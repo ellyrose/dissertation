@@ -37,12 +37,19 @@ class CreateAccountForm(FlaskForm):
     submit= SubmitField("Submit")
 
 
+class LoginForm(FlaskForm):
+    email_address= StringField("Email address", validators=[DataRequired(),Email(message="Your email address is not valid.")])
+
+    password = PasswordField('Password', validators=[DataRequired()])
+
+    submit= SubmitField("Submit")
+
+
 
 
 # Create route 
 @app.route('/home' , methods=['GET'])
 def index():
-    name= "Elly"
     return render_template("index.html")
 
 @app.route('/createaccount',  methods=['GET',"POST"])
@@ -77,9 +84,16 @@ def post_createaccount():
 
     
 
-@app.route('/login')
+@app.route('/login', methods= ["GET", "POST"])
 def login():
-    return render_template("login.html")
+    email_address= None
+    password=None
+    form= LoginForm()
+    if form.validate_on_submit():
+        email_address=form.email_address.data
+        password= form.email_address.data
+        return render_template("index.html",loggedin=True, home_buttons=True)
+    return render_template("login.html", email_address=email_address, password=password,form=form)
 
 @app.route('/forgottenpassword')
 def forgottenpassword():

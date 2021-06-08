@@ -6,20 +6,33 @@
 
     <h1 class="text-center"> Login </h1>
     <br>
-    <form>
+    <form Method="POST">
         <div class= "mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+            {{ form.hidden_tag() }}
+          </div>
+        <div class= "mb-3">
+          {{ form.email_address.label }}
+          {{ form.email_address(class="form-control") }}
         </div>
         <div class= "mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+          {{ form.password.label }}
+          {{ form.password(class="form-control") }}
         </div>
         <div class= "mb-3">
             <a href= "/forgottenpassword"> Forgotten your password?</a>
         </div>
         <br>
-        <button type="submit" class="button">Submit</button>
+        {% if form.errors %}
+          <p>Sorry, your details could not be processed because of the following errors: </p>
+          <ul class="errors">
+              {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                  {% for error in field_errors %}
+                      <li> {{ error }}</li>
+                  {% endfor %}
+              {% endfor %}
+          </ul>
+       {% endif %}
+        {{ form.submit(class="button") }}
     </form>
 </div>
 
