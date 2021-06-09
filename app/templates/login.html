@@ -15,13 +15,16 @@
           {{ form.email_address(class="form-control") }}
         </div>
         <div class= "mb-3">
-          {{ form.password.label }}
-          {{ form.password(class="form-control") }}
+          {{ form.password_hash.label }}
+          {{ form.password_hash(class="form-control") }}
         </div>
         <div class= "mb-3">
             <a href= "/forgottenpassword"> Forgotten your password?</a>
         </div>
         <br>
+        {% if message %}
+            <p> {{message}}</p>
+        {% endif %}
         {% if form.errors %}
           <p>Sorry, your details could not be processed because of the following errors: </p>
           <ul class="errors">

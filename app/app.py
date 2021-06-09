@@ -112,7 +112,7 @@ class CreateAccountForm(FlaskForm):
 class LoginForm(FlaskForm):
     email_address= StringField("Email address", validators=[DataRequired(),Email(message="Your email address is not valid.")])
 
-    password = PasswordField('Password', validators=[DataRequired()])
+    password_hash = PasswordField('Password', validators=[DataRequired()])
 
     submit= SubmitField("Submit")
 
@@ -142,6 +142,7 @@ def createaccount():
         print("validated")
         '''check that email address doesn't already exist'''
         user= Users.query.filter_by(email_address=form.email_address.data).first()
+        ''' if user doesnt already exist, add to db'''
         if user is None:
             print("none")
             first_name= form.first_name.data
@@ -160,6 +161,7 @@ def createaccount():
             db.session.add(user)
             db.session.commit()
         else:
+            ''' if user does exist, display message'''
             message= "An account with that email address already exists"
             return render_template("createaccount.html", first_name=first_name,last_name=last_name,birthdate=birthdate,
     email_address=email_address, password=password, confirm=confirm, accept_tos= accept_tos, form= form,message=message)
@@ -167,19 +169,26 @@ def createaccount():
     email_address=email_address, password=password, confirm=confirm, accept_tos= accept_tos, form= form)
     
 
-
 @app.route('/login', methods= ["GET", "POST"])
 def login():
     email_address= None
     password=None
+    user=None
+    passed= None
     form= LoginForm()
     if form.validate_on_submit():
         email_address=form.email_address.data
         form.email_address.data= " "
-        password= form.password.data
-        form.password.data= " "
-        return render_template("index.html",loggedin=True, home_buttons=True)
-    return render_template("login.html", email_address=email_address, password=password,form=form)
+        password= form.password_hash.data
+        form.password_hash.data= " "
+        user= Users.query.filter_by(email_address= email_address).first()
+        passed= check_password_hash(user.password_hash,password)
+        if passed:
+            return render_template("index.html",loggedin=True, home_buttons=True, user= user)
+        else:
+            message= "Incorrect email address or password"
+            return render_template("login.html", email_address=email_address, password_hash=password,form=form,message=message)
+    return render_template("login.html", email_address=email_address, password_hash=password,form=form)
 
 @app.route('/forgottenpassword', methods=["GET", "POST"])
 def forgottenpassword():
@@ -192,7 +201,6 @@ def forgottenpassword():
 
 @app.route('/yourgarden')
 def yourgarden():
-    name="Elly"
     return render_template("yourgarden.html")
 
 @app.route('/logout')
