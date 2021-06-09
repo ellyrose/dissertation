@@ -41,29 +41,29 @@
                     <li class="nav-item">
                         <a class="nav-link navbar-font-size text-dark mx-3" href="/support">Support</a>
                     </li>
-                {% if home_buttons %}
-                    <li class="nav-item">
-                        <a class="nav-link navbar-font-size text-dark mx-1" href="/yourgarden">Your Garden</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto mx-4 mb-lg-0">
-                    <li>
-                        <a class="nav-link navbar-font-size text-dark mx-3" href="/account">Account <span class="sr-only"></span></a>
-                    </li>
-                    <li>
-                        <a class="nav-link navbar-font-size text-dark mx-3" href="/logout" method="POST">Logout <span class="sr-only"></span></a>
-                    </li>
-                </ul>
+                {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link navbar-font-size text-dark mx-1" href="/yourgarden">Your Garden</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mx-4 mb-lg-0">
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3" href="/account">Account <span class="sr-only"></span></a>
+                        </li>
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3" href="/logout" method="POST">Logout <span class="sr-only"></span></a>
+                        </li>
+                    </ul>
                 {% else %}
-                </ul>
-                <ul class= "navbar-nav ms-auto  mx-4 mb-lg-0">
-                    <li>
-                        <a class="nav-link navbar-font-size text-dark mx-3"href="/createaccount">Create Account <span class="sr-only"></span></a>
-                    </li>
-                    <li>
-                        <a class="nav-link navbar-font-size text-dark mx-3" href="/login" >Login</a>
-                    </li>
-                </ul>
+                    </ul>
+                    <ul class= "navbar-nav ms-auto  mx-4 mb-lg-0">
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3"href="/createaccount">Create Account <span class="sr-only"></span></a>
+                        </li>
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3" href="/login" >Login</a>
+                        </li>
+                    </ul>
                 {% endif %}
                 {%if admin_btn %}
                     <a class="navbar-nav nav-item mx-3 nav-link navbar-font-size text-dark" href="/admin">Admin</a>

@@ -6,11 +6,11 @@ from wtforms.validators import DataRequired,email_validator,Email,EqualTo,Length
 from wtforms.fields.html5 import DateField
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
 import psycopg2
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
+from flask_login import LoginManager, login_required, login_user, UserMixin
 
 
 app = Flask(__name__)
@@ -37,7 +37,7 @@ migrate = Migrate(app, db)
 
 # create users table 
 
-class Users(db.Model):
+class Users(UserMixin, db.Model):
 
     __tablename__ = "users"
 
@@ -66,22 +66,37 @@ class Users(db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash,password)
         
+    # def is_active(self):
+    #     """True, as all users are active."""
+    #     return True
+
+    # def get_id(self):
+    #     """Return the email address to satisfy Flask-Login's requirements."""
+    #     return self.email_address
+
+    # def is_authenticated(self):
+    #     """Return True if the user is authenticated."""
+    #     return self.authenticated
+
+    # def is_anonymous(self):
+    #     """False, as anonymous users aren't supported."""
+    #     return False
 
     def __repr__(self):
-        return '<User {}>'.format(self.email_address)
+        return '<User {}>'.format(self.id)
 
-    # def __init__(self, id, first_name, last_name, dob, email_address,password_hash,date_created,last_seen,admin):
-    #     self.id= id
-    #     self.first_name= first_name
-    #     self.last_name = last_name
-    #     self.dob= dob
-    #     self.email_address= email_address
-    #     self.password_hash= password_hash
-    #     self.date_created= date_created
-    #     self.last_seen = last_seen
-    #     self.admin= admin
 
 # db.create_all()
+
+login_manager= LoginManager()
+
+login_manager.init_app(app)
+
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(id):
+    return Users.query.get(id)
 
 
 # Create form classes to be used on html files 
@@ -172,23 +187,21 @@ def createaccount():
 @app.route('/login', methods= ["GET", "POST"])
 def login():
     email_address= None
-    password=None
+    password_hash=None
     user=None
-    passed= None
     form= LoginForm()
     if form.validate_on_submit():
-        email_address=form.email_address.data
-        form.email_address.data= " "
-        password= form.password_hash.data
-        form.password_hash.data= " "
-        user= Users.query.filter_by(email_address= email_address).first()
-        passed= check_password_hash(user.password_hash,password)
-        if passed:
-            return render_template("index.html",loggedin=True, home_buttons=True, user= user)
+        user = Users.query.filter_by(email_address=form.email_address.data).first()
+        if user is not None and user.verify_password(form.password_hash.data):
+            login_user(user ,'''form.remember_me.data''')
+            next = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('index')
+            return redirect(next)
         else:
             message= "Incorrect email address or password"
-            return render_template("login.html", email_address=email_address, password_hash=password,form=form,message=message)
-    return render_template("login.html", email_address=email_address, password_hash=password,form=form)
+            return render_template("login.html", email_address=email_address, password_hash=password_hash,form=form,message=message)
+    return render_template("login.html", email_address=email_address, password_hash=password_hash,form=form)
 
 @app.route('/forgottenpassword', methods=["GET", "POST"])
 def forgottenpassword():
@@ -200,10 +213,12 @@ def forgottenpassword():
     return render_template("forgottenpassword.html", email_address=email_address, form=form)
 
 @app.route('/yourgarden')
+@login_required
 def yourgarden():
     return render_template("yourgarden.html")
 
 @app.route('/logout')
+@login_required
 def logout():
     return render_template("logout.html")
 
