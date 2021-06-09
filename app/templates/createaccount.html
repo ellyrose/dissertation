@@ -12,7 +12,7 @@
   {% else %}
     <h1 class="text-center"> Create your account</h1>
     <br>
-    <form method="POST">
+    <form method="POST", action=/createaccount>
         <div class= "mb-3">
           {{ form.hidden_tag() }}
         </div>
@@ -34,8 +34,8 @@
           <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
         <div class= "mb-3">
-          {{ form.password.label }}
-          {{ form.password(class="form-control") }}
+          {{ form.password_hash.label }}
+          {{ form.password_hash(class="form-control") }}
           <small id="passwordHelp" class="form-text text-muted">Your password must be atleast 12 characters long. We reccomend you choose 3 memorable words!</small>
         </div>
         <div class= "mb-3">
@@ -47,6 +47,9 @@
           {{ form.accept_tos(class="form-check-input")}}
         </div>
         <br>
+        {% if message %}
+          <p> {{ message }}</p>
+        {% endif %}
         {% if form.errors %}
           <p>Sorry, your details could not be processed because of the following errors: </p>
           <ul class="errors">
