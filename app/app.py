@@ -6,11 +6,15 @@ from wtforms.validators import DataRequired,Email,EqualTo,Length,NoneOf,InputReq
 from wtforms.fields.html5 import DateField
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-import psycopg2
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
+import os
+from flask_mail import Mail, Message
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
+
 
 
 app = Flask(__name__)
@@ -25,6 +29,32 @@ app.config['SECRET_KEY'] = "hI9t6Bt4Dl1!8F"
 app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:F41r4cr3/P1pps@localhost/themindgarden'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
+#congifure email sending 
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+
+
+#configure app mail sending 
+
+app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[The Mind Garden]'
+app.config['FLASKY_MAIL_SENDER'] = 'The Mind Garden <themindgarden21@gmail.com>'
+
+#initialize mail
+
+mail = Mail(app)
+
+# function to send emails 
+
+def send_email(to, subject, template, **kwargs):
+    msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject,
+                  sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)
 
 #instantiate database 
 
@@ -65,22 +95,25 @@ class Users(UserMixin, db.Model):
     '''verify password by checking hashed password and password given by user''' 
     def verify_password(self, password):
         return check_password_hash(self.password_hash,password)
+
+    ''' functions to generate tokens used in reset password'''
+    '''Expiration set to one hour'''
         
-    # def is_active(self):
-    #     """True, as all users are active."""
-    #     return True
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(app.config['SECRET_KEY'], expiration)
+        '''the token is made and the user-id for the user of given email is sent'''
+        return s.dumps({'id': self.id}).decode('utf-8')
 
-    # def get_id(self):
-    #     """Return the email address to satisfy Flask-Login's requirements."""
-    #     return self.email_address
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            id = s.loads(token)['id']
+        except:
+            return None
+        return Users.query.get(id)
+           
 
-    # def is_authenticated(self):
-    #     """Return True if the user is authenticated."""
-    #     return self.authenticated
-
-    # def is_anonymous(self):
-    #     """False, as anonymous users aren't supported."""
-    #     return False
 
     def __repr__(self):
         return '<User {}>'.format(self.id)
@@ -136,6 +169,16 @@ class ForgottenPasswordForm(FlaskForm):
    
     submit= SubmitField("Submit")
 
+class ResetPasswordForm(FlaskForm):
+    password_hash = PasswordField('Password', validators=[InputRequired(),
+    Length(min=12, max=30, message="Your password must contain at least 12 characters"),
+       EqualTo('confirm', message='The two passwords must match')])
+    
+
+    confirm = PasswordField('Repeat Password', validators=[DataRequired()])
+
+    submit= SubmitField("Submit")
+
 
 # Create route 
 @app.route('/' , methods=['GET'])
@@ -173,7 +216,6 @@ def createaccount():
             form.password_hash.data= " "
             hashed_password= generate_password_hash(password)
             user= Users(first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,password_hash= hashed_password)
-            print(user)
             db.session.add(user)
             db.session.commit()
         else:
@@ -204,14 +246,49 @@ def login():
             return render_template("login.html", email_address=email_address, password_hash=password_hash,form=form,message=message)
     return render_template("login.html", email_address=email_address, password_hash=password_hash,form=form)
 
+
 @app.route('/forgottenpassword', methods=["GET", "POST"])
 def forgottenpassword():
+    if current_user.is_authenticated:
+        return redirect (url_for('index'))
     email_address= None
     form= ForgottenPasswordForm()
     if form.validate_on_submit():
-        email_address=form.email_address.data
+        email_address=form.email_address.data.lower()
         form.email_address.data= " "
+        user= Users.query.filter_by(email_address=email_address).first()
+        if user is None:
+            email_address= True
+            return render_template("forgottenpassword.html", email_address=email_address, form=form)
+        token = user.generate_reset_token()
+        send_email(user.email_address,'Reset Your Password',
+                   '/mail/password_reset', user=user, token=token)
     return render_template("forgottenpassword.html", email_address=email_address, form=form)
+
+
+@app.route('/resetpassword/<token>', methods=["GET", "POST"])
+def resetpassword(token):
+    if current_user.is_authenticated:
+        return redirect (url_for('index'))
+    user= Users.verify_reset_token(token)
+    form= ResetPasswordForm()
+    if user is None:
+        return render_template("resetpassword.html", form=form, error=True)
+    if form.validate_on_submit():
+        password_hash= form.password_hash.data
+        form.password_hash.data= " "
+        form.confirm.data= " "
+        hashed_password= generate_password_hash(password_hash)
+        user.password_hash= hashed_password
+        db.session.commit()
+        return render_template("success.html")
+    return render_template("resetpassword.html", form=form, error=False)
+
+        
+
+
+
+
 
 @app.route('/yourgarden')
 @login_required
@@ -227,5 +304,6 @@ def logout():
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)
+   
 
     
