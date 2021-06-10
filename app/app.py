@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, request, url_for, jsonify, redirect, session, render_template, make_response, redirect, render_template, abort
+from flask import Flask, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from wtforms import validators
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField,PasswordField,HiddenField
-from wtforms.validators import DataRequired,email_validator,Email,EqualTo,Length,NoneOf,InputRequired
+from wtforms import StringField, SubmitField, BooleanField,PasswordField
+from wtforms.validators import DataRequired,Email,EqualTo,Length,NoneOf,InputRequired
 from wtforms.fields.html5 import DateField
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +10,7 @@ import psycopg2
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
-from flask_login import LoginManager, login_required, login_user, UserMixin
+from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
 
 
 app = Flask(__name__)
@@ -138,12 +138,14 @@ class ForgottenPasswordForm(FlaskForm):
 
 
 # Create route 
-@app.route('/home' , methods=['GET'])
+@app.route('/' , methods=['GET'])
 def index():
     return render_template("index.html")
 
 @app.route('/createaccount',  methods=['GET',"POST"])
 def createaccount():
+    if current_user.is_authenticated:
+        return redirect (url_for('index'))
     first_name= None
     last_name= None
     birthdate= None
@@ -151,15 +153,14 @@ def createaccount():
     password=None
     confirm= None
     accept_tos= None
+    ''' create form instance to pass through to html'''
     form= CreateAccountForm()
     '''validate form to check that each feild has been completed correctly''' 
     if form.validate_on_submit():
-        print("validated")
         '''check that email address doesn't already exist'''
         user= Users.query.filter_by(email_address=form.email_address.data).first()
         ''' if user doesnt already exist, add to db'''
         if user is None:
-            print("none")
             first_name= form.first_name.data
             form.first_name.data= " "
             last_name= form.last_name.data
@@ -186,6 +187,8 @@ def createaccount():
 
 @app.route('/login', methods= ["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect (url_for('index'))
     email_address= None
     password_hash=None
     user=None
@@ -194,12 +197,10 @@ def login():
         user = Users.query.filter_by(email_address=form.email_address.data).first()
         if user is not None and user.verify_password(form.password_hash.data):
             login_user(user ,'''form.remember_me.data''')
-            next = request.args.get('next')
-            if next is None or not next.startswith('/'):
-                next = url_for('index')
-            return redirect(next)
+            home = url_for('index')
+            return redirect(home)
         else:
-            message= "Incorrect email address or password"
+            message= "You have entered an incorrect email address or password"
             return render_template("login.html", email_address=email_address, password_hash=password_hash,form=form,message=message)
     return render_template("login.html", email_address=email_address, password_hash=password_hash,form=form)
 
@@ -220,6 +221,7 @@ def yourgarden():
 @app.route('/logout')
 @login_required
 def logout():
+    logout_user()
     return render_template("logout.html")
 
 
