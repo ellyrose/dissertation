@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %} Create Account {% endblock %}
+{% block content %}
+
+<div class= "container">
+    <h1 class="text-center">Your Details</h1>
+    <p class="text-center">Your account details are below. If you would like to edit them, enter your password below to submit any changes.</p>
+    <br>
+    {% if message %}
+        <p class= "text-center"> {{ message }} </p>
+    {% endif %}
+    <div>
+        <form method="POST">
+            <div class= "mb-3">
+            {{ form.hidden_tag() }}
+            </div>
+            <div class= "mb-3">
+            {{ form.first_name.label }}
+            {{ form.first_name(class="form-control", value= user.first_name) }}
+            </div>
+            <div class= "mb-3">
+            {{ form.last_name.label }}
+            {{ form.last_name(class="form-control",value= user.last_name) }}
+            </div>
+            <div class= "mb-3">
+            {{ form.birthdate.label }}
+            {{ form.birthdate(value= user.dob) }}
+            </div>
+            <div class= "mb-3">
+            {{ form.email_address.label }}
+            {{ form.email_address(class="form-control",value= user.email_address) }}
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class= "mb-3">
+                {{ form.new_password.label }}
+                {{ form.new_password(class="form-control")}}
+                <small id="passwordHelp" class="form-text text-muted">Your password must be atleast 12 characters long. We reccomend you choose 3 memorable words!</small>
+            </div>
+            <div class= "mb-3">
+                {{ form.confirm.label }}
+                {{ form.confirm(class="form-control")}}
+            </div>
+            <br>
+            <div class= "mb-3">
+                {{ form.password_hash.label }}
+                {{ form.password_hash(class="form-control") }}
+            </div>
+            {% if form.errors %}
+                <p>Sorry, your details could not be processed because of the following errors: </p>
+                <ul class="errors">
+                    {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                        {% for error in field_errors %}
+                            <li> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {{ form.submit(class="button") }}
+        </form>
+    </div>  
+
+
+
+</div>
+
+{% endblock %}

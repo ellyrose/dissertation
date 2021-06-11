@@ -65,7 +65,7 @@
                         </li>
                     </ul>
                 {% endif %}
-                {%if admin_btn %}
+                {%if current_user.admin %}
                     <a class="navbar-nav nav-item mx-3 nav-link navbar-font-size text-dark" href="/admin">Admin</a>
                 {% endif %}
            

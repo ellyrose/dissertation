@@ -8,15 +8,16 @@ from flask_login import LoginManager, login_required, login_user, UserMixin, log
 import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm
-
+from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-#create secret key for CSRF protection 
+#create secret key for CSRF protection, session etc 
 
 app.config['SECRET_KEY'] = "hI9t6Bt4Dl1!8F"
 
@@ -36,8 +37,8 @@ app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 
 #configure app mail sending 
 
-app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[The Mind Garden]'
-app.config['FLASKY_MAIL_SENDER'] = 'The Mind Garden <themindgarden21@gmail.com>'
+app.config['MAIL_SUBJECT_PREFIX'] = 'The Mind Garden |'
+app.config['MAIL_SENDER'] = 'The Mind Garden <themindgarden21@gmail.com>'
 
 #initialize mail
 
@@ -46,8 +47,8 @@ mail = Mail(app)
 # function to send emails 
 
 def send_email(to, subject, template, **kwargs):
-    msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject,
-                  sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
+    msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + subject,
+                  sender=app.config['MAIL_SENDER'], recipients=[to])
     msg.body = render_template(template + '.txt', **kwargs)
     msg.html = render_template(template + '.html', **kwargs)
     mail.send(msg)
@@ -59,7 +60,12 @@ db = SQLAlchemy(app)
 #initialise migrate 
 migrate = Migrate(app, db)
 
+#Use limiter to prevent brute force attacks for a given IP address 
 
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+)
 
 # create users table 
 
@@ -127,6 +133,9 @@ login_manager.login_view = 'login'
 def load_user(id):
     return Users.query.get(id)
 
+@app.errorhandler(404)
+def page_not_found(error):
+   return render_template('404.html', title = '404'), 404
 
 '''ROUTES'''
 
@@ -177,6 +186,7 @@ def createaccount():
     
 
 @app.route('/login', methods= ["GET", "POST"])
+@limiter.limit(["100 per day","50 per hour"])
 def login():
     if current_user.is_authenticated:
         return redirect (url_for('index'))
@@ -189,6 +199,7 @@ def login():
         if user is not None and user.verify_password(form.password_hash.data):
             login_user(user ,'''form.remember_me.data''')
             home = url_for('index')
+            session['id'] = user.id
             return redirect(home)
         else:
             message= "You have entered an incorrect email address or password"
@@ -240,18 +251,79 @@ def yourgarden():
     return render_template("yourgarden.html")
 
 
-@app.route('/account')
+@app.route('/account',methods=["GET", "POST"])
 @login_required
-def yourgarden():
-    return render_template("account.html")   
+def account():
+    id = session['id']
+    user= Users.query.get_or_404(id)
+    first_name= user.first_name
+    last_name = user.last_name
+    birthdate= user.dob
+    email_address= user.email_address
+    new_password=None
+    confirm= None
+    current_password=None
+    message= None
+    form= EditDetailsForm()
+    if form.validate_on_submit():
+        first_name= form.first_name.data
+        last_name= form.last_name.data
+        birthdate= form.birthdate.data
+        email_address=form.email_address.data.lower()
+        current_password= form.password_hash.data
+        new_password= form.new_password.data
+        if user.verify_password(current_password):
+            new_password_hash=generate_password_hash(new_password)
+            user.password_hash= new_password_hash
+            user.first_name= first_name
+            user.last_name= last_name
+            user.dob= birthdate
+            user.email_address= email_address
+            try:
+                db.session.commit()
+                form.first_name.data= user.first_name
+                form.last_name.data = user.last_name
+                form.birthdate.data= user.dob
+                form.email_address.data= user.email_address
+                message= "Your details have been updated!"
+                return render_template("account.html", message=message,form=form, user=user, 
+                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
+                password_hash= current_password)   
+            except:
+                form.first_name.data= user.first_name
+                form.last_name.data = user.last_name
+                form.birthdate.data= user.dob
+                form.email_address.data= user.email_address
+                message= "Sorry there was an error, please try again."
+                return render_template("account.html", message=message,form=form, user=user, 
+                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
+                password_hash= current_password,new_password=new_password,confirm=confirm)   
+        else:
+            message= "You entered an incorrect password."
+    return render_template("account.html", message=message,form=form, user=user, first_name= first_name, 
+    last_name= last_name, dob= birthdate,email_address=email_address,password_hash= current_password, 
+    new_password=new_password,confirm=confirm)   
 
 @app.route('/logout')
 @login_required
 def logout():
+    id = session['id']
+    user= Users.query.get_or_404(id)
+    user.last_seen= datetime.utcnow()
+    db.session.commit()
     logout_user()
+    session.pop('id')
     return render_template("logout.html")
 
-
+@app.route('/admin')
+@login_required
+def admin():
+    id = session['id']
+    user= Users.query.get_or_404(id)
+    if not user.admin:
+        return page_not_found(404)
+    all_users= Users.query.order_by(Users.date_created)
+    return render_template("admin.html", all_users=all_users)
 
 
 if __name__ == '__main__':
