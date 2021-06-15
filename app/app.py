@@ -282,6 +282,10 @@ def loggedinresetpassword():
                  message= "Sorry there was an error, please try again."
                  return render_template("resetpassword.html", message=message,form=form, user=user, 
                  password_hash= current_password, new_password= new_password, confirm=confirm)
+        else:
+            message ="Sorry, your current password was incorrect"
+            return render_template("resetpassword.html", message=message,form=form, user=user, 
+                 password_hash= current_password, new_password= new_password, confirm=confirm)
     return render_template("resetpassword.html", form=form, user=user, 
                  password_hash= current_password, new_password= new_password, confirm=confirm)
 

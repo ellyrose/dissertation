@@ -5,7 +5,9 @@
 <div>
     <h1 class="text-center"> Welcome to The Mind Garden, {{current_user.first_name}}</h1>
     <p class= "text-center">Click below to enter your garden...</p>
+
     <br>
+    <img src="{{url_for('static', filename='title.jpg')}}" class="img-fluid mx-auto d-block" width="800" height="150" alt="The Mind Garden">
     <a href='/yourgarden' class= "button d-block" >Your Garden</a> 
 </div>
 {% else %}
