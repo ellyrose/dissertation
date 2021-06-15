@@ -1,5 +1,7 @@
+from hashlib import new
 from flask import Flask, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,23 +10,31 @@ from flask_login import LoginManager, login_required, login_user, UserMixin, log
 import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm
+from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm,LoggedInResetPasswordForm
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+
 
 #create secret key for CSRF protection, session etc 
 
 app.config['SECRET_KEY'] = "hI9t6Bt4Dl1!8F"
 
+#set session time so a user is logged out after 2 hours
+app.config['PERMANENT_SESSION_LIFETIME']= timedelta(minutes=120)
+
 #add database 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:F41r4cr3/P1pps@localhost/themindgarden'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
+
+#set session time so a user is logged out after 2 hours
+
+
+
 
 #congifure email sending 
 
@@ -244,6 +254,37 @@ def resetpassword(token):
         return render_template("success.html")
     return render_template("resetpassword.html", form=form, error=False)
 
+@app.route('/resetpassword', methods=["GET", "POST"])
+@login_required
+def loggedinresetpassword():
+    id = session['id']
+    user= Users.query.get_or_404(id)
+    new_password=None
+    confirm= None
+    current_password= None
+    message=None
+    form= LoggedInResetPasswordForm()
+    if form.validate_on_submit():
+        current_password= form.password_hash.data
+        new_password= form.new_password.data
+        form.new_password.data= " "
+        form.password_hash.data= " "
+        form.confirm.data= " "
+        if user.verify_password(current_password):
+            new_password_hash=generate_password_hash(new_password)
+            user.password_hash= new_password_hash
+            try:
+                db.session.commit()
+                message= "Your details have been updated!"
+                return render_template("resetpassword.html", message=message,form=form, user=user, 
+                password_hash= current_password, new_password= new_password, confirm=confirm)   
+            except:
+                 message= "Sorry there was an error, please try again."
+                 return render_template("resetpassword.html", message=message,form=form, user=user, 
+                 password_hash= current_password, new_password= new_password, confirm=confirm)
+    return render_template("resetpassword.html", form=form, user=user, 
+                 password_hash= current_password, new_password= new_password, confirm=confirm)
+
    
 @app.route('/yourgarden')
 @login_required
@@ -260,8 +301,6 @@ def account():
     last_name = user.last_name
     birthdate= user.dob
     email_address= user.email_address
-    new_password=None
-    confirm= None
     current_password=None
     message= None
     form= EditDetailsForm()
@@ -271,10 +310,7 @@ def account():
         birthdate= form.birthdate.data
         email_address=form.email_address.data.lower()
         current_password= form.password_hash.data
-        new_password= form.new_password.data
         if user.verify_password(current_password):
-            new_password_hash=generate_password_hash(new_password)
-            user.password_hash= new_password_hash
             user.first_name= first_name
             user.last_name= last_name
             user.dob= birthdate
@@ -286,6 +322,7 @@ def account():
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
                 message= "Your details have been updated!"
+                session.permanent = True
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
                 password_hash= current_password)   
@@ -297,12 +334,11 @@ def account():
                 message= "Sorry there was an error, please try again."
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
-                password_hash= current_password,new_password=new_password,confirm=confirm)   
+                password_hash= current_password)   
         else:
             message= "You entered an incorrect password."
     return render_template("account.html", message=message,form=form, user=user, first_name= first_name, 
-    last_name= last_name, dob= birthdate,email_address=email_address,password_hash= current_password, 
-    new_password=new_password,confirm=confirm)   
+    last_name= last_name, dob= birthdate,email_address=email_address,password_hash= current_password)   
 
 @app.route('/logout')
 @login_required
@@ -327,7 +363,7 @@ def admin():
 
 
 if __name__ == '__main__':
-    app.run(port=80, debug=True)
+    app.run(port=80)
    
 
     

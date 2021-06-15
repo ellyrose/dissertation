@@ -51,18 +51,20 @@ class ResetPasswordForm(FlaskForm):
 
     submit= SubmitField("Submit")
 
+class LoggedInResetPasswordForm(FlaskForm):
+    new_password = PasswordField('New password', validators=[
+    Length(min=12, max=30, message="Your password must contain at least 12 characters"),
+       EqualTo('confirm', message='The two passwords must match')])
+    
+    confirm = PasswordField('Repeat new password')
+    password_hash = PasswordField('Please enter your current password to confirm any changes:', validators=[DataRequired()])
+    submit= SubmitField("Submit")
+
 class EditDetailsForm(FlaskForm):
     first_name= StringField("First Name")
     last_name= StringField("Last Name")
     birthdate= DateField("Birthdate" )
     email_address= StringField("Email address")
-    
-    new_password = PasswordField('New password', validators=[InputRequired(),
-    Length(min=12, max=30, message="Your password must contain at least 12 characters"),
-       EqualTo('confirm', message='The two passwords must match')])
-    
-    confirm = PasswordField('Repeat new password', validators=[DataRequired()])
-
     password_hash = PasswordField('Please enter your current password to confirm any changes:', validators=[DataRequired()])
 
     submit= SubmitField("Submit")

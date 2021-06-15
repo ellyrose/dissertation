@@ -2,9 +2,20 @@
 {% block title %} Your Garden {% endblock %}
 {% block content %}
 
+<div class="container">
 
-<h1 class="text-center">{{name}}'s Mind Garden</h1>
-<br>
+    <h1 class="text-center">{{current_user.first_name}}'s Mind Garden</h1>
+    <br>
+    <img src="/static/draftgarden.jpg" alt="Garden Map" usemap="#gardenmap">
+
+    <map name="gardenmap">
+    <area shape="rect" coords="0,0,373,393" alt="Fluency Fountain" href= "templates/modules/module1/fluency.html">
+   
+    </map>
+    
+
+</div>
+
 
 
 {% endblock %}

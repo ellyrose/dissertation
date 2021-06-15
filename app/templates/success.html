@@ -3,10 +3,19 @@
 {% block content %}
 
 <div class= "container">
-    <h1 class="text-center">Your password has been reset!</h1>
-    <p class="text-center">Please click below to login </p>
-    <br>
-    <a href='/login' class= "button d-block" >Login</a> 
+    {% if current_user.is_authenticated %}
+        <h1 class="text-center">Your password has been reset!</h1>
+        <p class="text-center">Please click below to enter your garden </p>
+        <br>
+        <a href='/yourgarden' class= "button d-block" >Your Garden</a>
+
+    {% else %}
+        <h1 class="text-center">Your password has been reset!</h1>
+        <p class="text-center">Please click below to login </p>
+        <br>
+        <a href='/login' class= "button d-block" >Login</a> 
+
+    {% endif %}
 </div>
 
 {% endblock %}

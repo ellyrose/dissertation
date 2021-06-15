@@ -31,15 +31,6 @@
             {{ form.email_address(class="form-control",value= user.email_address) }}
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
-            <div class= "mb-3">
-                {{ form.new_password.label }}
-                {{ form.new_password(class="form-control")}}
-                <small id="passwordHelp" class="form-text text-muted">Your password must be atleast 12 characters long. We reccomend you choose 3 memorable words!</small>
-            </div>
-            <div class= "mb-3">
-                {{ form.confirm.label }}
-                {{ form.confirm(class="form-control")}}
-            </div>
             <br>
             <div class= "mb-3">
                 {{ form.password_hash.label }}
@@ -55,6 +46,9 @@
                     {% endfor %}
                 </ul>
             {% endif %}
+            <div>
+                <a href= "/resetpassword">CLick here if you would like to reset your password</a>
+            </div>
             {{ form.submit(class="button") }}
         </form>
     </div>  
