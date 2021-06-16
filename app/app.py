@@ -127,7 +127,6 @@ class Users(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.id)
 
-
 # db.create_all()
 
 login_manager= LoginManager()
@@ -144,6 +143,11 @@ def load_user(id):
 @app.errorhandler(404)
 def page_not_found(error):
    return render_template('404.html', title = '404'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
 
 '''ROUTES'''
 
@@ -300,7 +304,7 @@ def account():
     first_name= user.first_name
     last_name = user.last_name
     birthdate= user.dob
-    email_address= user.email_address
+    current_email_address= user.email_address
     current_password=None
     message= None
     form= EditDetailsForm()
@@ -310,6 +314,15 @@ def account():
         birthdate= form.birthdate.data
         email_address=form.email_address.data.lower()
         current_password= form.password_hash.data
+        ''' if email address has changed, check that it is not alrady in use '''
+        if email_address != current_email_address:
+            check = Users.query.filter_by(email_address=email_address).first()
+            if check is not None:
+                message= "Sorry, please enter a different email address."
+                return render_template("account.html", message=message,form=form, user=user, 
+                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
+                password_hash= current_password)   
+        '''  check that password entered is correct before updating the details'''
         if user.verify_password(current_password):
             user.first_name= first_name
             user.last_name= last_name
@@ -337,7 +350,7 @@ def account():
         else:
             message= "You entered an incorrect password."
     return render_template("account.html", message=message,form=form, user=user, first_name= first_name, 
-    last_name= last_name, dob= birthdate,email_address=email_address,password_hash= current_password)   
+    last_name= last_name, dob= birthdate,email_address=current_email_address,password_hash= current_password)   
 
 @app.route('/logout')
 @login_required
@@ -409,12 +422,6 @@ def delete(id):
     if not user.admin:
         return page_not_found(404)
     update_user= Users.query.get_or_404(id)
-    first_name= update_user.first_name
-    last_name = update_user.last_name
-    birthdate= update_user.dob
-    email_address= update_user.email_address
-    message= None
-    form= AdminEditForm()
     try:
         db.session.delete(update_user)
         db.session.commit()

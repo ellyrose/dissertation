@@ -1,8 +1,9 @@
 from wtforms import validators
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField,PasswordField
-from wtforms.validators import DataRequired,Email,EqualTo,Length,NoneOf,InputRequired
+from wtforms.validators import DataRequired,Email,EqualTo,Length,NoneOf,InputRequired, ValidationError
 from wtforms.fields.html5 import DateField
+
 
 # Create form classes to be used on html files 
 
@@ -68,6 +69,7 @@ class EditDetailsForm(FlaskForm):
     password_hash = PasswordField('Please enter your current password to confirm any changes:', validators=[DataRequired()])
 
     submit= SubmitField("Submit")
+
 
 
 class AdminEditForm(FlaskForm):
