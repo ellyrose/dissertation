@@ -70,3 +70,13 @@ class EditDetailsForm(FlaskForm):
     submit= SubmitField("Submit")
 
 
+class AdminEditForm(FlaskForm):
+    first_name= StringField("First Name")
+    last_name= StringField("Last Name")
+    birthdate= DateField("Birthdate" )
+    email_address= StringField("Email address")
+
+    submit= SubmitField("Submit")
+
+
+

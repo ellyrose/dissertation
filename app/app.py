@@ -1,5 +1,5 @@
 from hashlib import new
-from flask import Flask, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
+from flask import Flask, flash, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +10,7 @@ from flask_login import LoginManager, login_required, login_user, UserMixin, log
 import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm,LoggedInResetPasswordForm
+from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm,LoggedInResetPasswordForm,AdminEditForm
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -23,18 +23,15 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "hI9t6Bt4Dl1!8F"
 
-#set session time so a user is logged out after 2 hours
-app.config['PERMANENT_SESSION_LIFETIME']= timedelta(minutes=120)
+#set session time so a user is logged out after 1 hour of inactivity 
+app.config['PERMANENT_SESSION_LIFETIME']= timedelta(minutes=60)
+
+
 
 #add database 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:F41r4cr3/P1pps@localhost/themindgarden'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
-
-#set session time so a user is logged out after 2 hours
-
-
-
 
 #congifure email sending 
 
@@ -143,6 +140,7 @@ login_manager.login_view = 'login'
 def load_user(id):
     return Users.query.get(id)
 
+
 @app.errorhandler(404)
 def page_not_found(error):
    return render_template('404.html', title = '404'), 404
@@ -207,9 +205,9 @@ def login():
     if form.validate_on_submit():
         user = Users.query.filter_by(email_address=form.email_address.data).first()
         if user is not None and user.verify_password(form.password_hash.data):
-            login_user(user ,'''form.remember_me.data''')
+            login_user(user ,remember=False)
             home = url_for('index')
-            session['id'] = user.id
+            session.permanent = True
             return redirect(home)
         else:
             message= "You have entered an incorrect email address or password"
@@ -257,8 +255,7 @@ def resetpassword(token):
 @app.route('/resetpassword', methods=["GET", "POST"])
 @login_required
 def loggedinresetpassword():
-    id = session['id']
-    user= Users.query.get_or_404(id)
+    user= current_user
     new_password=None
     confirm= None
     current_password= None
@@ -299,8 +296,7 @@ def yourgarden():
 @app.route('/account',methods=["GET", "POST"])
 @login_required
 def account():
-    id = session['id']
-    user= Users.query.get_or_404(id)
+    user= current_user
     first_name= user.first_name
     last_name = user.last_name
     birthdate= user.dob
@@ -326,7 +322,6 @@ def account():
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
                 message= "Your details have been updated!"
-                session.permanent = True
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
                 password_hash= current_password)   
@@ -347,27 +342,93 @@ def account():
 @app.route('/logout')
 @login_required
 def logout():
-    id = session['id']
-    user= Users.query.get_or_404(id)
+    user= current_user
     user.last_seen= datetime.utcnow()
     db.session.commit()
     logout_user()
-    session.pop('id')
     return render_template("logout.html")
 
+
+''' Admin panel page '''
 @app.route('/admin')
 @login_required
 def admin():
-    id = session['id']
-    user= Users.query.get_or_404(id)
+    user= current_user
     if not user.admin:
         return page_not_found(404)
     all_users= Users.query.order_by(Users.date_created)
     return render_template("admin.html", all_users=all_users)
 
+''' Admin update user details page '''
+@app.route('/update/<id>',methods=["GET", "POST"])
+@login_required
+def update(id):
+    user= current_user
+    if not user.admin:
+        return page_not_found(404)
+    update_user= Users.query.get_or_404(id)
+    first_name= update_user.first_name
+    last_name = update_user.last_name
+    birthdate= update_user.dob
+    email_address= update_user.email_address
+    message= None
+    form= AdminEditForm()
+    if form.validate_on_submit():
+        first_name= form.first_name.data
+        last_name= form.last_name.data
+        birthdate= form.birthdate.data
+        email_address=form.email_address.data.lower()
+        update_user.first_name= first_name
+        update_user.last_name= last_name
+        update_user.dob= birthdate
+        update_user.email_address= email_address
+        try:
+            db.session.commit()
+            form.first_name.data= update_user.first_name
+            form.last_name.data = update_user.last_name
+            form.birthdate.data= update_user.dob
+            form.email_address.data= update_user.email_address
+            message= "User's details have been updated!"
+            return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
+            birthdate=birthdate, email_address=email_address, message=message)
+        except:
+            form.first_name.data= update_user.first_name
+            form.last_name.data = update_user.last_name
+            form.birthdate.data= update_user.dob
+            form.email_address.data= update_user.email_address
+            message= "Sorry there was an error, please try again."
+            return render_template("update_user.html", form=form,update_user=update_user,first_name=first_name, last_name=last_name,
+            birthdate=birthdate, email_address=email_address, message=message)
+    return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
+    birthdate=birthdate, email_address=email_address)
+
+@app.route('/delete/<id>')
+@login_required
+def delete(id):
+    user= current_user
+    if not user.admin:
+        return page_not_found(404)
+    update_user= Users.query.get_or_404(id)
+    first_name= update_user.first_name
+    last_name = update_user.last_name
+    birthdate= update_user.dob
+    email_address= update_user.email_address
+    message= None
+    form= AdminEditForm()
+    try:
+        db.session.delete(update_user)
+        db.session.commit()
+        all_users=  Users.query.order_by(Users.date_created)
+        flash("User has been deleted!")
+        return render_template("admin.html", all_users=all_users)
+    except:
+        flash("There was a problem, please try again.")
+        return render_template("admin.html", all_users=all_users)
+
+
 
 if __name__ == '__main__':
-    app.run(port=80)
+    app.run(port=80, debug=True)
    
 
     

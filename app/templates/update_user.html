@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} Update User {% endblock %}
+{% block content %}
+
+<div class= "container">
+    <h1 class="text-center">Update User Details</h1>
+    {% if message %}
+        <p class= "text-center"> {{ message }} </p>
+    {% endif %}
+    <div>
+        <form method="POST">
+            <div class= "mb-3">
+            {{ form.hidden_tag() }}
+            </div>
+            <div class= "mb-3">
+            {{ form.first_name.label }}
+            {{ form.first_name(class="form-control", value= update_user.first_name) }}
+            </div>
+            <div class= "mb-3">
+            {{ form.last_name.label }}
+            {{ form.last_name(class="form-control",value= update_user.last_name) }}
+            </div>
+            <div class= "mb-3">
+            {{ form.birthdate.label }}
+            {{ form.birthdate(value= update_user.dob) }}
+            </div>
+            <div class= "mb-3">
+            {{ form.email_address.label }}
+            {{ form.email_address(class="form-control",value= update_user.email_address) }}
+            </div>
+            <br>
+            {{ form.submit(class="button") }}
+      </form>
+    </div>
+
+  {% endblock %}

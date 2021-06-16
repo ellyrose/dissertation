@@ -1,9 +1,39 @@
 {% extends 'base.html' %}
-{% block title %} Create Account {% endblock %}
+{% block title %} Admin {% endblock %}
 {% block content %}
+{% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
+{% endfor %}
 
 <div class= "container">
-
+    <h1 class="text-center">Admin Page</h1>
+    <p class="text-center">See below to edit or delete accounts:</p>
+    
+    <table class= "table table-bordered table-hover">
+        <tr>
+            <td>User ID</td>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Email Address</td>
+            <td>Birthdate</td>
+            <td>Last Seen</td>
+        </tr>
+        {% for user in all_users %}
+            <tr>
+            <td><a href= "{{url_for('update', id= user.id)}}">{{user.id}}</a></td>
+            <td>{{user.first_name}}</td>  
+            <td>{{user.last_name}}</td>
+            <td>{{user.email_address}} </td>
+            <td>{{user.dob}} </td>
+            <td>{{user.last_seen}}</td> 
+            <td><a href= "{{url_for('delete', id= user.id)}}">Delete</a></td>
+            </tr>
+        {% endfor %}    
+    </table>
 
 
 
