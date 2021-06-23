@@ -38,10 +38,10 @@ class Fluency_4(FlaskForm):
     submit= SubmitField("Submit")
 
 class Fluency_5(FlaskForm):
-    v1= IntegerField(label="Answer 1", validators=[DataRequired()])
-    v2= IntegerField(label="Answer 2", validators=[DataRequired()])
-    v3= IntegerField(label="Answer 3", validators=[DataRequired()])
-    v4= IntegerField(label="Answer 4", validators=[DataRequired()])
+    v1= StringField(label="What is the name of the current Prime Minister?", validators=[DataRequired()])
+    v2= StringField(label="Name the first woman who was Prime Minister:", validators=[DataRequired()])
+    v3= StringField(label="Name the USA President:", validators=[DataRequired()])
+    v4= StringField(label="What is the name of the USA President who was assassinated in the 1960s?", validators=[DataRequired()])
    
     submit= SubmitField("Submit")
 

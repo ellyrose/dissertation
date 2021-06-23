@@ -5,6 +5,9 @@
 <div class="container">
 
     <h1 class="text-center">{{current_user.first_name}}'s Mind Garden</h1>
+    {% if message %}
+        <p class="text-center">{{message}}</p>
+    {% endif %}
     <br>
     <img src="/static/draftgarden.jpg" alt="Garden Map" usemap="#gardenmap">
 

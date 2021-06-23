@@ -150,6 +150,64 @@ class Test(db.Model):
         return '<Test {}>'.format(self.id)
 
 
+class Module_1(db.Model):
+    __tablename__ = "module_1"
+
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_4= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_5= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_6= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_7= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_9= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_10= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+
+
+    def __repr__(self):
+        return '<Module_1 {}>'.format(self.id)
+
+class Module_2(db.Model):
+    __tablename__ = "module_2"
+
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_4= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_5= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_6= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_7= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+
+
+    def __repr__(self):
+        return '<Module_2{}>'.format(self.id)
+
+class Module_3(db.Model):
+    __tablename__ = "module_3"
+
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+
+
+    def __repr__(self):
+        return '<Module_3{}>'.format(self.id)
+
+class Module_4(db.Model):
+    __tablename__ = "module_4"
+
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+
+
+    def __repr__(self):
+        return '<Module_4{}>'.format(self.id)
+
 db.create_all()
 
 login_manager= LoginManager()
@@ -215,7 +273,19 @@ def createaccount():
             db.session.commit()
             id = str(user.id) 
             test = Test(id= id)
+            module_1= Module_1(id=id)
+            module_2= Module_2(id=id)
+            module_3= Module_3(id=id)
+            module_4= Module_4(id=id)
             db.session.add(test)
+            db.session.commit()
+            db.session.add(module_1)
+            db.session.commit()
+            db.session.add(module_2)
+            db.session.commit()
+            db.session.add(module_3)
+            db.session.commit()
+            db.session.add(module_4)
             db.session.commit()
 
         else:
@@ -467,7 +537,33 @@ def delete(id):
 @app.route('/fluency')
 @login_required
 def fluency():
-    return render_template("/modules/module1/fluency.html")
+    user= current_user
+    id= user.id
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions.question_10:
+        message= "You have completed Fluency Fountain!"
+        return render_template("/yourgarden.html", message=message)
+    elif questions.question_9:
+        return redirect (url_for('fluency10'))
+    elif questions.question_8:
+        return redirect(url_for('fluency9'))
+    elif questions.question_7:
+        return redirect(url_for('fluency8'))
+    elif questions.question_6:
+        return redirect(url_for('fluency7'))
+    elif questions.question_5:
+        return redirect(url_for('fluency6'))
+    elif questions.question_4:
+        return redirect(url_for('fluency5'))
+    elif questions.question_3:
+        return redirect(url_for('fluency4'))
+    elif questions.question_2:
+        return redirect(url_for('fluency3'))
+    elif questions.question_1:
+        return redirect(url_for('fluency2'))
+    else:
+         return render_template("/modules/module1/fluency.html")
+ 
 
 @app.route('/fluency1',methods=["GET", "POST"])
 @login_required
@@ -484,6 +580,7 @@ def fluency1():
         user = current_user
         id= user.id
         test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
         print(test.attention)
         module_score= test.module_1_score
         attention= test.attention
@@ -544,6 +641,7 @@ def fluency1():
             module_score +=1
         test.attention= attention
         test.module_1_score= module_score
+        questions.question_1= True
         db.session.commit()
         message= "Your answers have been accepted, please click next to continue"
         next= True
@@ -557,6 +655,11 @@ def fluency1():
 @app.route('/fluency2',methods=["GET", "POST"])
 @login_required
 def fluency2():
+    user= current_user 
+    id= user.id
+    questions= Module_1.query.filter_by(id= id).first()
+    questions.question_2= True
+    db.session.commit()
     return render_template("/modules/module1/fluency2.html")
 
 
@@ -575,6 +678,7 @@ def fluency3():
         user = current_user
         id= user.id
         test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
         attention= test.attention
         value_1 = form.v1.data
@@ -599,6 +703,7 @@ def fluency3():
             attention += 1     
         test.attention= attention
         test.module_1_score= module_score
+        questions.question_3= True
         db.session.commit()
         message= "Your answers have been accepted, please click next to continue"
         next= True
@@ -607,6 +712,66 @@ def fluency3():
     return render_template("/modules/module1/fluency3.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,value_5=value_5,form=form,message= message, next= next)
 
+@app.route('/fluency4',methods=["GET", "POST"])
+@login_required
+def fluency4():
+    user= current_user
+    id= user.id
+    questions= Module_1.query.filter_by(id= id).first()
+    questions.question_4=True
+    db.session.commit()
+    return render_template("/modules/module1/fluency4.html")
+
+@app.route('/fluency5',methods=["GET", "POST"])
+@login_required
+def fluency5():
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    value_4 = None
+    message= None
+    next= None
+    form= Fluency_5()
+    if form.validate_on_submit():
+        user = current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        attention= test.attention
+        value_1 = form.v1.data
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        value_4 = form.v4.data
+        q1_answers=["johnson", "boris johnson"]
+        q2_answers=["thatcher","margaret thatcher"]
+        q3_answers=["biden","joe biden","joseph biden","jo biden"]
+        q4_answers=["kennedy","john kennedy","john f. kennedy","john f kennedy"]
+        if value_1.lower() in q1_answers:
+            module_score += 1
+            attention += 1 
+        if value_2.lower() in q2_answers:
+            module_score += 1
+            attention += 1
+        if value_3.lower() in q3_answers:
+            module_score += 1
+            attention += 1
+        if value_4.lower() in q4_answers:
+            module_score += 1
+            attention += 1
+        test.attention= attention
+        test.module_1_score= module_score
+        questions.question_5 = True
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency6.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
+    return render_template("/modules/module1/fluency6.html",value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
+    
+           
+           
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)
