@@ -767,10 +767,20 @@ def fluency5():
         next= True
         return render_template("/modules/module1/fluency6.html", value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
-    return render_template("/modules/module1/fluency6.html",value_1=value_1,value_2=value_2,value_3=value_3,
+    return render_template("/modules/module1/fluency5.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
     
-           
+
+@app.route('/fluency6',methods=["GET", "POST"])
+@login_required
+def fluency6():
+    user= current_user
+    id= user.id
+    questions= Module_1.query.filter_by(id= id).first()
+    questions.question_6=True
+    db.session.commit()
+    return render_template("/modules/module1/fluency7.html")
+
            
 
 if __name__ == '__main__':
