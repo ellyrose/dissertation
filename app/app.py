@@ -486,10 +486,23 @@ def fluency1():
         actual_year= actual_date.year
         day_now= calendar.day_name[actual_date.weekday()]
         month_now = calendar.month_name[actual_date.month]
+        winter= ["December", "January", "February"]
+        spring= ["March", "April", "May"]
+        summer= ["June", "July", "August"]
+        autumn= ["September", "October", "November"]
+        season_now= " "
+        if month_now in winter:
+            season_now == "Winter"
+        elif month_now in spring:
+            season_now =="Spring"
+        elif month_now in summer:
+            season_now =="Summer"
+        elif month_now in autumn:
+            season_now =="Automn"
         if day == day_now:
             attention += 1 
             module_score +=1
-        if date == actual_day:
+        if date == range((actual_day-2),(actual_day+2)):
             attention += 1
             module_score +=1
         if month == month_now:
@@ -498,6 +511,11 @@ def fluency1():
         if year == actual_year:
             attention += 1
             module_score +=1
+        if season == season_now:
+            attention += 1
+            module_score +=1
+        
+
         
         
         
