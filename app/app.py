@@ -1,7 +1,7 @@
 from hashlib import new
 from flask import Flask, flash, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime, timedelta, date 
-from flask_sqlalchemy import SQLAlchemy, ForeignKey
+from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, current
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
@@ -132,7 +132,7 @@ class Users(UserMixin, db.Model):
 class Test(db.Model):
     __tablename__ = "test"
 
-    id = db.Column(db.String, ForeignKey('user.id'), primary_key=True )
+    id = db.Column(db.String, db.ForeignKey('users.id'), primary_key=True )
     module_1_score= db.Column(db.Integer, nullable=True)
     module_2_score= db.Column(db.Integer, nullable=True)
     module_3_score= db.Column(db.Integer, nullable=True)
@@ -148,7 +148,7 @@ class Test(db.Model):
         return '<Test {}>'.format(self.id)
 
 
-# db.create_all()
+db.create_all()
 
 login_manager= LoginManager()
 
