@@ -1,9 +1,8 @@
 from hashlib import new
 from flask import Flask, flash, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
-from datetime import datetime
-from datetime import timedelta
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from datetime import datetime, timedelta, date 
+from flask_sqlalchemy import SQLAlchemy, ForeignKey
+from flask_migrate import Migrate, current
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
@@ -11,8 +10,10 @@ import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm,LoggedInResetPasswordForm,AdminEditForm
+from fluency_forms import Fluency_1
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+import calendar
 
 
 
@@ -123,11 +124,29 @@ class Users(UserMixin, db.Model):
         except:
             return None
         return Users.query.get(id)
-           
-
-
+    
+    
     def __repr__(self):
         return '<User {}>'.format(self.id)
+
+class Test(db.Model):
+    __tablename__ = "test"
+
+    id = db.Column(db.String, ForeignKey('user.id'), primary_key=True )
+    module_1_score= db.Column(db.Integer, nullable=True)
+    module_2_score= db.Column(db.Integer, nullable=True)
+    module_3_score= db.Column(db.Integer, nullable=True)
+    module_4_score= db.Column(db.Integer, nullable=True)
+    total_score= db.Column(db.Integer, nullable=True)
+    attention= db.Column(db.Integer, nullable=True)
+    fluency= db.Column(db.Integer, nullable=True)
+    language= db.Column(db.Integer, nullable=True)
+    memory= db.Column(db.Integer, nullable=True)
+    visuospatial= db.Column(db.Integer, nullable=True)
+
+    def __repr__(self):
+        return '<Test {}>'.format(self.id)
+
 
 # db.create_all()
 
@@ -446,6 +465,43 @@ def fluency():
 @app.route('/fluency1')
 @login_required
 def fluency1():
+    day = None
+    date= None
+    month= None
+    year= None
+    season= None
+    form = Fluency_1()
+    if form.validate_on_submit():
+        user = current_user
+        test= Test.query.filter_by(id= user.id).first()
+        module_score= test.module_1_score
+        attention= test.attention
+        day = day.form.data
+        date= date.form.data
+        month= month.form.data
+        year= year.form.data
+        season= season.form.data
+        actual_date= date.today()
+        actual_day= actual_date.day
+        actual_year= actual_date.year
+        day_now= calendar.day_name[actual_date.weekday()]
+        month_now = calendar.month_name[actual_date.month]
+        if day == day_now:
+            attention += 1 
+            module_score +=1
+        if date == actual_day:
+            attention += 1
+            module_score +=1
+        if month == month_now:
+            attention += 1
+            module_score +=1
+        if year == actual_year:
+            attention += 1
+            module_score +=1
+        
+        
+        
+    
     return render_template("/modules/module1/fluency1.html")
 
 if __name__ == '__main__':
