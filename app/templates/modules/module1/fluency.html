@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
-{% block title %} Forgotten Password {% endblock %}
+{% block title %} Fluency Fountain {% endblock %}
 {% block content %}
+<div class="container">
+    <h1 class="text-center">Fluency Fountain</h1>
+    <p>Welcome to Fluency Fountain, the first part of The Mind Garden test.</p>
+    <p>This part of the test includes 10 questions and should take around 10 minutes to take.</p>
+    <p>It will test your memory, attention, language and visual spatial abilities.</p>
+    <p>You will need to take this part of the test in one go, so make sure you are comfortable and 
+        in an evironment that is free from distractions!
+    </p>
+    <p>When you are ready, click below to start.</p>
+
+    <br>
+        <a href="{{url_for('fluency1')}}" class= "button d-block" >Start Test</a> 
+</div>
 
 
 {% endblock %}

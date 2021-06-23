@@ -25,6 +25,7 @@ app.config['SECRET_KEY'] = "hI9t6Bt4Dl1!8F"
 
 #set session time so a user is logged out after 1 hour of inactivity 
 app.config['PERMANENT_SESSION_LIFETIME']= timedelta(minutes=60)
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 
 
@@ -32,6 +33,11 @@ app.config['PERMANENT_SESSION_LIFETIME']= timedelta(minutes=60)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:F41r4cr3/P1pps@localhost/themindgarden'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
+
+#instantiate database 
+
+db = SQLAlchemy(app)
+
 
 #congifure email sending 
 
@@ -42,16 +48,17 @@ app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 
 
-#configure app mail sending 
 
-app.config['MAIL_SUBJECT_PREFIX'] = 'The Mind Garden |'
-app.config['MAIL_SENDER'] = 'The Mind Garden <themindgarden21@gmail.com>'
 
 #initialize mail
 
 mail = Mail(app)
 
-# function to send emails 
+
+#configure app mail sending 
+
+app.config['MAIL_SUBJECT_PREFIX'] = 'The Mind Garden |'
+app.config['MAIL_SENDER'] = 'The Mind Garden <themindgarden21@gmail.com>'
 
 def send_email(to, subject, template, **kwargs):
     msg = Message(app.config['MAIL_SUBJECT_PREFIX'] + subject,
@@ -60,9 +67,7 @@ def send_email(to, subject, template, **kwargs):
     msg.html = render_template(template + '.html', **kwargs)
     mail.send(msg)
 
-#instantiate database 
 
-db = SQLAlchemy(app)
 
 #initialise migrate 
 migrate = Migrate(app, db)
@@ -94,10 +99,7 @@ class Users(UserMixin, db.Model):
     def password(self):
         raise AttributeError("password is not a readable attribute")
 
-    
     @password.setter
-
-    # hash password
     def password(self, password):
         self.password_hash= generate_password_hash(password)
 
@@ -110,7 +112,7 @@ class Users(UserMixin, db.Model):
         
     def generate_reset_token(self, expiration=3600):
         s = Serializer(app.config['SECRET_KEY'], expiration)
-        '''the token is made and the user-id for the user of given email is sent'''
+        '''the user ID is encoded using the secret key, and the token expiration set to 1 hour'''
         return s.dumps({'id': self.id}).decode('utf-8')
 
     @staticmethod
@@ -149,6 +151,7 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
+
 '''ROUTES'''
 
 @app.route('/' , methods=['GET'])
@@ -184,8 +187,9 @@ def createaccount():
             form.email_address.data= " "
             password= form.password_hash.data
             form.password_hash.data= " "
-            hashed_password= generate_password_hash(password)
-            user= Users(first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,password_hash= hashed_password)
+            user= Users(first_name= first_name, last_name= last_name, dob= birthdate,
+            email_address=email_address,password_hash=password)
+            user.password= password
             db.session.add(user)
             db.session.commit()
         else:
@@ -432,7 +436,17 @@ def delete(id):
         flash("There was a problem, please try again.")
         return render_template("admin.html", all_users=all_users)
 
+''' ROUTES FOR MODULE 1 '''
 
+@app.route('/fluency')
+@login_required
+def fluency():
+    return render_template("/modules/module1/fluency.html")
+
+@app.route('/fluency1')
+@login_required
+def fluency1():
+    return render_template("/modules/module1/fluency1.html")
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)

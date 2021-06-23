@@ -16,7 +16,8 @@ class CreateAccountForm(FlaskForm):
 
     birthdate= DateField("Birthdate", validators=[DataRequired()])
 
-    email_address= StringField("Email address", validators=[DataRequired(),Email(message="Your email address is not valid.")])
+    email_address= StringField("Email address", validators=[DataRequired(),
+    Email(message="Your email address is not valid.")])
 
     password_hash = PasswordField('Password', validators=[InputRequired(),
     Length(min=12, max=30, message="Your password must contain at least 12 characters"),
@@ -31,14 +32,16 @@ class CreateAccountForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email_address= StringField("Email address", validators=[DataRequired(),Email(message="Your email address is not valid.")])
+    email_address= StringField("Email address", validators=[DataRequired(),
+    Email(message="Your email address is not valid.")])
 
     password_hash = PasswordField('Password', validators=[DataRequired()])
 
     submit= SubmitField("Submit")
 
 class ForgottenPasswordForm(FlaskForm):
-    email_address= StringField("Email address", validators=[DataRequired(),Email(message="Your email address is not valid.")])
+    email_address= StringField("Email address", validators=[DataRequired(),
+    Email(message="Your email address is not valid.")])
    
     submit= SubmitField("Submit")
 
