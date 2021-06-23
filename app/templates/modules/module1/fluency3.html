@@ -3,34 +3,33 @@
 {% block content %}
 
 <div class="container">
-    <h1 class="text-center">Part 1</h1>
-    
-    <p class= "text-center"> Please answer all questions below then click submit;</p>
-
+    <h1 class="text-center">Part 3</h1>
+    <p1 class= "text-center">In this part of the test, you need to start at 100 and take 7 away, and enter the result in the first box. Keep subtracting 7 and enter the values as you go!</p1>
     <br>
+    <img src=static/100.jpg class="img-fluid mx-auto d-block">
     <form method="POST">
         <div class= "mb-3">
             {{ form.hidden_tag() }}
         </div>
         <div class= "mb-3">
-            {{ form.day.label }}
-            {{ form.day(class="form-control") }}
+            {{ form.v1.label }}
+            {{ form.v1(class="form-control") }}
         </div>
         <div class= "mb-3">
-            {{ form.date.label }}
-            {{ form.date(class="form-control") }}
+            {{ form.v2.label }}
+            {{ form.v2(class="form-control") }}
         </div>
         <div class= "mb-3">
-            {{ form.month.label }}
-            {{ form.month(class="form-control") }}
+            {{ form.v3.label }}
+            {{ form.v3(class="form-control") }}
         </div>
         <div class= "mb-3">
-            {{ form.year.label }}
-            {{ form.year(class="form-control") }}
+            {{ form.v4.label }}
+            {{ form.v4(class="form-control") }}
         </div>
         <div class= "mb-3">
-            {{ form.season.label }}
-            {{ form.season(class="form-control") }}
+            {{ form.v5.label }}
+            {{ form.v5(class="form-control") }}
         </div>
         <br>
         {% if form.errors %}
@@ -55,7 +54,7 @@
 
     {% if next %}
         <br>
-        <a href="{{url_for('fluency2')}}" class= "button d-block" >Next Question</a> 
+        <a href="{{url_for('fluency4')}}" class= "button d-block" >Next Question</a> 
 
     {% endif %}
 

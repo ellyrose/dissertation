@@ -1,6 +1,6 @@
 from wtforms import validators
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField,PasswordField
+from wtforms import StringField, SubmitField, BooleanField,IntegerField
 from wtforms.fields.core import SelectField
 from wtforms.validators import DataRequired,Email,EqualTo,Length,NoneOf,InputRequired, ValidationError
 from wtforms.fields.html5 import DateField
@@ -20,4 +20,28 @@ class Fluency_1(FlaskForm):
     
     submit= SubmitField("Submit")
 
+class Fluency_2(FlaskForm):
+
+    submit= SubmitField("Submit")
+
+class Fluency_3(FlaskForm):
+    v1= IntegerField(label="Answer 1", validators=[DataRequired()])
+    v2= IntegerField(label="Answer 2", validators=[DataRequired()])
+    v3= IntegerField(label="Answer 3", validators=[DataRequired()])
+    v4= IntegerField(label="Answer 4", validators=[DataRequired()])
+    v5= IntegerField(label="Answer 5", validators=[DataRequired()])
+
+    submit= SubmitField("Submit")
+
+class Fluency_4(FlaskForm):
+
+    submit= SubmitField("Submit")
+
+class Fluency_5(FlaskForm):
+    v1= IntegerField(label="Answer 1", validators=[DataRequired()])
+    v2= IntegerField(label="Answer 2", validators=[DataRequired()])
+    v3= IntegerField(label="Answer 3", validators=[DataRequired()])
+    v4= IntegerField(label="Answer 4", validators=[DataRequired()])
+   
+    submit= SubmitField("Submit")
 

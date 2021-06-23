@@ -1,8 +1,10 @@
 from hashlib import new
 from flask import Flask, flash, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
-from datetime import datetime, timedelta, date 
+from datetime import datetime, timedelta, date as dt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import UUID
 from flask_migrate import Migrate, current
+from sqlalchemy.sql.schema import DEFAULT_NAMING_CONVENTION
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
@@ -10,7 +12,7 @@ import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm,LoggedInResetPasswordForm,AdminEditForm
-from fluency_forms import Fluency_1
+from fluency_forms import *
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import calendar
@@ -86,7 +88,7 @@ class Users(UserMixin, db.Model):
 
     __tablename__ = "users"
 
-    id = db.Column(db.String, primary_key=True,default=uuid4)
+    id = db.Column(UUID(as_uuid=True), primary_key=True,default=uuid4)
     first_name= db.Column(db.String(100), nullable=False)
     last_name= db.Column(db.String(100), nullable=False)
     dob = db.Column(db.Date, nullable=False)
@@ -132,17 +134,17 @@ class Users(UserMixin, db.Model):
 class Test(db.Model):
     __tablename__ = "test"
 
-    id = db.Column(db.String, db.ForeignKey('users.id'), primary_key=True )
-    module_1_score= db.Column(db.Integer, nullable=True)
-    module_2_score= db.Column(db.Integer, nullable=True)
-    module_3_score= db.Column(db.Integer, nullable=True)
-    module_4_score= db.Column(db.Integer, nullable=True)
-    total_score= db.Column(db.Integer, nullable=True)
-    attention= db.Column(db.Integer, nullable=True)
-    fluency= db.Column(db.Integer, nullable=True)
-    language= db.Column(db.Integer, nullable=True)
-    memory= db.Column(db.Integer, nullable=True)
-    visuospatial= db.Column(db.Integer, nullable=True)
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    module_1_score= db.Column(db.Integer, default= 0)
+    module_2_score= db.Column(db.Integer, default= 0)
+    module_3_score= db.Column(db.Integer, default= 0)
+    module_4_score= db.Column(db.Integer, default= 0)
+    total_score= db.Column(db.Integer, default= 0)
+    attention= db.Column(db.Integer, default= 0)
+    fluency= db.Column(db.Integer, default= 0)
+    language= db.Column(db.Integer, default= 0)
+    memory= db.Column(db.Integer, default= 0)
+    visuospatial= db.Column(db.Integer, default= 0)
 
     def __repr__(self):
         return '<Test {}>'.format(self.id)
@@ -211,6 +213,11 @@ def createaccount():
             user.password= password
             db.session.add(user)
             db.session.commit()
+            id = str(user.id) 
+            test = Test(id= id)
+            db.session.add(test)
+            db.session.commit()
+
         else:
             ''' if user does exist, display message'''
             message= "An account with that email address already exists"
@@ -462,7 +469,7 @@ def delete(id):
 def fluency():
     return render_template("/modules/module1/fluency.html")
 
-@app.route('/fluency1')
+@app.route('/fluency1',methods=["GET", "POST"])
 @login_required
 def fluency1():
     day = None
@@ -470,57 +477,136 @@ def fluency1():
     month= None
     year= None
     season= None
+    message= None
+    next= None
     form = Fluency_1()
     if form.validate_on_submit():
         user = current_user
-        test= Test.query.filter_by(id= user.id).first()
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        print(test.attention)
         module_score= test.module_1_score
         attention= test.attention
-        day = day.form.data
-        date= date.form.data
-        month= month.form.data
-        year= year.form.data
-        season= season.form.data
-        actual_date= date.today()
+        day = form.day.data
+        date= form.date.data
+        month= form.month.data
+        year= form.year.data
+        season= form.season.data
+        actual_date= dt.today()
         actual_day= actual_date.day
         actual_year= actual_date.year
         day_now= calendar.day_name[actual_date.weekday()]
-        month_now = calendar.month_name[actual_date.month]
+        month_now = str(calendar.month_name[actual_date.month])
         winter= ["December", "January", "February"]
         spring= ["March", "April", "May"]
         summer= ["June", "July", "August"]
         autumn= ["September", "October", "November"]
         season_now= " "
+        print(month_now)
         if month_now in winter:
-            season_now == "Winter"
+            season_now = "Winter"
         elif month_now in spring:
-            season_now =="Spring"
+            season_now ="Spring"
         elif month_now in summer:
-            season_now =="Summer"
+            season_now ="Summer"
         elif month_now in autumn:
-            season_now =="Automn"
+            season_now ="Autumn"
+        print(season)
+        print(season_now)
         if day == day_now:
+            print("day is correct")
             attention += 1 
             module_score +=1
-        if date == range((actual_day-2),(actual_day+2)):
+        print(day)
+        print(day_now)
+        if int(date) in range((actual_day-2),(actual_day+2)):
+            print("date is correct")
             attention += 1
             module_score +=1
+        print(date)
+        print(actual_day)
         if month == month_now:
+            print("month is correct")
             attention += 1
             module_score +=1
-        if year == actual_year:
+        print(month)
+        print(month_now)
+        if int(year) == actual_year:
+            print("year is correct")
             attention += 1
             module_score +=1
+            type(year)
+        print(year)
+        print(actual_year)
         if season == season_now:
+            print("season is correct")
             attention += 1
             module_score +=1
-        
+        test.attention= attention
+        test.module_1_score= module_score
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,message= message, next= next)
+        # except:
+        #     message= "Sorry there was a problem, please try again"
+        #     next= None
+        #     return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,next=next,message= message)
+    return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,next=next,message= message)
 
-        
-        
-        
-    
-    return render_template("/modules/module1/fluency1.html")
+@app.route('/fluency2',methods=["GET", "POST"])
+@login_required
+def fluency2():
+    return render_template("/modules/module1/fluency2.html")
+
+
+@app.route('/fluency3',methods=["GET", "POST"])
+@login_required
+def fluency3():
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    value_4 = None
+    value_5 = None
+    message= None
+    next= None
+    form= Fluency_3()
+    if form.validate_on_submit():
+        user = current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        attention= test.attention
+        value_1 = form.v1.data
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        value_4 = form.v4.data
+        value_5 = form.v5.data
+        if value_1 == 93:
+            module_score += 1
+            attention += 1 
+        if value_2 == 86:
+            module_score += 1
+            attention += 1 
+        if value_3 == 79:
+            module_score += 1
+            attention += 1 
+        if value_4 == 72:
+            module_score += 1
+            attention += 1 
+        if value_5 == 65:
+            module_score += 1
+            attention += 1     
+        test.attention= attention
+        test.module_1_score= module_score
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency3.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,value_5=value_5,form=form,message= message, next= next)
+    return render_template("/modules/module1/fluency3.html",value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,value_5=value_5,form=form,message= message, next= next)
+
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)
