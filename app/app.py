@@ -681,11 +681,11 @@ def fluency3():
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
         attention= test.attention
-        value_1 = form.v1.data.strip(" ")
-        value_2 = form.v2.data.strip(" ")
-        value_3 = form.v3.data.strip(" ")
-        value_4 = form.v4.data.strip(" ")
-        value_5 = form.v5.data.strip(" ")
+        value_1 = form.v1.data
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        value_4 = form.v4.data
+        value_5 = form.v5.data
         if value_1 == 93:
             module_score += 1
             attention += 1 

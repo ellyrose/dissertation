@@ -4,10 +4,23 @@
 
 <div class="container">
     <h1 class="text-center">Part 1</h1>
-    
-    <p class= "text-center"> Please answer all questions below then click submit;</p>
 
+    {% if not next %}
+    <p class= "text-center"> Please answer all questions below then click submit;</p>
+    {% endif %}
     <br>
+    {% if message %}
+    <p class= "text-center"> {{message}} </p>
+
+    {% endif %}
+
+{% if next %}
+    <br>
+    <a href="{{url_for('fluency2')}}" class= "button d-block" >Next Question</a> 
+    <br>
+{% endif %}
+
+{% if not next %}
     <form method="POST">
         <div class= "mb-3">
             {{ form.hidden_tag() }}
@@ -43,21 +56,14 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
-        {% if not next %}
+     
+    
         <button type="submit" class="button">Submit</button>
-        {% endif %}
+
     </form>
-    {% if message %}
-        <p class= "text-center"> {{message}} </p>
 
-    {% endif %}
-
-    {% if next %}
-        <br>
-        <a href="{{url_for('fluency2')}}" class= "button d-block" >Next Question</a> 
-
-    {% endif %}
+{% endif %}
+  
 
     
 </div>
