@@ -1,4 +1,5 @@
 from hashlib import new
+from re import L
 from flask import Flask, flash, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime, timedelta, date as dt
 from flask_sqlalchemy import SQLAlchemy
@@ -540,6 +541,15 @@ def fluency():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    question_1= questions.question_1
+    return render_template("/modules/module1/fluency.html",questions_1= question_1)
+
+@app.route('/fluencycontinue')
+@login_required
+def fluencycontinue():
+    user= current_user
+    id= user.id
+    questions= Module_1.query.filter_by(id= id).first() 
     if questions.question_10:
         message= "You have completed Fluency Fountain!"
         return render_template("/yourgarden.html", message=message)
@@ -561,13 +571,33 @@ def fluency():
         return redirect(url_for('fluency3'))
     elif questions.question_1:
         return redirect(url_for('fluency2'))
-    else:
-         return render_template("/modules/module1/fluency.html")
- 
+
 
 @app.route('/fluency1',methods=["GET", "POST"])
 @login_required
 def fluency1():
+    user = current_user
+    id= user.id
+    test= Test.query.filter_by(id= id).first()
+    test.module_1_score = 0
+    test.attention = 0
+    test.fluency= 0 
+    test.language= 0
+    test.memory= 0
+    test.visuospatial= 0
+    db.session.commit()
+    questions= Module_1.query.filter_by(id= id).first()
+    questions.question_1 = False
+    questions.question_2 = False
+    questions.question_3 = False
+    questions.question_4 = False
+    questions.question_5 = False
+    questions.question_6 = False
+    questions.question_7 = False
+    questions.question_8 = False
+    questions.question_9 = False
+    questions.question_10 = False
+    db.session.commit()
     day = None
     date= None
     month= None
@@ -738,7 +768,7 @@ def fluency5():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        attention= test.attention
+        memory= test.memory
         value_1 = form.v1.data.strip(" ")
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
@@ -749,17 +779,17 @@ def fluency5():
         q4_answers=["kennedy","john kennedy","john f. kennedy","john f kennedy"]
         if value_1.lower() in q1_answers:
             module_score += 1
-            attention += 1 
+            memory += 1 
         if value_2.lower() in q2_answers:
             module_score += 1
-            attention += 1
+            memory += 1
         if value_3.lower() in q3_answers:
             module_score += 1
-            attention += 1
+            memory += 1
         if value_4.lower() in q4_answers:
             module_score += 1
-            attention += 1
-        test.attention= attention
+            memory += 1
+        test.memory= memory
         test.module_1_score= module_score
         questions.question_5 = True
         db.session.commit()
@@ -806,7 +836,7 @@ def fluency7():
         questions= Module_1.query.filter_by(id= id).first()
         questions.question_7=True
         module_score= test.module_1_score
-        attention= test.attention
+        language= test.language
         value_1 = form.v1.data.strip(" ")
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
@@ -833,41 +863,44 @@ def fluency7():
         q12_answers=[" piano accordion","accordian","squeeze box"]
         if value_1.lower() in q1_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
             print("q1 right")
         if value_2.lower() in q2_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_3.lower() in q3_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_4.lower() in q4_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_5.lower() in q5_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_6.lower() in q6_answers:
             module_score += 1
-            attention += 1 
+            language+= 1 
         if value_7.lower() in q7_answers:
             module_score += 1
-            attention += 1 
+            language+= 1 
         if value_8.lower() in q8_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_9.lower() in q9_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_10.lower() in q10_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_11.lower() in q11_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
         if value_12.lower() in q12_answers:
             module_score += 1
-            attention += 1 
+            language += 1 
+        test.language= language
+        test.module_1_score= module_score
+        questions.question_7 = True
         db.session.commit()
         message= "Your answers have been accepted, please click next to continue"
         next= True
@@ -896,25 +929,25 @@ def fluency8():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        attention= test.attention
+        language= test.language
         value_1 = int(form.v1.data)
         value_2 = int(form.v2.data)
         value_3 = int(form.v3.data)
         value_4 = int(form.v4.data)
         if value_1 == 10:
             module_score += 1
-            attention += 1 
+            language += 1 
             print("q1 right")
         if value_2 == 3:
             module_score += 1
-            attention += 1
+            language += 1
         if value_3 == 4:
             module_score += 1
-            attention += 1
+            language += 1
         if value_4 == 5:
             module_score += 1
-            attention += 1
-        test.attention= attention
+            language += 1
+        test.language= language
         test.module_1_score= module_score
         questions.question_8 = True
         db.session.commit()
