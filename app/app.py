@@ -765,7 +765,7 @@ def fluency5():
         db.session.commit()
         message= "Your answers have been accepted, please click next to continue"
         next= True
-        return render_template("/modules/module1/fluency6.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        return render_template("/modules/module1/fluency5.html", value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
     return render_template("/modules/module1/fluency5.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
@@ -779,9 +779,105 @@ def fluency6():
     questions= Module_1.query.filter_by(id= id).first()
     questions.question_6=True
     db.session.commit()
-    return render_template("/modules/module1/fluency7.html")
+    return render_template("/modules/module1/fluency6.html")
 
-           
+@app.route('/fluency7',methods=["GET", "POST"])
+@login_required
+def fluency7():
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    value_4 = None
+    value_5 = None
+    value_6 = None
+    value_7 = None
+    value_8 = None
+    value_9 = None
+    value_10 = None
+    value_11 = None
+    value_12 = None
+    message= None
+    next= None
+    form= Fluency_7()
+    if form.validate_on_submit():
+        user= current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        questions.question_6=True
+        module_score= test.module_1_score
+        attention= test.attention
+        value_1 = form.v1.data.strip(" ")
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        value_4 = form.v4.data
+        value_5 = form.v5.data
+        value_6 = form.v6.data
+        value_7 = form.v7.data
+        value_8 = form.v8.data
+        value_9 = form.v9.data
+        value_10 = form.v10.data
+        value_11 = form.v11.data
+        value_12 = form.v12.data
+        q1_answers=["spoon"]
+        q2_answers=["book"]
+        q3_answers=["kangaroo","wallaby"]
+        q4_answers=["penguin"]
+        q5_answers=["anchor"]
+        q6_answers=["camel","dromedary"]
+        q7_answers=["harp"]
+        q8_answers=["rhino","rhinoceros"]
+        q9_answers=["barrel","keg","tub"]
+        q10_answers=["crown"]
+        q11_answers=["crocodile","alligator"]
+        q12_answers=[" piano accordion","accordian","squeeze box"]
+        if value_1.lower() in q1_answers:
+            module_score += 1
+            attention += 1 
+            print("q1 right")
+        if value_2.lower() in q2_answers:
+            module_score += 1
+            attention += 1 
+        if value_3.lower() in q3_answers:
+            module_score += 1
+            attention += 1 
+        if value_4.lower() in q4_answers:
+            module_score += 1
+            attention += 1 
+        if value_5.lower() in q5_answers:
+            module_score += 1
+            attention += 1 
+        if value_6.lower() in q6_answers:
+            module_score += 1
+            attention += 1 
+        if value_7.lower() in q7_answers:
+            module_score += 1
+            attention += 1 
+        if value_8.lower() in q8_answers:
+            module_score += 1
+            attention += 1 
+        if value_9.lower() in q9_answers:
+            module_score += 1
+            attention += 1 
+        if value_10.lower() in q10_answers:
+            module_score += 1
+            attention += 1 
+        if value_11.lower() in q11_answers:
+            module_score += 1
+            attention += 1 
+        if value_12.lower() in q12_answers:
+            module_score += 1
+            attention += 1 
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency7.html", value_1 =value_1, value_2 = value_2,value_3 = value_3,value_4=value_4,
+    value_5 = value_5, value_6 = value_6, value_7 = value_7, value_8 = value_8, value_9 = value_9, value_10 = value_10,value_11 = value_11,
+    value_12 = value_12, message= message,next= next,form= form)
+    return render_template("/modules/module1/fluency7.html", value_1 =value_1, value_2 = value_2,value_3 = value_3,value_4=value_4,
+    value_5 = value_5, value_6 = value_6, value_7 = value_7, value_8 = value_8, value_9 = value_9, value_10 = value_10,value_11 = value_11,
+    value_12 = value_12, message= message,next= next,form= form)
+          
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)

@@ -3,59 +3,18 @@
 {% block content %}
 
 <div class="container">
-    <h1 class="text-center">Part 888</h1>
-    <p1 class= "text-center">In this part of the test, you simply need to asnwer the questions below.</p1>
-    <p1 class= "text-center">Only surnames or full names will be accepted, so please do not enter nick-names or abbreviations.</p1>
+    
+    <h1 class="text-center">Part 6</h1>
+    
+    <p class= "text-center"> Please answer all questions below then click submit;</p>
+
     <br>
-    <form method="POST">
-        <div class= "mb-3">
-            {{ form.hidden_tag() }}
-        </div>
-        <div class= "mb-3">
-            {{ form.v1.label }}
-            {{ form.v1(class="form-control") }}
-        </div>
-        <div class= "mb-3">
-            {{ form.v2.label }}
-            {{ form.v2(class="form-control") }}
-        </div>
-        <div class= "mb-3">
-            {{ form.v3.label }}
-            {{ form.v3(class="form-control") }}
-        </div>
-        <div class= "mb-3">
-            {{ form.v4.label }}
-            {{ form.v4(class="form-control") }}
-        </div>
-        <br>
-        {% if form.errors %}
-            <p>Sorry, the details could not be processed because of the following errors: </p>
-            <ul class="errors">
-                {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-                    {% for error in field_errors %}
-                        <li> {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <a href="{{url_for('fluency7')}}" class= "button d-block" >Next Question</a> 
 
-        {% if not next %}
-        <button type="submit" class="button">Submit</button>
-        {% endif %}
-    </form>
-    {% if message %}
-        <p class= "text-center"> {{message}} </p>
-
-    {% endif %}
-
-    {% if next %}
-        <br>
-        <a href="{{url_for('fluency6')}}" class= "button d-block" >Next Question</a> 
-
-    {% endif %}
+</div>
 
     
-</div>
+
 
 
 {% endblock %}

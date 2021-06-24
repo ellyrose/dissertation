@@ -45,3 +45,23 @@ class Fluency_5(FlaskForm):
    
     submit= SubmitField("Submit")
 
+class Fluency_6(FlaskForm):
+
+    submit= SubmitField("Submit")
+
+
+class Fluency_7(FlaskForm):
+    v1= StringField(label="Name of item 1:", validators=[DataRequired()])
+    v2= StringField(label="Name of item 2:", validators=[DataRequired()])
+    v3= StringField(label="Name of item 3:", validators=[DataRequired()])
+    v4= StringField(label="Name of item 4:", validators=[DataRequired()])
+    v5= StringField(label="Name of item 5:", validators=[DataRequired()])
+    v6= StringField(label="Name of item 6:", validators=[DataRequired()])
+    v7= StringField(label="Name of item 7:", validators=[DataRequired()])
+    v8= StringField(label="Name of item 8:", validators=[DataRequired()])
+    v9= StringField(label="Name of item 9:", validators=[DataRequired()])
+    v10= StringField(label="Name of item 10:", validators=[DataRequired()])
+    v11= StringField(label="Name of item 11:", validators=[DataRequired()])
+    v12= StringField(label="Name of item 12:", validators=[DataRequired()])
+
+    submit= SubmitField("Submit")
