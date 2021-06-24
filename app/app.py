@@ -307,7 +307,7 @@ def login():
     user=None
     form= LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email_address=form.email_address.data).first()
+        user = Users.query.filter_by(email_address=form.email_address.data.strip(" ")).first()
         if user is not None and user.verify_password(form.password_hash.data):
             login_user(user ,remember=False)
             home = url_for('index')
@@ -681,11 +681,11 @@ def fluency3():
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
         attention= test.attention
-        value_1 = form.v1.data
-        value_2 = form.v2.data
-        value_3 = form.v3.data
-        value_4 = form.v4.data
-        value_5 = form.v5.data
+        value_1 = form.v1.data.strip(" ")
+        value_2 = form.v2.data.strip(" ")
+        value_3 = form.v3.data.strip(" ")
+        value_4 = form.v4.data.strip(" ")
+        value_5 = form.v5.data.strip(" ")
         if value_1 == 93:
             module_score += 1
             attention += 1 
@@ -739,10 +739,10 @@ def fluency5():
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
         attention= test.attention
-        value_1 = form.v1.data
-        value_2 = form.v2.data
-        value_3 = form.v3.data
-        value_4 = form.v4.data
+        value_1 = form.v1.data.strip(" ")
+        value_2 = form.v2.data.strip(" ")
+        value_3 = form.v3.data.strip(" ")
+        value_4 = form.v4.data.strip(" ")
         q1_answers=["johnson", "boris johnson"]
         q2_answers=["thatcher","margaret thatcher"]
         q3_answers=["biden","joe biden","joseph biden","jo biden"]
@@ -808,17 +808,17 @@ def fluency7():
         module_score= test.module_1_score
         attention= test.attention
         value_1 = form.v1.data.strip(" ")
-        value_2 = form.v2.data
-        value_3 = form.v3.data
-        value_4 = form.v4.data
-        value_5 = form.v5.data
-        value_6 = form.v6.data
-        value_7 = form.v7.data
-        value_8 = form.v8.data
-        value_9 = form.v9.data
-        value_10 = form.v10.data
-        value_11 = form.v11.data
-        value_12 = form.v12.data
+        value_2 = form.v2.data.strip(" ")
+        value_3 = form.v3.data.strip(" ")
+        value_4 = form.v4.data.strip(" ")
+        value_5 = form.v5.data.strip(" ")
+        value_6 = form.v6.data.strip(" ")
+        value_7 = form.v7.data.strip(" ")
+        value_8 = form.v8.data.strip(" ")
+        value_9 = form.v9.data.strip(" ")
+        value_10 = form.v10.data.strip(" ")
+        value_11 = form.v11.data.strip(" ")
+        value_12 = form.v12.data.strip(" ")
         q1_answers=["spoon"]
         q2_answers=["book"]
         q3_answers=["kangaroo","wallaby"]
