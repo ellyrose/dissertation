@@ -958,6 +958,53 @@ def fluency8():
     return render_template("/modules/module1/fluency8.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
 
+
+@app.route('/fluency9',methods=["GET", "POST"])
+@login_required
+def fluency9():
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    value_4 = None
+    message= None
+    next= None
+    form= Fluency_9()
+    if form.validate_on_submit():
+        user = current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        visuospatial= test.visuospatial
+        value_1 = int(form.v1.data)
+        value_2 = int(form.v2.data)
+        value_3 = int(form.v3.data)
+        value_4 = int(form.v4.data)
+        if value_1 == 8:
+            module_score += 1
+            visuospatial += 1 
+            print("q1 right")
+        if value_2 == 10:
+            module_score += 1
+            visuospatial += 1
+        if value_3 == 7:
+            module_score += 1
+            visuospatial += 1
+        if value_4 == 9:
+            module_score += 1
+            visuospatial += 1
+        test.visuospatial= visuospatial
+        test.module_1_score= module_score
+        questions.question_9 = True
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency9.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
+    return render_template("/modules/module1/fluency9.html",value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
+
+
 if __name__ == '__main__':
     app.run(port=80, debug=True)
    

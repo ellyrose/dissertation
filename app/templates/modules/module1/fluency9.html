@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %} Fluency Fountain {% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center">Part 9</h1>
+
+    {% if message %}
+    <p class= "text-center"> {{message}} </p>
+
+{% endif %}
+
+{% if next %}
+    <br>
+    <a href="{{url_for('fluency10')}}" class= "button d-block" >Final Question</a> 
+
+{% endif %}
+
+{% if not next %}
+
+    <p class= "text-center">For this section, you are required to count the dots in each square, without pointing at them!</p>
+    <p class= "text-center">Enter the number of dots in each image, then click submit when you are ready.</p>
+    <br>
+    <br>
+
+    <form method="POST" class="pform">
+        <div class= "col-md-5">
+            {{ form.hidden_tag() }}
+        </div>
+        <div class= "row">
+            <div class= "col-md-5">
+                <img src='static/dots1.jpg' class="img-thumbnail image" >
+                <br><br>
+                {{ form.v1.label }}
+                {{ form.v1(class="form-control") }}
+            </div>
+            <br>
+            <div class= "col-md-5">
+                <img src='static/dots2.jpg' class="img-thumbnail image">
+                <br><br>
+                {{ form.v2.label }}
+                {{ form.v2(class="form-control") }}
+            </div>
+            <br>
+        </div>
+        <br><br>
+        <div class= "row">
+            <div class= "col-md-5">
+                <img src='static/dots3.jpg' class="img-thumbnail image">
+                <br> <br>
+                {{ form.v3.label }}
+                {{ form.v3(class="form-control") }}
+            </div>
+            <br>
+            <div class= "col-md-5">
+                <img src='static/dots4.jpg'class="img-thumbnail image">
+                <br> <br>
+                {{ form.v4.label }}
+                {{ form.v4(class="form-control") }}
+            </div>
+            <br>
+        </div>
+        <br>
+        {% if form.errors %}
+            <p>Sorry, the details could not be processed because of the following errors: </p>
+            <ul class="errors">
+                {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                    {% for error in field_errors %}
+                        <li> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+     
+        <br>
+        <button type="submit" class="button">Submit</button>
+     
+    </form>
+
+{% endif %}  
+
+    
+</div>
+
+
+{% endblock %}

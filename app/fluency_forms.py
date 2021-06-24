@@ -74,3 +74,12 @@ class Fluency_8(FlaskForm):
     v4= SelectField(label="Which item has a nautical connection?", validators=[DataRequired()], choices=OPTIONS)
    
     submit= SubmitField("Submit")
+
+
+class Fluency_9(FlaskForm):
+    v1= IntegerField(label="Number of dots in image 1", validators=[DataRequired()])
+    v2= IntegerField(label="Number of dots in image 2", validators=[DataRequired()])
+    v3= IntegerField(label="Number of dots in image 3", validators=[DataRequired()])
+    v4= IntegerField(label="Number of dots in image 4", validators=[DataRequired()])
+
+    submit= SubmitField("Submit")
