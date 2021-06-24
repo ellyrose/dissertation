@@ -43,10 +43,7 @@ ul.navbar-nav a{
   .pform{
     width:75%;
   }
-  /* .image{
-    width:80%;
-    height: 80%;
-  } */
+
 
   h1 {
       color: #66697c !important;
@@ -65,7 +62,6 @@ ul.navbar-nav a{
 }
 
 form{
-
     width: 40%;
     margin:auto;
 }

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %} Fluency Fountain {% endblock %}
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center">Part 8</h1>
+
+    {% if message %}
+    <p class= "text-center"> {{message}} </p>
+
+{% endif %}
+
+{% if next %}
+    <br>
+    <a href="{{url_for('fluency9')}}" class= "button d-block" >Next Question</a> 
+
+{% endif %}
+
+{% if not next %}
+
+    <p class= "text-center">Take another look at the images and answer the qestions below:</p>
+    <br>
+    <br>
+
+
+        <div class= "row">
+            <div class= "col-md-3">
+                <p>Item 1</p>
+                <img src='static/spoon.jpg' class="img-thumbnail image" >
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 2</p>
+                <img src='static/book.jpg' class="img-thumbnail image">
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 3</p>
+                <img src='static/kangaroo.jpg' class="img-thumbnail image">
+            </div>
+            <br>
+        </div>
+        <br>
+        <div class= "row">
+            <div class= "col-md-3">
+                <p>Item 4</p>
+                <img src='static/penguin.jpg'class="img-thumbnail image">
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 5</p>
+                <img src='static/anchor.jpg'class="img-thumbnail image">
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 6</p>
+                <img src='static/camel.jpg'class="img-thumbnail image">
+            </div>
+            <br>
+        </div>
+        <br><br>
+        <div class= "row">
+            <div class= "col-md-3">
+                <p>Item 7</p>
+                <img src='static/harp.jpg'class="img-thumbnail image">
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 8</p>
+                <img src='static/rhino.jpg'class="img-thumbnail image">
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 9</p>
+                <img src='static/barrel.jpg'class="img-thumbnail image">
+            </div>
+            <br>
+        </div>
+        <br><br>
+        <div class= "row">
+            <div class= "col-md-3">
+                <p>Item 10</p>
+                <img src='static/crown.png'class="img-thumbnail">
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 11</p>
+                <img src='static/croc.jpg'class="img-thumbnail">
+            </div>
+            <br>
+            <div class= "col-md-3">
+                <p>Item 12</p>
+                <img src='static/acc.jpg'class="img-thumbnail">
+           </div>
+        </div>
+        <br>
+        <form method="POST">
+            <div class= "mb-3">
+                {{ form.hidden_tag() }}
+            </div>
+            <div class= "mb-3">
+                {{ form.v1.label }}
+                {{ form.v1(class="form-control") }}
+            </div>
+            <div class= "mb-3">
+                {{ form.v2.label }}
+                {{ form.v2(class="form-control") }}
+            </div>
+            <div class= "mb-3">
+                {{ form.v3.label }}
+                {{ form.v3(class="form-control") }}
+            </div>
+            <div class= "mb-3">
+                {{ form.v4.label }}
+                {{ form.v4(class="form-control") }}
+            </div>
+        <br>
+        {% if form.errors %}
+            <p>Sorry, the details could not be processed because of the following errors: </p>
+            <ul class="errors">
+                {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                    {% for error in field_errors %}
+                        <li> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+     
+        <br>
+        <button type="submit" class="button">Submit</button>
+     
+    </form>
+
+{% endif %}  
+
+    
+</div>
+
+
+{% endblock %}

@@ -804,7 +804,7 @@ def fluency7():
         id= user.id
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
-        questions.question_6=True
+        questions.question_7=True
         module_score= test.module_1_score
         attention= test.attention
         value_1 = form.v1.data.strip(" ")
@@ -878,6 +878,52 @@ def fluency7():
     value_5 = value_5, value_6 = value_6, value_7 = value_7, value_8 = value_8, value_9 = value_9, value_10 = value_10,value_11 = value_11,
     value_12 = value_12, message= message,next= next,form= form)
           
+
+
+@app.route('/fluency8',methods=["GET", "POST"])
+@login_required
+def fluency8():
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    value_4 = None
+    message= None
+    next= None
+    form= Fluency_8()
+    if form.validate_on_submit():
+        user = current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        attention= test.attention
+        value_1 = int(form.v1.data)
+        value_2 = int(form.v2.data)
+        value_3 = int(form.v3.data)
+        value_4 = int(form.v4.data)
+        if value_1 == 10:
+            module_score += 1
+            attention += 1 
+            print("q1 right")
+        if value_2 == 3:
+            module_score += 1
+            attention += 1
+        if value_3 == 4:
+            module_score += 1
+            attention += 1
+        if value_4 == 5:
+            module_score += 1
+            attention += 1
+        test.attention= attention
+        test.module_1_score= module_score
+        questions.question_8 = True
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency8.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
+    return render_template("/modules/module1/fluency8.html",value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)

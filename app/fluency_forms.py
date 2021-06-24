@@ -10,6 +10,7 @@ DATE=range(1,32)
 MONTH= ["January","February","March","April","May","June","July","August","September","October","November","December"]
 YEAR= range(1950,2051)
 SEASON= ["Spring","Summer", "Automn","Winter"]
+OPTIONS= range(1,13)
 
 class Fluency_1(FlaskForm):
     day= SelectField(label="What day is it?", validators=[DataRequired()], choices=DAYS)
@@ -64,4 +65,12 @@ class Fluency_7(FlaskForm):
     v11= StringField(label="Name of item 11:", validators=[DataRequired()])
     v12= StringField(label="Name of item 12:", validators=[DataRequired()])
 
+    submit= SubmitField("Submit")
+
+class Fluency_8(FlaskForm):
+    v1= SelectField(label="Which item is associated with the monarchy?", validators=[DataRequired()], choices=OPTIONS)
+    v2= SelectField(label="Which item is a marcupial?", validators=[DataRequired()], choices=OPTIONS)
+    v3= SelectField(label="Which item can be found in the Antartic?", validators=[DataRequired()], choices=OPTIONS)
+    v4= SelectField(label="Which item has a nautical connection?", validators=[DataRequired()], choices=OPTIONS)
+   
     submit= SubmitField("Submit")
