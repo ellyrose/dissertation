@@ -1,6 +1,6 @@
 from hashlib import new
 from re import L
-from flask import Flask, flash, jsonify, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
+from flask import Flask, flash, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime, timedelta, date as dt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
@@ -624,22 +624,11 @@ def fluency1():
         actual_year= actual_date.year
         day_now= calendar.day_name[actual_date.weekday()]
         month_now = str(calendar.month_name[actual_date.month])
-        winter= ["December", "January", "February"]
-        spring= ["March", "April", "May"]
-        summer= ["June", "July", "August"]
+        winter= ["November","December", "January", "February"]
+        spring= ["March", "April", "May","June"]
+        summer= ["June", "July", "August","September"]
         autumn= ["September", "October", "November"]
-        season_now= " "
         print(month_now)
-        if month_now in winter:
-            season_now = "Winter"
-        elif month_now in spring:
-            season_now ="Spring"
-        elif month_now in summer:
-            season_now ="Summer"
-        elif month_now in autumn:
-            season_now ="Autumn"
-        print(season)
-        print(season_now)
         if day == day_now:
             print("day is correct")
             attention += 1 
@@ -665,21 +654,41 @@ def fluency1():
             type(year)
         print(year)
         print(actual_year)
-        if season == season_now:
-            print("season is correct")
-            attention += 1
-            module_score +=1
+        if season == "Winter":
+            if month_now in winter:
+                print("season is correct")
+                attention += 1
+                module_score +=1
+            else:
+                pass
+        elif season == "Spring":
+            if month_now in spring:
+                print("season is correct")
+                attention += 1
+                module_score +=1
+            else:
+                pass
+        elif season == "Summer":
+            if month_now in summer:
+                print("season is correct")
+                attention += 1
+                module_score +=1
+            else:
+                pass
+        elif season == "Autumn":
+            if month_now in autumn:
+                print("season is correct")
+                attention += 1
+                module_score +=1
+            else:
+                pass
         test.attention= attention
         test.module_1_score= module_score
         questions.question_1= True
         db.session.commit()
         message= "Your answers have been accepted, please click next to continue"
         next= True
-        return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,message= message, next= next)
-        # except:
-        #     message= "Sorry there was a problem, please try again"
-        #     next= None
-        #     return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,next=next,message= message)
+        render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,message= message, next= next)
     return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,next=next,message= message)
 
 @app.route('/fluency2',methods=["GET", "POST"])
@@ -814,6 +823,11 @@ def fluency6():
 @app.route('/fluency7',methods=["GET", "POST"])
 @login_required
 def fluency7():
+    # user= current_user
+    # id= user.id
+    # question= Module_1.query.filter_by(id= id).first()
+    # if question.question_7:
+    #     return redirect(request.referrer)
     value_1 = None
     value_2 = None
     value_3 = None
@@ -851,16 +865,16 @@ def fluency7():
         value_12 = form.v12.data.strip(" ")
         q1_answers=["spoon"]
         q2_answers=["book"]
-        q3_answers=["kangaroo","wallaby"]
-        q4_answers=["penguin"]
-        q5_answers=["anchor"]
-        q6_answers=["camel","dromedary"]
+        q3_answers=["kangaroo","kangaro","kangeroo","kangero","walaby","waleby","wallaby"]
+        q4_answers=["penguin","pengin","pengun","pegine","pengune"]
+        q5_answers=["anchor","ancher","anchar","ancer","ancar","ancor"]
+        q6_answers=["camel","dromedary","camal","cammel","cammal","camle","cammle"]
         q7_answers=["harp"]
-        q8_answers=["rhino","rhinoceros"]
-        q9_answers=["barrel","keg","tub"]
+        q8_answers=["rhino","rhinoceros","ryno","rino","rinoserous","rinocerous","rinoseros","rinoceros","rhinocerous","rhinoserous"]
+        q9_answers=["barrel","keg","tub","barel","barall","baral"]
         q10_answers=["crown"]
-        q11_answers=["crocodile","alligator"]
-        q12_answers=[" piano accordion","accordian","squeeze box"]
+        q11_answers=["crocodile","alligator","crocadile","crocerdile"]
+        q12_answers=["piano accordion","accordian","squeeze box","acordian","piano acordian"]
         if value_1.lower() in q1_answers:
             module_score += 1
             language += 1 
