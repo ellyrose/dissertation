@@ -232,6 +232,8 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 
+        
+
 '''ROUTES'''
 
 @app.route('/' , methods=['GET'])
@@ -705,6 +707,13 @@ def fluency2():
 @app.route('/fluency3',methods=["GET", "POST"])
 @login_required
 def fluency3():
+    user= current_user
+    id= user.id
+    question= Module_1.query.filter_by(id= id).first()
+    if question.question_3:
+        return redirect(url_for('yourgarden'))
+    if not question.question_1 or not question.question_2:
+        return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
     value_3 = None
@@ -764,6 +773,13 @@ def fluency4():
 @app.route('/fluency5',methods=["GET", "POST"])
 @login_required
 def fluency5():
+    user= current_user
+    id= user.id
+    question= Module_1.query.filter_by(id= id).first()
+    if question.question_5:
+        return redirect(url_for('yourgarden'))
+    if not question.question_1 or not question.question_2 or not question.question_4 :
+        return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
     value_3 = None
@@ -823,11 +839,13 @@ def fluency6():
 @app.route('/fluency7',methods=["GET", "POST"])
 @login_required
 def fluency7():
-    # user= current_user
-    # id= user.id
-    # question= Module_1.query.filter_by(id= id).first()
-    # if question.question_7:
-    #     return redirect(request.referrer)
+    user= current_user
+    id= user.id
+    question= Module_1.query.filter_by(id= id).first()
+    if question.question_7:
+        return redirect(url_for('yourgarden'))
+    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 :
+        return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
     value_3 = None
@@ -930,6 +948,15 @@ def fluency7():
 @app.route('/fluency8',methods=["GET", "POST"])
 @login_required
 def fluency8():
+    user= current_user
+    id= user.id
+    question= Module_1.query.filter_by(id= id).first()
+    '''used to stop users skipping back'''
+    if question.question_8:
+        return redirect(url_for('yourgarden'))
+    ''' used to stop users skipping forward'''
+    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7:
+        return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
     value_3 = None
@@ -976,6 +1003,13 @@ def fluency8():
 @app.route('/fluency9',methods=["GET", "POST"])
 @login_required
 def fluency9():
+    user= current_user
+    id= user.id
+    question= Module_1.query.filter_by(id= id).first()
+    if question.question_9:
+        return redirect(url_for('yourgarden'))
+    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8:
+        return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
     value_3 = None
