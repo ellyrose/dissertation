@@ -165,6 +165,7 @@ class Module_1(db.Model):
     question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_9= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_10= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
     def __repr__(self):
@@ -182,6 +183,7 @@ class Module_2(db.Model):
     question_6= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_7= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
     def __repr__(self):
@@ -194,6 +196,7 @@ class Module_3(db.Model):
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
     def __repr__(self):
@@ -204,12 +207,13 @@ class Module_4(db.Model):
 
     id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
     def __repr__(self):
         return '<Module_4{}>'.format(self.id)
 
-db.create_all()
+# db.create_all()
 
 login_manager= LoginManager()
 
@@ -231,7 +235,9 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
-
+def add_score(test):
+    total= (test.module_1_score + test.module_2_score + test.module_3_score + test.module_4_score)
+    return total
         
 
 '''ROUTES'''
@@ -397,7 +403,18 @@ def loggedinresetpassword():
 @app.route('/yourgarden')
 @login_required
 def yourgarden():
-    return render_template("yourgarden.html")
+    user = current_user
+    id = user.id 
+    fluency= Module_1.query.filter_by(id= id).first()
+    fluency_completed = fluency.completed
+    language= Module_2.query.filter_by(id= id).first()
+    language_completed = language.completed
+    memory= Module_3.query.filter_by(id= id).first()
+    memory_completed = memory.completed
+    visual= Module_4.query.filter_by(id= id).first()
+    visual_completed = visual.completed
+    return render_template("yourgarden.html",fluency_completed= fluency_completed,language_completed=language_completed,
+    memory_completed=memory_completed,visual_completed=visual_completed)
 
 
 @app.route('/account',methods=["GET", "POST"])
@@ -544,7 +561,8 @@ def fluency():
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
     question_1= questions.question_1
-    return render_template("/modules/module1/fluency.html",questions_1= question_1)
+    completed= questions.completed
+    return render_template("/modules/module1/fluency.html",questions_1= question_1, completed=completed)
 
 @app.route('/fluencycontinue')
 @login_required
@@ -599,6 +617,7 @@ def fluency1():
     questions.question_8 = False
     questions.question_9 = False
     questions.question_10 = False
+    questions.completed= False
     db.session.commit()
     day = None
     date= None
@@ -1052,6 +1071,60 @@ def fluency9():
     return render_template("/modules/module1/fluency9.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
 
+@app.route('/fluency10',methods=["GET", "POST"])
+@login_required
+def fluency10():
+    user= current_user
+    id= user.id
+    question= Module_1.query.filter_by(id= id).first()
+    if question.question_10:
+        return redirect(url_for('yourgarden'))
+    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8 or not question.question_9:
+        return redirect(url_for('yourgarden'))
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    value_4 = None
+    message= None
+    next= None
+    form= Fluency_10()
+    if form.validate_on_submit():
+        user = current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        visuospatial= test.visuospatial
+        value_1 = form.v1.data
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        value_4 = form.v4.data
+        if value_1.upper() == "K":
+            module_score += 1
+            visuospatial += 1 
+            print("q1 right")
+        if value_2.upper() == "M":
+            module_score += 1
+            visuospatial += 1
+        if value_3.upper() == "A":
+            module_score += 1
+            visuospatial += 1
+        if value_4.upper() == "T":
+            module_score += 1
+            visuospatial += 1
+        test.visuospatial= visuospatial
+        test.module_1_score= module_score
+        test.total_score = add_score(test)
+        print(test.total_score)
+        questions.question_10 = True
+        questions.completed= True
+        db.session.commit()
+        message= "Your answers have been accepted, thank you for completing Fluency Fointain! Please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency10.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
+    return render_template("/modules/module1/fluency10.html",value_1=value_1,value_2=value_2,value_3=value_3,
+        value_4=value_4,form=form,message= message, next= next)
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)
