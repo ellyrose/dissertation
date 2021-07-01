@@ -718,9 +718,50 @@ def fluency2():
     user= current_user 
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
-    questions.question_2= True
-    db.session.commit()
-    return render_template("/modules/module1/fluency2.html")
+    if questions.question_2:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1:
+        return redirect(url_for('yourgarden'))
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    message= None
+    next= None
+    form= Fluency_2()
+    if form.validate_on_submit():
+        user = current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        attention= test.attention
+        value_1 = form.v1.data
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        answers_1= ["lemon","leman","liman","limon"]
+        answers_2= ["key","kee","ki","kie"]
+        answers_3= ["ball","bal","baul"]
+        if value_1.lower() in answers_1:
+            module_score += 1
+            attention += 1 
+        if value_2.lower() in answers_2:
+            module_score += 1
+            attention += 1 
+        if value_3.lower() in answers_3:
+            module_score += 1
+            attention += 1 
+        test.attention= attention
+        test.module_1_score= module_score
+        questions.question_2= True
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency2.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        form=form,message= message, next= next)
+    return render_template("/modules/module1/fluency2.html",value_1=value_1,value_2=value_2,value_3=value_3,
+        form=form,message= message, next= next)
+    
+
 
 
 @app.route('/fluency3',methods=["GET", "POST"])
@@ -782,9 +823,47 @@ def fluency3():
 @app.route('/fluency4',methods=["GET", "POST"])
 @login_required
 def fluency4():
-    user= current_user
-    id= user.id
-    questions= Module_1.query.filter_by(id= id).first()
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    message= None
+    next= None
+    form= Fluency_2()
+    if form.validate_on_submit():
+        user = current_user
+        id= user.id
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        memory= test.memory
+        value_1 = form.v1.data
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        answers_1= ["lemon","leman","liman","limon"]
+        answers_2= ["key","kee","ki","kie"]
+        answers_3= ["ball","bal","baul"]
+        if value_1.lower() in answers_1:
+            module_score += 1
+            memory += 1 
+        if value_2.lower() in answers_2:
+            module_score += 1
+            memory += 1 
+        if value_3.lower() in answers_3:
+            module_score += 1
+            memory += 1 
+        test.memory= memory
+        test.module_1_score= module_score
+        questions.question_4= True
+        db.session.commit()
+        message= "Your answers have been accepted, please click next to continue"
+        next= True
+        return render_template("/modules/module1/fluency4.html", value_1=value_1,value_2=value_2,value_3=value_3,
+        form=form,message= message, next= next)
+    return render_template("/modules/module1/fluency4.html",value_1=value_1,value_2=value_2,value_3=value_3,
+        form=form,message= message, next= next)
+    
+
+
     questions.question_4=True
     db.session.commit()
     return render_template("/modules/module1/fluency4.html")

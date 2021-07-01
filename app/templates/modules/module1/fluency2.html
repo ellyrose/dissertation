@@ -2,15 +2,69 @@
 {% block title %} Fluency Fountain {% endblock %}
 {% block content %}
 
-<div class="container">
-    <h1 class="text-center">Part 2</h1>
+    <div class="container">
+        {% if message %}
+        <p class= "text-center"> {{message}} </p>
     
-    <p class= "text-center"> Please answer all questions below then click submit;</p>
-
-    <br>
+        {% endif %}
+        {% if next %}
+        <br>
         <a href="{{url_for('fluency3')}}" class= "button d-block" >Next Question</a> 
+        <br>
+    {% endif %}
+        
+  
+    {% if not next %}   
+        <h1 class="text-center">Part 2</h1>
+        <p class= "text-center"> For this section, you will need to play the video below and listen carefully. You will only be able to play it once, so make sur eyou are ready.</p>
+        <p class= "text-center">Once you have listened to the video, you will need to name the items that have been mentioned in the video.</p>
+        
+        <div class="text-center" id="videoDiv">
+            <video id= "video" width="320" height="240" >
+                <source src="static/items.mp4" type="video/mp4">
+                <source src="static/items.ogg" type="video/ogg">
+            </video>
+            <button id="play" class= "d-block button" type="button">Play</button>
+        </div>
+        <br>
+        
 
-</div>
+        <br>
+        <div id= "questions">
+            <p class= "text-center">What three items were mentioned? Enter your answers below:</p>
+            <form method="POST">
+                <div class= "mb-3">
+                    {{ form.hidden_tag() }}
+                </div>
+                <div class= "mb-3">
+                    {{ form.v1.label }}
+                    {{ form.v1(class="form-control") }}
+                </div>
+                <div class= "mb-3">
+                    {{ form.v2.label }}
+                    {{ form.v2(class="form-control") }}
+                </div>
+                <div class= "mb-3">
+                    {{ form.v3.label }}
+                    {{ form.v3(class="form-control") }}
+                </div>
+                <br>
+                {% if form.errors %}
+                    <p>Sorry, the details could not be processed because of the following errors: </p>
+                    <ul class="errors">
+                        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                            {% for error in field_errors %}
+                                <li> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <button type="submit" class="button">Submit</button>
+            </form>
+        </div>
+    {% endif %}
+
+    </div>
 
 
 {% endblock %}

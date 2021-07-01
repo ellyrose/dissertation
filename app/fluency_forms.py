@@ -23,6 +23,9 @@ class Fluency_1(FlaskForm):
     submit= SubmitField("Submit")
 
 class Fluency_2(FlaskForm):
+    v1= StringField(label="Name of item 1:", validators=[DataRequired()])
+    v2= StringField(label="Name of item 2:", validators=[DataRequired()])
+    v3= StringField(label="Name of item 3:", validators=[DataRequired()])
 
     submit= SubmitField("Submit")
 
@@ -36,6 +39,7 @@ class Fluency_3(FlaskForm):
     submit= SubmitField("Submit")
 
 class Fluency_4(FlaskForm):
+    
 
     submit= SubmitField("Submit")
 
