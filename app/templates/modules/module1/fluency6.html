@@ -1,20 +1,100 @@
-{% extends 'base.html' %}
-{% block title %} Fluency Fountain {% endblock %}
-{% block content %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+        <script src="static/script.js" defer></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" 
+        crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" 
+        crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+       
+        <link rel="shortcut icon" type="image/x-icon" href="{{url_for('static', filename='icon.png')}}" />
 
-<div class="container">
+
+            <title>
+                The Mind Garden
+            </title>
+    </head>
+    <body >
+        <nav class="navbar sticky-top navbar-expand-md navbar-light">
+            <div class="container-fluid">
+            <a class="navbar-brand mx-3" href="/">
+                <img src="{{url_for('static', filename='logo.jpg')}}" width="120" height="80" alt=""></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-4 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link navbar-font-size text-dark mx-3" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link navbar-font-size text-dark mx-3" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link navbar-font-size text-dark mx-3" href="/support">Support</a>
+                    </li>
+                {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link navbar-font-size text-dark mx-1" href="/yourgarden">Your Garden</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mx-4 mb-lg-0">
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3" href="/account">Account <span class="sr-only"></span></a>
+                        </li>
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3" href="/logout" method="POST">Logout <span class="sr-only"></span></a>
+                        </li>
+                    </ul>
+                {% else %}
+                    </ul>
+                    <ul class= "navbar-nav ms-auto  mx-4 mb-lg-0">
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3"href="/createaccount">Create Account <span class="sr-only"></span></a>
+                        </li>
+                        <li>
+                            <a class="nav-link navbar-font-size text-dark mx-3" href="/login" >Login</a>
+                        </li>
+                    </ul>
+                {% endif %}
+                {%if current_user.admin %}
+                    <a class="navbar-nav nav-item mx-3 nav-link navbar-font-size text-dark" href="/admin">Admin</a>
+                {% endif %}
+           
+            </div>
+        </nav>
+                
+      <br>
+
+        <div class="container">
+            
+            <h1 class="text-center">Part 6</h1>
+            
+            <p class= "text-center"> Please answer all questions below then click submit;</p>
+            
+            <div class= "text-center">
+                <canvas id="canvas" width="900" height="600"></canvas>
+                <br>
+                <button id="start" class= "button" onclick= "init();" >Start</button> 
+            </div>
+         
+
+
+       
+                <a href="{{url_for('fluency7')}}" class= "button d-block" >Next Question</a> 
+
+        </div>
+
     
-    <h1 class="text-center">Part 6</h1>
-    
-    <p class= "text-center"> Please answer all questions below then click submit;</p>
-
-    <br>
-        <a href="{{url_for('fluency7')}}" class= "button d-block" >Next Question</a> 
-
-</div>
-
-    
-
-
-
-{% endblock %}
+    </body>
+</html>

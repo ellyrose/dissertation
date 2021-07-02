@@ -5,7 +5,6 @@ from datetime import datetime, timedelta, date as dt
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 from flask_migrate import Migrate, current
-from sqlalchemy.sql.schema import DEFAULT_NAMING_CONVENTION
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
@@ -17,7 +16,7 @@ from fluency_forms import *
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import calendar
-
+from flask_simple_geoip import SimpleGeoIP
 
 
 app = Flask(__name__)
@@ -84,6 +83,8 @@ limiter = Limiter(
 )
 
 # create users table 
+
+# simple_geoip = SimpleGeoIP(app)
 
 class Users(UserMixin, db.Model):
 
@@ -171,6 +172,20 @@ class Module_1(db.Model):
     def __repr__(self):
         return '<Module_1 {}>'.format(self.id)
 
+class Module_1_history(db.Model):
+    __tablename__ = "module_1_history"
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    date= db.Column(db.DateTime,nullable=False)
+    module_score = db.Column(db.Integer, nullable=False)
+    attention= db.Column(db.Integer, nullable=False)
+    fluency= db.Column(db.Integer, default= 0)
+    language= db.Column(db.Integer, default= 0)
+    memory= db.Column(db.Integer, default= 0)
+    visuospatial= db.Column(db.Integer, default= 0)
+
+    def __repr__(self):
+            return '<Module_1_history {}>'.format(self.id)
+
 class Module_2(db.Model):
     __tablename__ = "module_2"
 
@@ -213,7 +228,7 @@ class Module_4(db.Model):
     def __repr__(self):
         return '<Module_4{}>'.format(self.id)
 
-# db.create_all()
+db.create_all()
 
 login_manager= LoginManager()
 
@@ -238,6 +253,10 @@ def internal_error(error):
 def add_score(test):
     total= (test.module_1_score + test.module_2_score + test.module_3_score + test.module_4_score)
     return total
+
+def get_location_info():
+    geoip_data = simple_geoip.get_geoip_data()
+    return jsonify(data=geoip_data)
         
 
 '''ROUTES'''
@@ -280,22 +299,22 @@ def createaccount():
             user.password= password
             db.session.add(user)
             db.session.commit()
-            id = str(user.id) 
-            test = Test(id= id)
-            module_1= Module_1(id=id)
-            module_2= Module_2(id=id)
-            module_3= Module_3(id=id)
-            module_4= Module_4(id=id)
-            db.session.add(test)
-            db.session.commit()
-            db.session.add(module_1)
-            db.session.commit()
-            db.session.add(module_2)
-            db.session.commit()
-            db.session.add(module_3)
-            db.session.commit()
-            db.session.add(module_4)
-            db.session.commit()
+            # id = str(user.id) 
+            # test = Test(id= id)
+            # module_1= Module_1(id=id)
+            # module_2= Module_2(id=id)
+            # module_3= Module_3(id=id)
+            # module_4= Module_4(id=id)
+            # db.session.add(test)
+            # db.session.commit()
+            # db.session.add(module_1)
+            # db.session.commit()
+            # db.session.add(module_2)
+            # db.session.commit()
+            # db.session.add(module_3)
+            # db.session.commit()
+            # db.session.add(module_4)
+            # db.session.commit()
 
         else:
             ''' if user does exist, display message'''
@@ -406,13 +425,25 @@ def yourgarden():
     user = current_user
     id = user.id 
     fluency= Module_1.query.filter_by(id= id).first()
-    fluency_completed = fluency.completed
+    if fluency != None:
+        fluency_completed = fluency.completed
+    else:
+        fluency_completed= False
     language= Module_2.query.filter_by(id= id).first()
-    language_completed = language.completed
+    if language != None:
+        language_completed = language.completed
+    else:
+        language_completed= False
     memory= Module_3.query.filter_by(id= id).first()
-    memory_completed = memory.completed
+    if memory  != None:
+        memory_completed = memory.completed
+    else:
+        memory_completed = False
     visual= Module_4.query.filter_by(id= id).first()
-    visual_completed = visual.completed
+    if visual != None:
+        visual_completed = visual.completed
+    else:
+         visual_completed = False
     return render_template("yourgarden.html",fluency_completed= fluency_completed,language_completed=language_completed,
     memory_completed=memory_completed,visual_completed=visual_completed)
 
@@ -560,8 +591,12 @@ def fluency():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
-    question_1= questions.question_1
-    completed= questions.completed
+    if questions == None:
+        question_1 = False
+        completed = False
+    else:
+        question_1= questions.question_1
+        completed= questions.completed
     return render_template("/modules/module1/fluency.html",questions_1= question_1, completed=completed)
 
 @app.route('/fluencycontinue')
@@ -596,9 +631,21 @@ def fluencycontinue():
 @app.route('/fluency1',methods=["GET", "POST"])
 @login_required
 def fluency1():
+    # location_info = get_location_info()
+    # print(location_info)
     user = current_user
     id= user.id
     test= Test.query.filter_by(id= id).first()
+    if test == None:
+        test = Test(id= id)
+        module_1= Module_1(id=id)
+        db.session.add(test)
+        db.session.commit()
+        db.session.add(module_1)
+        db.session.commit()
+        test= Test.query.filter_by(id= id).first()
+    else:
+        pass 
     test.module_1_score = 0
     test.attention = 0
     test.fluency= 0 
@@ -1192,11 +1239,17 @@ def fluency10():
             module_score += 1
             visuospatial += 1
         test.visuospatial= visuospatial
+        attention= test.attention
+        fluency= test.fluency
+        language= test.language
+        memory= test.memory
         test.module_1_score= module_score
         test.total_score = add_score(test)
-        print(test.total_score)
         questions.question_10 = True
         questions.completed= True
+        user_history= Module_1_history(id=id, date=datetime.utcnow(), module_score= module_score, attention=attention, fluency=fluency,
+        language=language,memory=memory,visuospatial=visuospatial)
+        db.session.add(user_history)
         db.session.commit()
         message= "Your answers have been accepted, thank you for completing Fluency Fointain! Please click next to continue"
         next= True
