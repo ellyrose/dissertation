@@ -166,6 +166,11 @@ class Module_1(db.Model):
     question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_9= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_10= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    attention_1= db.Column(db.Integer, default= 0)
+    fluency_1= db.Column(db.Integer, default= 0)
+    language_1= db.Column(db.Integer, default= 0)
+    memory_1= db.Column(db.Integer, default= 0)
+    visuospatial_1= db.Column(db.Integer, default= 0)
     completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
@@ -177,7 +182,7 @@ class Module_1_history(db.Model):
     id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
     date= db.Column(db.DateTime,nullable=False)
     module_score = db.Column(db.Integer, nullable=False)
-    attention= db.Column(db.Integer, nullable=False)
+    attention= db.Column(db.Integer, default= 0)
     fluency= db.Column(db.Integer, default= 0)
     language= db.Column(db.Integer, default= 0)
     memory= db.Column(db.Integer, default= 0)
@@ -198,6 +203,11 @@ class Module_2(db.Model):
     question_6= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_7= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    attention_2 = db.Column(db.Integer, default= 0)
+    fluency_2= db.Column(db.Integer, default= 0)
+    language_2= db.Column(db.Integer, default= 0)
+    memory_2= db.Column(db.Integer, default= 0)
+    visuospatial_2= db.Column(db.Integer, default= 0)
     completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
@@ -211,6 +221,11 @@ class Module_3(db.Model):
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    attention_3 = db.Column(db.Integer, default= 0)
+    fluency_3= db.Column(db.Integer, default= 0)
+    language_3= db.Column(db.Integer, default= 0)
+    memory_3= db.Column(db.Integer, default= 0)
+    visuospatial_3= db.Column(db.Integer, default= 0)
     completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
@@ -222,6 +237,11 @@ class Module_4(db.Model):
 
     id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
+    attention_4 = db.Column(db.Integer, default= 0)
+    fluency_4= db.Column(db.Integer, default= 0)
+    language_4= db.Column(db.Integer, default= 0)
+    memory_4= db.Column(db.Integer, default= 0)
+    visuospatial_4= db.Column(db.Integer, default= 0)
     completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
@@ -591,6 +611,7 @@ def fluency():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    '''if this is their first time taking the test, variables set to false'''
     if questions == None:
         question_1 = False
         completed = False
@@ -605,6 +626,7 @@ def fluencycontinue():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first() 
+    '''logic below checks which question they have already completed'''
     if questions.question_10:
         message= "You have completed Fluency Fountain!"
         return render_template("/yourgarden.html", message=message)
@@ -636,6 +658,7 @@ def fluency1():
     user = current_user
     id= user.id
     test= Test.query.filter_by(id= id).first()
+    '''if they have not completed the module beofore'''
     if test == None:
         test = Test(id= id)
         module_1= Module_1(id=id)
@@ -644,16 +667,12 @@ def fluency1():
         db.session.add(module_1)
         db.session.commit()
         test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
     else:
-        pass 
+        test= Test.query.filter_by(id= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
     test.module_1_score = 0
-    test.attention = 0
-    test.fluency= 0 
-    test.language= 0
-    test.memory= 0
-    test.visuospatial= 0
     db.session.commit()
-    questions= Module_1.query.filter_by(id= id).first()
     questions.question_1 = False
     questions.question_2 = False
     questions.question_3 = False
@@ -664,6 +683,11 @@ def fluency1():
     questions.question_8 = False
     questions.question_9 = False
     questions.question_10 = False
+    questions.attention_1 = 0
+    questions.fluency_1= 0
+    questions.language_1= 0
+    questions.memory_1= 0
+    questions.visuospatial_1= 0 
     questions.completed= False
     db.session.commit()
     day = None
@@ -679,9 +703,8 @@ def fluency1():
         id= user.id
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
-        print(test.attention)
         module_score= test.module_1_score
-        attention= test.attention
+        attention= questions.attention_1
         day = form.day.data
         date= form.date.data
         month= form.month.data
@@ -750,14 +773,15 @@ def fluency1():
                 module_score +=1
             else:
                 pass
-        test.attention= attention
         test.module_1_score= module_score
+        questions.attention_1= attention
+        print("attention socre is", questions.attention_1)
         questions.question_1= True
         db.session.commit()
-        message= "Your answers have been accepted, please click next to continue"
-        next= True
-        render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,message= message, next= next)
+        return render_template("/modules/module1/fluency1completed.html")
     return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,next=next,message= message)
+
+
 
 @app.route('/fluency2',methods=["GET", "POST"])
 @login_required
@@ -781,7 +805,7 @@ def fluency2():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        attention= test.attention
+        attention= questions.attention_1
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -797,7 +821,7 @@ def fluency2():
         if value_3.lower() in answers_3:
             module_score += 1
             attention += 1 
-        test.attention= attention
+        questions.attention_1= attention
         test.module_1_score= module_score
         questions.question_2= True
         db.session.commit()
@@ -816,10 +840,10 @@ def fluency2():
 def fluency3():
     user= current_user
     id= user.id
-    question= Module_1.query.filter_by(id= id).first()
-    if question.question_3:
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions.question_3:
         return redirect(url_for('yourgarden'))
-    if not question.question_1 or not question.question_2:
+    if not questions.question_1 or not questions.question_2:
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -835,7 +859,7 @@ def fluency3():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        attention= test.attention
+        attention= questions.attention_1
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -856,9 +880,9 @@ def fluency3():
         if value_5 == 65:
             module_score += 1
             attention += 1     
-        test.attention= attention
-        test.module_1_score= module_score
+        questions.attention_1= attention
         questions.question_3= True
+        test.module_1_score= module_score
         db.session.commit()
         message= "Your answers have been accepted, please click next to continue"
         next= True
@@ -882,7 +906,7 @@ def fluency4():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        memory= test.memory
+        memory= questions.memory_1
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -898,7 +922,7 @@ def fluency4():
         if value_3.lower() in answers_3:
             module_score += 1
             memory += 1 
-        test.memory= memory
+        questions.memory_1= memory
         test.module_1_score= module_score
         questions.question_4= True
         db.session.commit()
@@ -910,20 +934,15 @@ def fluency4():
         form=form,message= message, next= next)
     
 
-
-    questions.question_4=True
-    db.session.commit()
-    return render_template("/modules/module1/fluency4.html")
-
 @app.route('/fluency5',methods=["GET", "POST"])
 @login_required
 def fluency5():
     user= current_user
     id= user.id
-    question= Module_1.query.filter_by(id= id).first()
-    if question.question_5:
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions.question_5:
         return redirect(url_for('yourgarden'))
-    if not question.question_1 or not question.question_2 or not question.question_4 :
+    if not questions.question_1 or not questions.question_2 or not questions.question_4 :
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -938,7 +957,7 @@ def fluency5():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        memory= test.memory
+        memory= questions.memory_1
         value_1 = form.v1.data.strip(" ")
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
@@ -959,7 +978,7 @@ def fluency5():
         if value_4.lower() in q4_answers:
             module_score += 1
             memory += 1
-        test.memory= memory
+        questions.memory_1= memory
         test.module_1_score= module_score
         questions.question_5 = True
         db.session.commit()
@@ -986,10 +1005,10 @@ def fluency6():
 def fluency7():
     user= current_user
     id= user.id
-    question= Module_1.query.filter_by(id= id).first()
-    if question.question_7:
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions.question_7:
         return redirect(url_for('yourgarden'))
-    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 :
+    if not questions.question_1 or not questions.question_2 or not questions.question_4 or not questions.question_5 or not questions.question_6 :
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1013,7 +1032,7 @@ def fluency7():
         questions= Module_1.query.filter_by(id= id).first()
         questions.question_7=True
         module_score= test.module_1_score
-        language= test.language
+        language= questions.language_1
         value_1 = form.v1.data.strip(" ")
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
@@ -1075,7 +1094,7 @@ def fluency7():
         if value_12.lower() in q12_answers:
             module_score += 1
             language += 1 
-        test.language= language
+        questions.language_1= language
         test.module_1_score= module_score
         questions.question_7 = True
         db.session.commit()
@@ -1115,7 +1134,7 @@ def fluency8():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        language= test.language
+        language= questions.language_1
         value_1 = int(form.v1.data)
         value_2 = int(form.v2.data)
         value_3 = int(form.v3.data)
@@ -1133,7 +1152,7 @@ def fluency8():
         if value_4 == 5:
             module_score += 1
             language += 1
-        test.language= language
+        questions.language_1= language
         test.module_1_score= module_score
         questions.question_8 = True
         db.session.commit()
@@ -1168,7 +1187,7 @@ def fluency9():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        visuospatial= test.visuospatial
+        visuospatial= questions.visuospatial_1
         value_1 = int(form.v1.data)
         value_2 = int(form.v2.data)
         value_3 = int(form.v3.data)
@@ -1186,7 +1205,7 @@ def fluency9():
         if value_4 == 9:
             module_score += 1
             visuospatial += 1
-        test.visuospatial= visuospatial
+        questions.visuospatial_1= visuospatial
         test.module_1_score= module_score
         questions.question_9 = True
         db.session.commit()
@@ -1220,7 +1239,7 @@ def fluency10():
         test= Test.query.filter_by(id= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        visuospatial= test.visuospatial
+        visuospatial= questions.visuospatial_1
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -1238,17 +1257,17 @@ def fluency10():
         if value_4.upper() == "T":
             module_score += 1
             visuospatial += 1
-        test.visuospatial= visuospatial
-        attention= test.attention
-        fluency= test.fluency
-        language= test.language
-        memory= test.memory
+        questions.visuospatial_1= visuospatial
+        attention= questions.attention_1
+        fluency= questions.fluency_1
+        language= questions.language_1
+        memory= questions.memory_1
         test.module_1_score= module_score
         test.total_score = add_score(test)
         questions.question_10 = True
         questions.completed= True
-        user_history= Module_1_history(id=id, date=datetime.utcnow(), module_score= module_score, attention=attention, fluency=fluency,
-        language=language,memory=memory,visuospatial=visuospatial)
+        user_history= Module_1_history(id=id, date=datetime.utcnow(), module_score= module_score, attention_1=attention, fluency_1=fluency,
+        language_1=language,memory_1=memory,visuospatial_1=visuospatial)
         db.session.add(user_history)
         db.session.commit()
         message= "Your answers have been accepted, thank you for completing Fluency Fointain! Please click next to continue"

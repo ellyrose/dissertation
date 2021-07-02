@@ -9,21 +9,21 @@ function play() {
     document.getElementById("videoDiv").style.display = "none";
 }
 
-setTimeout(function showQuestions(){
+function showQuestions(){
 
     document.getElementById("questions").style.display = "block";
-}, 18000)
+}
 
 
 function questions() {
     play();
-    showQuestions();
+    setTimeout(showQuestions(), 18000);
     
 }
 
 
 playButton= document.getElementById("play");
-playButton.addEventListener('click', play, false);
+playButton.addEventListener('click', questions, false);
 
 
 // code for question 6 
