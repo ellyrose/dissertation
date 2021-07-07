@@ -3,12 +3,18 @@
 
 {% if current_user.is_authenticated %}
 <div>
-    <audio autoplay loop>
+    <div id="onOff">
+        <img id="sound">
+    </div>
+   <div>
+    <audio autoplay loop id= "audio">
         <source src="static/test.mp3" type="audio/mpeg">
         <source src="static/test.ogg" type="audio/ogg">
         <p>Your browser doesn't support HTML5 audio. Here is
            a <a href="static/test.mp3">link to the audio</a> instead.</p>
       </audio>
+   </div>
+  
     <img src="{{url_for('static', filename='title.jpg')}}" class="img-fluid mx-auto d-block" width="800" height="150" alt="The Mind Garden">
     <h1 class="text-center"> Welcome to The Mind Garden, {{current_user.first_name}}</h1>
     <p class= "text-center">Click below to enter your garden...</p>

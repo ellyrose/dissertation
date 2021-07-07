@@ -69,3 +69,12 @@ form{
 table {
   margin: 0 auto;
 }
+
+#sound {
+  cursor: pointer;
+}
+
+#onOff {
+
+  position:fixed;
+}

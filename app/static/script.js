@@ -1,8 +1,34 @@
+// code for sound toggle 
+
+var image = document.getElementById("sound");
+image.src = "static/soundOn.png";
+var sound = document.getElementById("audio");
+sound.play()
+
+function togglePlay() {
+    if (sound.paused) {
+        image.src= "static/soundOn.png";
+        sound.play();
+    }
+    else {
+        sound.pause();
+        image.src="static/soundOff.png";
+    }
+};
+
+image.addEventListener("click",togglePlay, false);   
+
+
+
+
+
 //code for question 4
 
 var video = document.getElementById("video");
-video.style.display = "none";
-document.getElementById("questions").style.display = "none";
+var videoDiv = document.getElementById("videoDiv")
+videoDiv.style.display = "none";
+var questions= document.getElementById("questions")
+questions.style.display = "none";
 
 function play() {
     video.play();
@@ -113,7 +139,7 @@ function loadCan(event) {
 
 var start = document.getElementById("start");
 
-// start.addEventListener('click', one, false);
+start.addEventListener('click', one, false);
 
 
 flower.addEventListener("click", evaluateAns, false);   
@@ -135,5 +161,4 @@ function evaluateAns(event){
     console.log(points)
 }
 
-console.log(points)
-console.log("hello")
+
