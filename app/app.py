@@ -1,5 +1,4 @@
-from hashlib import new
-from re import L
+from operator import mod
 from flask import Flask, flash, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime, timedelta, date as dt
 from flask_sqlalchemy import SQLAlchemy
@@ -11,7 +10,7 @@ from flask_login import LoginManager, login_required, login_user, UserMixin, log
 import os
 from flask_mail import Mail, Message
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from forms import LoginForm,CreateAccountForm,ResetPasswordForm,ForgottenPasswordForm, EditDetailsForm,LoggedInResetPasswordForm,AdminEditForm
+from forms import *
 from fluency_forms import *
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -82,9 +81,12 @@ limiter = Limiter(
     key_func=get_remote_address,
 )
 
-# create users table 
 
-# simple_geoip = SimpleGeoIP(app)
+
+app.config.update(GEOIPIFY_API_KEY='2bf8e159c38372')
+simple_geoip = SimpleGeoIP(app)
+
+# create users table 
 
 class Users(UserMixin, db.Model):
 
@@ -95,6 +97,7 @@ class Users(UserMixin, db.Model):
     last_name= db.Column(db.String(100), nullable=False)
     dob = db.Column(db.Date, nullable=False)
     email_address = db.Column(db.String(120), nullable=False, unique=True)
+    country = db.Column(db.String(200), nullable=False, unique=False)
     password_hash = db.Column(db.String, nullable=False)
     date_created=db.Column(db.DateTime,nullable=False, default= datetime.utcnow)
     last_seen= db.Column(db.DateTime,nullable=True)
@@ -136,17 +139,24 @@ class Users(UserMixin, db.Model):
 class Test(db.Model):
     __tablename__ = "test"
 
-    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    userid = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'))
+    date_completed= db.Column(db.DateTime,nullable=True)
     module_1_score= db.Column(db.Integer, default= 0)
+    module_1_status = db.Column(db.String(100),unique=False,nullable=False, default='not started')
     module_2_score= db.Column(db.Integer, default= 0)
+    module_2_status = db.Column(db.String(100),unique=False,nullable=False, default='not started')
     module_3_score= db.Column(db.Integer, default= 0)
+    module_3_status = db.Column(db.String(100),unique=False,nullable=False, default='not started')
     module_4_score= db.Column(db.Integer, default= 0)
+    module_4_status = db.Column(db.String(100),unique=False,nullable=False, default='not started')
     total_score= db.Column(db.Integer, default= 0)
     attention= db.Column(db.Integer, default= 0)
     fluency= db.Column(db.Integer, default= 0)
     language= db.Column(db.Integer, default= 0)
     memory= db.Column(db.Integer, default= 0)
     visuospatial= db.Column(db.Integer, default= 0)
+    completed= db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
     def __repr__(self):
         return '<Test {}>'.format(self.id)
@@ -166,30 +176,10 @@ class Module_1(db.Model):
     question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_9= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_10= db.Column(db.Boolean,unique=False,nullable=False, default=False)
-    attention_1= db.Column(db.Integer, default= 0)
-    fluency_1= db.Column(db.Integer, default= 0)
-    language_1= db.Column(db.Integer, default= 0)
-    memory_1= db.Column(db.Integer, default= 0)
-    visuospatial_1= db.Column(db.Integer, default= 0)
-    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
     def __repr__(self):
         return '<Module_1 {}>'.format(self.id)
-
-class Module_1_history(db.Model):
-    __tablename__ = "module_1_history"
-    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
-    date= db.Column(db.DateTime,nullable=False)
-    module_score = db.Column(db.Integer, nullable=False)
-    attention= db.Column(db.Integer, default= 0)
-    fluency= db.Column(db.Integer, default= 0)
-    language= db.Column(db.Integer, default= 0)
-    memory= db.Column(db.Integer, default= 0)
-    visuospatial= db.Column(db.Integer, default= 0)
-
-    def __repr__(self):
-            return '<Module_1_history {}>'.format(self.id)
 
 class Module_2(db.Model):
     __tablename__ = "module_2"
@@ -203,12 +193,6 @@ class Module_2(db.Model):
     question_6= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_7= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_8= db.Column(db.Boolean,unique=False,nullable=False, default=False)
-    attention_2 = db.Column(db.Integer, default= 0)
-    fluency_2= db.Column(db.Integer, default= 0)
-    language_2= db.Column(db.Integer, default= 0)
-    memory_2= db.Column(db.Integer, default= 0)
-    visuospatial_2= db.Column(db.Integer, default= 0)
-    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
     def __repr__(self):
@@ -221,13 +205,6 @@ class Module_3(db.Model):
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
-    attention_3 = db.Column(db.Integer, default= 0)
-    fluency_3= db.Column(db.Integer, default= 0)
-    language_3= db.Column(db.Integer, default= 0)
-    memory_3= db.Column(db.Integer, default= 0)
-    visuospatial_3= db.Column(db.Integer, default= 0)
-    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
-
 
     def __repr__(self):
         return '<Module_3{}>'.format(self.id)
@@ -237,12 +214,6 @@ class Module_4(db.Model):
 
     id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
-    attention_4 = db.Column(db.Integer, default= 0)
-    fluency_4= db.Column(db.Integer, default= 0)
-    language_4= db.Column(db.Integer, default= 0)
-    memory_4= db.Column(db.Integer, default= 0)
-    visuospatial_4= db.Column(db.Integer, default= 0)
-    completed = db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
     def __repr__(self):
@@ -293,6 +264,7 @@ def createaccount():
     last_name= None
     birthdate= None
     email_address=None
+    country= None
     password=None
     confirm= None
     accept_tos= None
@@ -312,37 +284,22 @@ def createaccount():
             form.birthdate.data = datetime.strptime("01-01-2020", '%d-%m-%Y')
             email_address= form.email_address.data
             form.email_address.data= " "
+            country= form.country.data
+            form.country.data= " "
             password= form.password_hash.data
             form.password_hash.data= " "
             user= Users(first_name= first_name, last_name= last_name, dob= birthdate,
-            email_address=email_address,password_hash=password)
+            email_address=email_address,country=country,password_hash=password)
             user.password= password
             db.session.add(user)
             db.session.commit()
-            # id = str(user.id) 
-            # test = Test(id= id)
-            # module_1= Module_1(id=id)
-            # module_2= Module_2(id=id)
-            # module_3= Module_3(id=id)
-            # module_4= Module_4(id=id)
-            # db.session.add(test)
-            # db.session.commit()
-            # db.session.add(module_1)
-            # db.session.commit()
-            # db.session.add(module_2)
-            # db.session.commit()
-            # db.session.add(module_3)
-            # db.session.commit()
-            # db.session.add(module_4)
-            # db.session.commit()
-
         else:
             ''' if user does exist, display message'''
             message= "An account with that email address already exists"
             return render_template("createaccount.html", first_name=first_name,last_name=last_name,birthdate=birthdate,
-    email_address=email_address, password=password, confirm=confirm, accept_tos= accept_tos, form= form,message=message)
+    email_address=email_address, country=country, password=password, confirm=confirm, accept_tos= accept_tos, form= form,message=message)
     return render_template("createaccount.html", first_name=first_name,last_name=last_name,birthdate=birthdate,
-    email_address=email_address, password=password, confirm=confirm, accept_tos= accept_tos, form= form)
+    email_address=email_address,country=country, password=password, confirm=confirm, accept_tos= accept_tos, form= form)
     
 
 @app.route('/login', methods= ["GET", "POST"])
@@ -444,28 +401,20 @@ def loggedinresetpassword():
 def yourgarden():
     user = current_user
     id = user.id 
-    fluency= Module_1.query.filter_by(id= id).first()
-    if fluency != None:
-        fluency_completed = fluency.completed
+    '''check to see if there is an active test'''
+    test= Test.query.filter_by(userid= id, completed=False).first()
+    if test == None:
+        module_1_completed= 'not started'
+        module_2_completed= 'not started'
+        module_3_completed= 'not started'
+        module_4_completed = 'not started'
     else:
-        fluency_completed= False
-    language= Module_2.query.filter_by(id= id).first()
-    if language != None:
-        language_completed = language.completed
-    else:
-        language_completed= False
-    memory= Module_3.query.filter_by(id= id).first()
-    if memory  != None:
-        memory_completed = memory.completed
-    else:
-        memory_completed = False
-    visual= Module_4.query.filter_by(id= id).first()
-    if visual != None:
-        visual_completed = visual.completed
-    else:
-         visual_completed = False
-    return render_template("yourgarden.html",fluency_completed= fluency_completed,language_completed=language_completed,
-    memory_completed=memory_completed,visual_completed=visual_completed)
+        module_1_completed = test.module_1_status
+        module_2_completed = test.module_2_status
+        module_3_completed= test.module_3_status
+        module_4_completed= test.module_4_status
+    return render_template("yourgarden.html",module_1_completed= module_1_completed,module_2_completed=module_2_completed,
+    module_3_completed=module_3_completed,module_4_completed=module_4_completed)
 
 
 @app.route('/account',methods=["GET", "POST"])
@@ -476,6 +425,7 @@ def account():
     last_name = user.last_name
     birthdate= user.dob
     current_email_address= user.email_address
+    country= user.country
     current_password=None
     message= None
     form= EditDetailsForm()
@@ -484,6 +434,7 @@ def account():
         last_name= form.last_name.data
         birthdate= form.birthdate.data
         email_address=form.email_address.data.lower()
+        country=form.country.data
         current_password= form.password_hash.data
         ''' if email address has changed, check that it is not alrady in use '''
         if email_address != current_email_address:
@@ -491,7 +442,7 @@ def account():
             if check is not None:
                 message= "Sorry, please enter a different email address."
                 return render_template("account.html", message=message,form=form, user=user, 
-                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
+                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
         '''  check that password entered is correct before updating the details'''
         if user.verify_password(current_password):
@@ -499,29 +450,32 @@ def account():
             user.last_name= last_name
             user.dob= birthdate
             user.email_address= email_address
+            user.country=country
             try:
                 db.session.commit()
                 form.first_name.data= user.first_name
                 form.last_name.data = user.last_name
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
+                form.country.data= user.country
                 message= "Your details have been updated!"
                 return render_template("account.html", message=message,form=form, user=user, 
-                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
+                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
             except:
                 form.first_name.data= user.first_name
                 form.last_name.data = user.last_name
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
+                form.country.data= user.country
                 message= "Sorry there was an error, please try again."
                 return render_template("account.html", message=message,form=form, user=user, 
-                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,
+                first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
         else:
             message= "You entered an incorrect password."
     return render_template("account.html", message=message,form=form, user=user, first_name= first_name, 
-    last_name= last_name, dob= birthdate,email_address=current_email_address,password_hash= current_password)   
+    last_name= last_name, dob= birthdate,email_address=current_email_address,country=country,password_hash= current_password)   
 
 @app.route('/logout')
 @login_required
@@ -555,6 +509,7 @@ def update(id):
     last_name = update_user.last_name
     birthdate= update_user.dob
     email_address= update_user.email_address
+    country= update_user.country
     message= None
     form= AdminEditForm()
     if form.validate_on_submit():
@@ -562,29 +517,33 @@ def update(id):
         last_name= form.last_name.data
         birthdate= form.birthdate.data
         email_address=form.email_address.data.lower()
+        country=form.country.data.lower()
         update_user.first_name= first_name
         update_user.last_name= last_name
         update_user.dob= birthdate
         update_user.email_address= email_address
+        update_user.country= country
         try:
             db.session.commit()
             form.first_name.data= update_user.first_name
             form.last_name.data = update_user.last_name
             form.birthdate.data= update_user.dob
             form.email_address.data= update_user.email_address
+            form.country.data= update_user.country
             message= "User's details have been updated!"
             return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
-            birthdate=birthdate, email_address=email_address, message=message)
+            birthdate=birthdate, email_address=email_address,country= country, message=message)
         except:
             form.first_name.data= update_user.first_name
             form.last_name.data = update_user.last_name
             form.birthdate.data= update_user.dob
             form.email_address.data= update_user.email_address
+            form.country.data= update_user.country
             message= "Sorry there was an error, please try again."
             return render_template("update_user.html", form=form,update_user=update_user,first_name=first_name, last_name=last_name,
-            birthdate=birthdate, email_address=email_address, message=message)
+            birthdate=birthdate, email_address=email_address,country= country,  message=message)
     return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
-    birthdate=birthdate, email_address=email_address)
+    birthdate=birthdate, email_address=email_address,country= country, )
 
 @app.route('/delete/<id>')
 @login_required
@@ -610,15 +569,26 @@ def delete(id):
 def fluency():
     user= current_user
     id= user.id
-    questions= Module_1.query.filter_by(id= id).first()
+    test= Test.query.filter_by(userid=id).first() 
     '''if this is their first time taking the test, variables set to false'''
-    if questions == None:
-        question_1 = False
+    if test is None:
+        active_test= False 
         completed = False
     else:
-        question_1= questions.question_1
-        completed= questions.completed
-    return render_template("/modules/module1/fluency.html",questions_1= question_1, completed=completed)
+        test = Test.query.filter_by(userid=id, completed= False).first() 
+        '''if they have no active tests ongoing'''
+        if test is None: 
+            active_test= False 
+            completed = True
+        else:
+            active_test= True 
+            module_1_status = test.module_1_status
+            '''if they have alreay completed module 1''' 
+            if module_1_status == 'completed':
+                completed= True
+            else:
+                completed= False 
+    return render_template("/modules/module1/fluency.html", completed=completed, active_test=active_test)
 
 @app.route('/fluencycontinue')
 @login_required
@@ -648,48 +618,30 @@ def fluencycontinue():
         return redirect(url_for('fluency3'))
     elif questions.question_1:
         return redirect(url_for('fluency2'))
+    else:
+        return redirect(url_for('fluency1'))
 
 
 @app.route('/fluency1',methods=["GET", "POST"])
 @login_required
 def fluency1():
-    # location_info = get_location_info()
-    # print(location_info)
+    location_info = get_location_info()
+    data= location_info.json 
+    print(data)
     user = current_user
     id= user.id
-    test= Test.query.filter_by(id= id).first()
-    '''if they have not completed the module beofore'''
+    test= Test.query.filter_by(userid= id).first()
     if test == None:
-        test = Test(id= id)
+        test = Test(userid=id)
         module_1= Module_1(id=id)
         db.session.add(test)
-        db.session.commit()
         db.session.add(module_1)
         db.session.commit()
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
     else:
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
-    test.module_1_score = 0
-    db.session.commit()
-    questions.question_1 = False
-    questions.question_2 = False
-    questions.question_3 = False
-    questions.question_4 = False
-    questions.question_5 = False
-    questions.question_6 = False
-    questions.question_7 = False
-    questions.question_8 = False
-    questions.question_9 = False
-    questions.question_10 = False
-    questions.attention_1 = 0
-    questions.fluency_1= 0
-    questions.language_1= 0
-    questions.memory_1= 0
-    questions.visuospatial_1= 0 
-    questions.completed= False
-    db.session.commit()
     day = None
     date= None
     month= None
@@ -701,11 +653,12 @@ def fluency1():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
+        '''status changed to in progress as module has been started'''
+        test.module_1_status='in progress'
         module_score= test.module_1_score
-        attention= questions.attention_1
-        day = form.day.data
+        attention= test.attention
         date= form.date.data
         month= form.month.data
         year= form.year.data
@@ -774,8 +727,8 @@ def fluency1():
             else:
                 pass
         test.module_1_score= module_score
-        questions.attention_1= attention
-        print("attention socre is", questions.attention_1)
+        test.attention= attention
+        print("attention socre is", test.attention)
         questions.question_1= True
         db.session.commit()
         return render_template("/modules/module1/fluency1completed.html")
@@ -802,10 +755,10 @@ def fluency2():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        attention= questions.attention_1
+        attention= test.attention
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -821,7 +774,7 @@ def fluency2():
         if value_3.lower() in answers_3:
             module_score += 1
             attention += 1 
-        questions.attention_1= attention
+        test.attention= attention
         test.module_1_score= module_score
         questions.question_2= True
         db.session.commit()
@@ -856,10 +809,10 @@ def fluency3():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        attention= questions.attention_1
+        attention= test.attention
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -880,9 +833,9 @@ def fluency3():
         if value_5 == 65:
             module_score += 1
             attention += 1     
-        questions.attention_1= attention
-        questions.question_3= True
         test.module_1_score= module_score
+        test.attention= attention
+        questions.question_3= True
         db.session.commit()
         message= "Your answers have been accepted, please click next to continue"
         next= True
@@ -903,10 +856,10 @@ def fluency4():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        memory= questions.memory_1
+        memory= test.memory
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -922,7 +875,7 @@ def fluency4():
         if value_3.lower() in answers_3:
             module_score += 1
             memory += 1 
-        questions.memory_1= memory
+        test.memory= memory
         test.module_1_score= module_score
         questions.question_4= True
         db.session.commit()
@@ -954,10 +907,10 @@ def fluency5():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        memory= questions.memory_1
+        memory= test.memory
         value_1 = form.v1.data.strip(" ")
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
@@ -978,7 +931,7 @@ def fluency5():
         if value_4.lower() in q4_answers:
             module_score += 1
             memory += 1
-        questions.memory_1= memory
+        test.memory= memory
         test.module_1_score= module_score
         questions.question_5 = True
         db.session.commit()
@@ -1028,11 +981,11 @@ def fluency7():
     if form.validate_on_submit():
         user= current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         questions.question_7=True
         module_score= test.module_1_score
-        language= questions.language_1
+        language= test.language
         value_1 = form.v1.data.strip(" ")
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
@@ -1094,7 +1047,7 @@ def fluency7():
         if value_12.lower() in q12_answers:
             module_score += 1
             language += 1 
-        questions.language_1= language
+        test.language= language
         test.module_1_score= module_score
         questions.question_7 = True
         db.session.commit()
@@ -1131,10 +1084,10 @@ def fluency8():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        language= questions.language_1
+        language= test.language
         value_1 = int(form.v1.data)
         value_2 = int(form.v2.data)
         value_3 = int(form.v3.data)
@@ -1152,7 +1105,7 @@ def fluency8():
         if value_4 == 5:
             module_score += 1
             language += 1
-        questions.language_1= language
+        test.language= language
         test.module_1_score= module_score
         questions.question_8 = True
         db.session.commit()
@@ -1184,10 +1137,10 @@ def fluency9():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        visuospatial= questions.visuospatial_1
+        visuospatial= test.visuospatial
         value_1 = int(form.v1.data)
         value_2 = int(form.v2.data)
         value_3 = int(form.v3.data)
@@ -1205,7 +1158,7 @@ def fluency9():
         if value_4 == 9:
             module_score += 1
             visuospatial += 1
-        questions.visuospatial_1= visuospatial
+        test.visuospatial= visuospatial
         test.module_1_score= module_score
         questions.question_9 = True
         db.session.commit()
@@ -1236,10 +1189,10 @@ def fluency10():
     if form.validate_on_submit():
         user = current_user
         id= user.id
-        test= Test.query.filter_by(id= id).first()
+        test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
-        visuospatial= questions.visuospatial_1
+        visuospatial= test.visuospatial
         value_1 = form.v1.data
         value_2 = form.v2.data
         value_3 = form.v3.data
@@ -1257,23 +1210,23 @@ def fluency10():
         if value_4.upper() == "T":
             module_score += 1
             visuospatial += 1
-        questions.visuospatial_1= visuospatial
-        attention= questions.attention_1
-        fluency= questions.fluency_1
-        language= questions.language_1
-        memory= questions.memory_1
+        test.visuospatial= visuospatial
         test.module_1_score= module_score
         test.total_score = add_score(test)
+        test.module_1_status= 'completed'
+        test_completed= False 
+        module_2_completed= test.module_2_status
+        module_3_completed= test.module_3_status
+        module_4_completed= test.module_4_status
+        if module_2_completed == module_3_completed == module_4_completed == 'completed':
+            test.completed= True 
+            test.date_completed= datetime.utcnow() 
         questions.question_10 = True
-        questions.completed= True
-        user_history= Module_1_history(id=id, date=datetime.utcnow(), module_score= module_score, attention_1=attention, fluency_1=fluency,
-        language_1=language,memory_1=memory,visuospatial_1=visuospatial)
-        db.session.add(user_history)
         db.session.commit()
         message= "Your answers have been accepted, thank you for completing Fluency Fointain! Please click next to continue"
         next= True
         return render_template("/modules/module1/fluency10.html", value_1=value_1,value_2=value_2,value_3=value_3,
-        value_4=value_4,form=form,message= message, next= next)
+        value_4=value_4,form=form,message= message, next= next, test_completed= test_completed)
     return render_template("/modules/module1/fluency10.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
 

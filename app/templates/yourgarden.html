@@ -9,12 +9,42 @@
         <p class="text-center">{{message}}</p>
     {% endif %}
     <br>
-    <img src="/static/draftgarden.jpg" alt="Garden Map" usemap="#gardenmap">
+    <!-- <img src="/static/draftgarden.jpg" alt="Garden Map" usemap="#gardenmap">
 
     <map name="gardenmap">
     <area shape="rect" coords="0,0,373,393" alt="Fluency Fountain" href= "{{url_for('fluency')}}">
    
-    </map>
+    </map> -->
+    <table class = "text-center">
+        <tr>
+          <td>
+            <a href= "{{url_for('fluency')}}">
+                {% if module_1_completed == 'not started' %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Black_And_White_Fountain_%2890123217%29.jpeg" height=250 width=250 >
+               
+                {% elif module_1_completed == 'in progress' %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Round_fountain_surrounded_by_trees_under_a_stormy_sky_in_Kyoto_Botanical_Garden_Japan.jpg" height=250 width=250 >
+
+                {% else %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Fountain_-_Wilhelma.jpg" height=250 width=250 >
+
+                </a>
+                {% endif %}
+          </td>
+          <td>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Hedge_maze_in_Parque_S%C3%A3o_Roque_da_Lameira_2.jpg" height=250 width=250>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Allotments_off_Sandling_Lane_-_geograph.org.uk_-_89452.jpg" height=250 width=250>
+            </td>
+          <td>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Stonecrop_Gardens%2C_Cold_Spring%2C_violet_flowers.jpg" height=250 width=250>
+          </td>
+        </tr>
+      </table>
+      
     
 
 </div>

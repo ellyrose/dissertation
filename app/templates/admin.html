@@ -20,6 +20,7 @@
             <td>Last Name</td>
             <td>Email Address</td>
             <td>Birthdate</td>
+            <td>Country</td>
             <td>Last Seen</td>
             <td>Delete User</td>
         </tr>
@@ -30,6 +31,7 @@
             <td>{{user.last_name}}</td>
             <td>{{user.email_address}} </td>
             <td>{{user.dob}} </td>
+            <td>{{user.country}} </td>
             <td>{{user.last_seen}}</td> 
             <td><a href= "{{url_for('delete', id= user.id)}}">Delete</a></td>
             </tr>

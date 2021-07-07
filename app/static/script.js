@@ -1,6 +1,7 @@
 //code for question 4
 
 var video = document.getElementById("video");
+video.style.display = "none";
 document.getElementById("questions").style.display = "none";
 
 function play() {
@@ -17,7 +18,7 @@ function showQuestions(){
 
 function questions() {
     play();
-    setTimeout(showQuestions(), 18000);
+    setTimeout(showQuestions, 17500);
     
 }
 

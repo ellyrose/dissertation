@@ -34,6 +34,10 @@
           <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
         <div class= "mb-3">
+          {{ form.country.label }}
+          {{ form.country(class="form-control") }}
+        </div>
+        <div class= "mb-3">
           {{ form.password_hash.label }}
           {{ form.password_hash(class="form-control") }}
           <small id="passwordHelp" class="form-text text-muted">Your password must be atleast 12 characters long. We reccomend you choose 3 memorable words!</small>
