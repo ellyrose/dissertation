@@ -277,7 +277,7 @@ class Fluency_1(FlaskForm):
     email_address= StringField("What is your email address?", validators=[DataRequired()])
     test_place= SelectField("Which area of the test are you in?", validators=[DataRequired()], choices=AREAS)
     age= SelectField(label="How old are you?", validators=[DataRequired()], choices=AGE)
-    country= StringField("Which country do you live in?", validators=[DataRequired()], choices= COUNTRIES)
+    country= SelectField("Which country do you live in?", validators=[DataRequired()], choices= COUNTRIES)
     
     submit= SubmitField("Submit")
 

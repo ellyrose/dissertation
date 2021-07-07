@@ -245,6 +245,13 @@ def add_score(test):
     total= (test.module_1_score + test.module_2_score + test.module_3_score + test.module_4_score)
     return total
 
+def calculateAge(birthDate):
+    today = dt.today()
+    age = today.year - birthDate.year 
+    if ((today.month, today.day) < (birthDate.month, birthDate.day)):
+        age -= 1
+    return age
+
 def get_location_info():
     geoip_data = simple_geoip.get_geoip_data()
     return jsonify(data=geoip_data)
@@ -625,9 +632,9 @@ def fluencycontinue():
 @app.route('/fluency1',methods=["GET", "POST"])
 @login_required
 def fluency1():
-    location_info = get_location_info()
-    data= location_info.json 
-    print(data)
+    # location_info = get_location_info()
+    # data= location_info.json 
+    # print(data)
     user = current_user
     id= user.id
     test= Test.query.filter_by(userid= id).first()
@@ -647,6 +654,11 @@ def fluency1():
     month= None
     year= None
     season= None
+    birthdate=None
+    email_address= None
+    test_place= None
+    age= None
+    country= None
     message= None
     next= None
     form = Fluency_1()
@@ -659,10 +671,16 @@ def fluency1():
         test.module_1_status='in progress'
         module_score= test.module_1_score
         attention= test.attention
+        day = form.day.data
         date= form.date.data
         month= form.month.data
         year= form.year.data
         season= form.season.data
+        birthdate= form.birthdate.data
+        email_address= form.email_address.data
+        test_place= form.test_place.data
+        age= int(form.age.data)
+        country= form.country.data
         actual_date= dt.today()
         actual_day= actual_date.day
         actual_year= actual_date.year
@@ -672,7 +690,12 @@ def fluency1():
         spring= ["March", "April", "May","June"]
         summer= ["June", "July", "August","September"]
         autumn= ["September", "October", "November"]
-        print(month_now)
+        actual_birthdate= user.dob
+        print("birthdays",birthdate,actual_birthdate)
+        actual_email = user.email_address
+        actual_age= calculateAge(actual_birthdate)
+        actual_country= user.country
+        print ("ages", age, actual_age)
         if day == day_now:
             print("day is correct")
             attention += 1 
@@ -726,13 +749,44 @@ def fluency1():
                 module_score +=1
             else:
                 pass
+        if birthdate == actual_birthdate:
+            attention += 1
+            module_score +=1
+            print("birthdate is correct")
+        else:
+            pass
+        if email_address == actual_email:
+            attention += 1
+            module_score +=1
+            print("email is correct")
+        else:
+            pass
+        if test_place.lower() == 'fluency fountain':
+            attention += 1
+            module_score +=1
+            print("test p is correct")
+        else:
+            pass
+        if age == actual_age:
+            attention += 1
+            module_score +=1
+            print("age is correct")
+        else:
+            pass
+        if country == actual_country:
+            attention += 1
+            module_score +=1
+            print("country is correct")
+        else:
+            pass
         test.module_1_score= module_score
         test.attention= attention
         print("attention socre is", test.attention)
         questions.question_1= True
         db.session.commit()
         return render_template("/modules/module1/fluency1completed.html")
-    return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,form=form,next=next,message= message)
+    return render_template("/modules/module1/fluency1.html", day= day, date= date, year= year, season= season,birthdate=birthdate,
+    email_address= email_address, test_place=test_place, age= age, country= country,form=form,next=next,message= message)
 
 
 

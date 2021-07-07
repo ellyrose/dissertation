@@ -48,6 +48,26 @@
             {{ form.season.label }}
             {{ form.season(class="form-control") }}
         </div>
+        <div class= "mb-3">
+            {{ form.birthdate.label }}
+            {{ form.birthdate(class="form-control") }}
+        </div>
+        <div class= "mb-3">
+            {{ form.email_address.label }}
+            {{ form.email_address(class="form-control") }}
+        </div>
+        <div class= "mb-3">
+            {{ form.test_place.label }}
+            {{ form.test_place(class="form-control") }}
+        </div>
+        <div class= "mb-3">
+            {{ form.age.label }}
+            {{ form.age(class="form-control") }}
+        </div>
+        <div class= "mb-3">
+            {{ form.country.label }}
+            {{ form.country(class="form-control") }}
+        </div>
         <br>
         {% if form.errors %}
             <p>Sorry, your details could not be processed because of the following errors: </p>
