@@ -1,4 +1,3 @@
-from operator import mod
 from flask import Flask, flash, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime, timedelta, date as dt
 from flask_sqlalchemy import SQLAlchemy
@@ -15,7 +14,7 @@ from fluency_forms import *
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import calendar
-from flask_simple_geoip import SimpleGeoIP
+
 
 
 app = Flask(__name__)
@@ -82,9 +81,6 @@ limiter = Limiter(
 )
 
 
-
-app.config.update(GEOIPIFY_API_KEY='2bf8e159c38372')
-simple_geoip = SimpleGeoIP(app)
 
 # create users table 
 
@@ -252,10 +248,7 @@ def calculateAge(birthDate):
         age -= 1
     return age
 
-def get_location_info():
-    geoip_data = simple_geoip.get_geoip_data()
-    return jsonify(data=geoip_data)
-        
+       
 
 '''ROUTES'''
 
@@ -632,9 +625,6 @@ def fluencycontinue():
 @app.route('/fluency1',methods=["GET", "POST"])
 @login_required
 def fluency1():
-    # location_info = get_location_info()
-    # data= location_info.json 
-    # print(data)
     user = current_user
     id= user.id
     test= Test.query.filter_by(userid= id).first()

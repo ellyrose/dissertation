@@ -7,7 +7,9 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
-        <script src="static/script.js" defer></script>
+        <script src="static/sound.js" defer></script>
+        <script src="static/questionFour.js" defer></script>
+        <script src="static/questionSix.js" defer></script>
         <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" 
         integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" 
@@ -46,6 +48,9 @@
                 {% if current_user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link navbar-font-size text-dark mx-1" href="/yourgarden">Your Garden</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link navbar-font-size text-dark mx-1" href="/results">Your Results</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto mx-4 mb-lg-0">
