@@ -1,3 +1,50 @@
 {% extends 'base.html' %}
 {% block title %} Your Results {% endblock %}
 {% block content %}
+
+<h1 class="text-center">Your Results</h1>
+{% if all_tests == [] %}
+
+    <p class="text-center">You have not yet completed the test! Please return to your garden to choose a section.</p>
+
+    <br>
+    
+    <a href='/yourgarden' class= "button d-block" >Your Garden</a> 
+ 
+{% else %}    
+
+    <p class="text-center">Your resluts for previous tests are listed below:</p>
+    
+    <table class= "table table-bordered table-hover">
+        <tr>
+            <td>Date Completed (if finished)</td>
+            <td>Total Score</td>
+            <td>Attention Score</td>
+            <td>Fluency Score</td>
+            <td>Language Score</td>
+            <td>Memory Score</td>
+            <td>Visuospatial Score</td>
+        </tr>
+        {% for test in all_tests %}
+            <tr>
+            <td>{{test.date_completed}}</td>  
+            <td>{{test.total}}</td>
+            <td>{{test.attention}} </td>
+            <td>{{test.fluency}} </td>
+            <td>{{test.language}} </td>
+            <td>{{test.memory}}</td> 
+            <td>{{test.visuospatial}}</td> 
+            </tr>
+        {% endfor %}    
+    </table>
+
+    <p>If ou would like further advice regarding your results, or anything else to do with Mild Cognitive Impairment, please visit the Support page.</p>
+
+{% endif %}
+
+
+
+
+
+
+{% endblock %}

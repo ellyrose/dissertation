@@ -417,6 +417,17 @@ def yourgarden():
     module_3_completed=module_3_completed,module_4_completed=module_4_completed)
 
 
+@app.route('/results')
+@login_required
+def results():
+    user = current_user
+    id = user.id 
+    all_tests= Test.query.filter_by(userid= id, completed= True).order_by(Test.date_completed).all()
+    print(all_tests)
+    return render_template('results.html',all_tests=all_tests)
+
+
+
 @app.route('/account',methods=["GET", "POST"])
 @login_required
 def account():
