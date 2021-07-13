@@ -109,23 +109,22 @@ table {
 
 .tooltip-inner  {
 
-  background-color: lightgrey;
+  background-color: #ccf8eb;  
   color: #333;
 }
 
 .tooltip.bs-tooltip-top .tooltip-arrow::before {
-  border-top-color: lightgrey;
+  border-top-color: #ccf8eb;  
 }
 
 .tooltip.bs-tooltip-bottom .tooltip-arrow::before {
-  border-bottom-color: lightgrey;
+  border-bottom-color: #ccf8eb;  
 }
 
 .tooltip.bs-tooltip-start .tooltip-arrow::before {
-  border-left-color: lightgrey;
-}
+  border-left-color: #ccf8eb;  
 
 .tooltip.bs-tooltip-end .tooltip-arrow::before {
-  border-right-color: lightgrey;
+  border-right-color: #ccf8eb;  
 }
 

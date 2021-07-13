@@ -117,6 +117,7 @@ class Users(UserMixin, db.Model):
     def generate_reset_token(self, expiration=3600):
         s = Serializer(app.config['SECRET_KEY'], expiration)
         '''the user ID is encoded using the secret key, and the token expiration set to 1 hour'''
+        self.id = str(self.id)
         return s.dumps({'id': self.id}).decode('utf-8')
 
     @staticmethod
@@ -650,6 +651,8 @@ def fluency1():
     else:
         test= Test.query.filter_by(userid= id).first()
         questions= Module_1.query.filter_by(id= id).first()
+    if questions.question_1:
+        return redirect(url_for('yourgarden'))
     day = None
     date= None
     month= None
@@ -922,9 +925,9 @@ def fluency4():
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
         memory= test.memory
-        value_1 = form.v1.data
-        value_2 = form.v2.data
-        value_3 = form.v3.data
+        value_1 = form.v1.data.strip(" ")
+        value_2 = form.v2.data.strip(" ")
+        value_3 = form.v3.data.strip(" ")
         answers_1= ["lemon","leman","liman","limon"]
         answers_2= ["key","kee","ki","kie"]
         answers_3= ["ball","bal","baul"]
