@@ -1,5 +1,11 @@
 const host= "http://127.0.0.1/";
 
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip({
+        placement: 'bottom'
+    });
+    
+  });
 
 // code for sound toggle 
 

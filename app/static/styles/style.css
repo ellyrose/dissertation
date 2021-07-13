@@ -106,3 +106,26 @@ table {
 
   margin: 30px;
 }
+
+.tooltip-inner  {
+
+  background-color: lightgrey;
+  color: #333;
+}
+
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: lightgrey;
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: lightgrey;
+}
+
+.tooltip.bs-tooltip-start .tooltip-arrow::before {
+  border-left-color: lightgrey;
+}
+
+.tooltip.bs-tooltip-end .tooltip-arrow::before {
+  border-right-color: lightgrey;
+}
+

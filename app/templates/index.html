@@ -4,8 +4,9 @@
 {% if current_user.is_authenticated %}
 <div>
     <div id="onOff">
-        <img id="sound">
+        <img id="sound" data-toggle="tooltip" data-placement="bottom" title="Click to control sound!">
     </div>
+ 
    <div>
     <audio autoplay loop id= "audio">
         <source src="static/test.mp3" type="audio/mpeg">
