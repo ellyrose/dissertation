@@ -902,6 +902,13 @@ def fluency3():
 @app.route('/fluency4',methods=["GET", "POST"])
 @login_required
 def fluency4():
+    user = current_user
+    id= user.id
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions.question_4:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3:
+        return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
     value_3 = None
@@ -950,7 +957,7 @@ def fluency5():
     questions= Module_1.query.filter_by(id= id).first()
     if questions.question_5:
         return redirect(url_for('yourgarden'))
-    if not questions.question_1 or not questions.question_2 or not questions.question_4 :
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 :
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1004,9 +1011,36 @@ def fluency6():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
-    questions.question_6=True
-    db.session.commit()
-    return render_template("/modules/module1/fluency6.html")
+    if questions.question_6:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 :
+        return redirect(url_for('yourgarden'))
+    value_1 = None
+    value_2 = None
+    value_3 = None
+    value_4 = None
+    form= Fluency_6()
+    if form.validate_on_submit():
+        user= current_user
+        id= user.id
+        test= Test.query.filter_by(userid= id).first()
+        questions= Module_1.query.filter_by(id= id).first()
+        module_score= test.module_1_score
+        language= test.language
+        value_1 = form.v1.data
+        value_2 = form.v2.data
+        value_3 = form.v3.data
+        value_4 = form.v4.data
+        total = (value_1 + value_2 + value_3 + value_4)
+        module_score += total
+        language += total 
+        test.language= language
+        test.module_1_score= module_score
+        questions.question_6=True
+        db.session.commit()
+        return render_template("/modules/module1/fluency6completed.html")
+    return render_template("/modules/module1/fluency6.html", form= form, value_1=value_1, value_2=value_2, value_3= value_3,
+    value_4=value_4)
 
 @app.route('/fluency7',methods=["GET", "POST"])
 @login_required
@@ -1016,7 +1050,7 @@ def fluency7():
     questions= Module_1.query.filter_by(id= id).first()
     if questions.question_7:
         return redirect(url_for('yourgarden'))
-    if not questions.question_1 or not questions.question_2 or not questions.question_4 or not questions.question_5 or not questions.question_6 :
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 :
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1127,7 +1161,7 @@ def fluency8():
     if question.question_8:
         return redirect(url_for('yourgarden'))
     ''' used to stop users skipping forward'''
-    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7:
+    if not question.question_1 or not question.question_2 or not question.question_3 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7:
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1180,7 +1214,7 @@ def fluency9():
     question= Module_1.query.filter_by(id= id).first()
     if question.question_9:
         return redirect(url_for('yourgarden'))
-    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8:
+    if not question.question_1 or not question.question_2 or not question.question_3 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8:
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1232,7 +1266,7 @@ def fluency10():
     question= Module_1.query.filter_by(id= id).first()
     if question.question_10:
         return redirect(url_for('yourgarden'))
-    if not question.question_1 or not question.question_2 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8 or not question.question_9:
+    if not question.question_1 or not question.question_2 or not question.question_3 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8 or not question.question_9:
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None

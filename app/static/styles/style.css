@@ -78,3 +78,31 @@ table {
 
   position:fixed;
 }
+
+.flower, .can{
+
+  cursor: pointer;
+  margin: 30px;
+}
+
+.flower:hover, .can:hover{
+
+  border:5px solid #ccf8eb;  
+  box-shadow: 0 0 10px #666;  
+  -webkit-box-shadow: 0 0 10px #333;  
+  -moz-box-shadow: 0 0 10px #333;  
+  -o-box-shadow: 0 0 10px #333;  
+  -ms-box-shadow: 0 0 10px #333;
+}
+
+.flower:active, .can:active{
+
+  border:5px solid #ccf8eb;  
+  box-shadow: 0 0 5px #333;  
+  transform: translateY(4px);
+}
+
+.flowerblur, .canblur{
+
+  margin: 30px;
+}

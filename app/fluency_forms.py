@@ -4,6 +4,7 @@ from wtforms import StringField, SubmitField, BooleanField,IntegerField,HiddenFi
 from wtforms.fields.core import SelectField
 from wtforms.validators import DataRequired,Email,EqualTo,Length,NoneOf,InputRequired, ValidationError
 from wtforms.fields.html5 import DateField
+from wtforms.widgets import HiddenInput
 
 DAYS= ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 DATE=range(1,32)
@@ -311,6 +312,10 @@ class Fluency_5(FlaskForm):
     submit= SubmitField("Submit")
 
 class Fluency_6(FlaskForm):
+    v1= IntegerField(widget=HiddenInput())
+    v2= IntegerField(widget=HiddenInput())
+    v3= IntegerField(widget=HiddenInput())
+    v4= IntegerField(widget=HiddenInput())
 
     submit= SubmitField("Submit")
 

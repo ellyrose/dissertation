@@ -8,7 +8,7 @@ if (window.location.href == host){
     var image = document.getElementById("sound");
     image.src = "static/soundOn.png";
     var sound = document.getElementById("audio");
-    sound.play()
+    // sound.play()
 
     function togglePlay() {
         if (sound.paused) {
@@ -67,110 +67,289 @@ if (window.location.href == host + 'fluency2')
 if (window.location.href == host + 'fluency6')
 
 {
-    var canvas;
-    var stage;
-    var flower;
-    var can;
+    var startDiv = document.getElementById("startDiv");
+    var soundDiv= document.getElementById("soundDiv");
+    var div1= document.getElementById("div1");
+    var div2= document.getElementById("div2");
+    var div3= document.getElementById("div3");
+    var div4= document.getElementById("div4");
+    var next = document.getElementById("next");
+
+    var start = document.getElementById("startBtn");
+   
+
+    soundDiv.style.display = "none";
+    div1.style.display = "none";
+    div2.style.display = "none";
+    div3.style.display = "none";
+    div4.style.display = "none";
+   
+
+    var audio1 = document.getElementById("audio1");
+    var audio2 = document.getElementById("audio2");
+    var audio3 = document.getElementById("audio3");
+    var audio4 = document.getElementById("audio4");
+
+    var flower1 = document.getElementById("flower1");
+    var flower2 = document.getElementById("flower2");
+    var flower3 = document.getElementById("flower3");
+    var flower4 = document.getElementById("flower4");
+
+    var can1 = document.getElementById("can1");
+    var can2 = document.getElementById("can2");
+    var can3 = document.getElementById("can3");
+    var can4 = document.getElementById("can4");
+
+    
+
+    var finish1 = document.getElementById("finish1");
+    var finish2 = document.getElementById("finish2");
+    var finish3 = document.getElementById("finish3");
+    var finish4 = document.getElementById("finish4");
+
     var points = 0;
 
-    function init() {
+    var clickedArray1 = []
+    var clickedArray2 = []
+    var clickedArray3 = []
+    var clickedArray4 = []
 
-        canvas= document.getElementById("canvas");
-        stage= new createjs.Stage(canvas);
-        flower= new Image();
-        flower.src= "static/flower2.png";
-        flower.onload = loadFlower;
-        can = new Image();
-        can.src= "static/can3.png";
-        can.onload = loadCan;
-
-        
-        stage.update();
-
-
-
-    }
-
-
-    function loadFlower(event) {
-
-        var image = event.target;
-        var flower = new createjs.Bitmap(image);
-        stage.addChild(flower);
-        flower.x= canvas.width-700;
-        flower.y= canvas.height/2-200
-    
-        var mover = new createjs.Container();
-        mover.x = mover.y = 100;
-        mover.addChild(flower);
-        stage.addChild(mover);
-
-        mover.on("mousedown", function (evt) {
-            // keep a record on the offset between the mouse position and the container
-            // position. currentTarget will be the container that the event listener was added to:
-            evt.currentTarget.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
-        });
-        
-        mover.on("pressmove",function(evt) {
-            // Calculate the new X and Y based on the mouse new position plus the offset.
-            evt.currentTarget.x = evt.stageX + evt.currentTarget.offset.x;
-            evt.currentTarget.y = evt.stageY + evt.currentTarget.offset.y;
-            // make sure to redraw the stage to show the change:
-            stage.update();   
-        });
 
     
+   
+
+    function playOne(){
+
+        startDiv.style.display = "none";
+        soundDiv.style.display ="block";
+        audio1.play()
         
-        stage.update();
+
+
     }
 
-    function loadCan(event) {
+    function showDiv1() {
 
-        var image = event.target;
-        var can = new createjs.Bitmap(image);
-        stage.addChild(can);
-        can.x= canvas.width-400;
-        can.y= canvas.height/2-100
-        var mover = new createjs.Container();
-        mover.x = mover.y = 100;
-        mover.addChild(can);
-        stage.addChild(mover);
+        soundDiv.style.display ="none"
+        div1.style.display = "block"
 
-        mover.on("mousedown", function (evt) {
-            evt.currentTarget.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
-        });
-        
-        mover.on("pressmove",function(evt) {
-            evt.currentTarget.x = evt.stageX + evt.currentTarget.offset.x;
-            evt.currentTarget.y = evt.stageY + evt.currentTarget.offset.y;
-            stage.update();   
-        });
-        
-        stage.update();
     }
 
-    var start = document.getElementById("start");
 
-    start.addEventListener('click', one, false);
+    function begin() {
 
+        playOne()
+        setTimeout(showDiv1, 7000);
+    }
 
-    flower.addEventListener("click", evaluateAns, false);   
+    // code for step 1 
 
-    can.addEventListener("click",evaluateAns, false);   
+    function clicked1(event){
 
+        if (event.target== flower1){
 
-    function evaluateAns(event){
-
-        if (event.target == flower){
-
-            points += 1;
+            clickedArray1.push('f')
         }
 
+        if (event.target == can1){
+
+            clickedArray1.push('c')
+        }
+        console.log(clickedArray1)
+    }
+
+ 
+
+    function evaluate1(){
+
+        if (JSON.stringify(clickedArray1) === JSON.stringify(['f','c'])) {
+
+            document.getElementById("v1").value = 1;
+            div1.style.display = "none";
+            soundDiv.style.display = "block";
+            audio2.play()
+        }
         else{
-            pass
 
+            document.getElementById("v1").value = 0;
+            document.getElementById("v2").value = 0;
+            document.getElementById("v3").value = 0;
+            document.getElementById("v4").value = 0;
+            document.getElementById("form").submit();
+            
         }
-        console.log(points)
+
     }
+    
+    function showDiv2(){
+
+        soundDiv.style.display = "none";
+        div2.style.display = "block";
+    }
+
+    function question1(){
+        evaluate1()
+        setTimeout(showDiv2, 7000);
+    }
+
+
+
+ // code for step 2 
+
+    function clicked2(event){
+
+        if (event.target== flower2){
+
+            clickedArray2.push('f')
+        }
+
+        if (event.target == can2){
+
+            clickedArray2.push('c')
+        }
+        
+    }
+
+ 
+
+    function evaluate2(){
+
+        if (JSON.stringify(clickedArray2) === JSON.stringify(['c','f'])) {
+
+            document.getElementById("v2").value = 1;
+        
+        }
+        else{
+            document.getElementById("v2").value = 0;
+        }
+
+        div2.style.display = "none";
+        soundDiv.style.display = "block";
+        audio3.play()
+        
+
+    }
+    
+    function showDiv3(){
+
+        soundDiv.style.display = "none";
+        div3.style.display = "block";
+    }
+
+    function question2(){
+        evaluate2()
+        setTimeout(showDiv3, 6000);
+    }
+
+    // code for step 3
+    
+    function clicked3(event){
+
+        if (event.target== flower3){
+
+            clickedArray3.push('f')
+        }
+
+        if (event.target == can3){
+
+            clickedArray3.push('c')
+        }
+        
+    }
+
+ 
+
+    function evaluate3(){
+
+        if (JSON.stringify(clickedArray3) === JSON.stringify(['f'])) {
+
+            document.getElementById("v3").value = 1;
+        
+        }
+        else{
+            document.getElementById("v3").value = 0;
+        }
+
+        div3.style.display = "none";
+        soundDiv.style.display = "block";
+        audio4.play()
+        
+
+    }
+    
+    function showDiv4(){
+
+        soundDiv.style.display = "none";
+        div4.style.display = "block";
+    }
+
+    function question3(){
+        evaluate3()
+        setTimeout(showDiv4, 6000);
+    }
+
+
+    // code for step 4 
+
+    function clicked4(event){
+
+        if (event.target== flower4){
+
+            clickedArray4.push('f')
+        }
+
+        if (event.target == can4){
+
+            clickedArray4.push('c')
+        }
+        
+    }
+
+ 
+
+    function evaluate4(){
+
+        if (JSON.stringify(clickedArray4) === JSON.stringify(['f','c'])) {
+
+            document.getElementById("v4").value = 1;
+        
+        }
+        else{
+            document.getElementById("v4").value = 0;
+        }
+
+        document.getElementById("form").submit();
+        
+
+    }
+    
+
+
+
+
+
+    start.addEventListener('click', begin, false);
+
+    flower1.addEventListener('click', clicked1, false);
+    can1.addEventListener('click', clicked1, false);
+
+    finish1.addEventListener('click', question1, false)
+
+    flower2.addEventListener('click', clicked2, false);
+    can2.addEventListener('click', clicked2, false);
+
+    finish2.addEventListener('click', question2, false)
+
+    flower3.addEventListener('click', clicked3, false);
+    can3.addEventListener('click', clicked3, false);
+
+    finish3.addEventListener('click', question3, false)
+    
+    flower4.addEventListener('click', clicked4, false);
+    can4.addEventListener('click', clicked4, false);
+
+    finish4.addEventListener('click', evaluate4, false)
+
+
 
 }
