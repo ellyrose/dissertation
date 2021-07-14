@@ -1,5 +1,6 @@
 from flask import Flask, flash, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
 from datetime import datetime, timedelta, date as dt
+from flask_admin.base import AdminIndexView
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 from flask_migrate import Migrate, current
@@ -14,6 +15,11 @@ from fluency_forms import *
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import calendar
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.menu import MenuLink
+
+
 
 
 
@@ -228,6 +234,28 @@ login_manager.login_view = 'login'
 def load_user(id):
     return Users.query.get(id)
 
+''' code for admin panel'''
+
+class MyModelView(ModelView):
+        column_display_pk = True
+        
+
+
+# edits AdminIndexView to only allow users who are logged in as admin to access page. WIll return 404 error if not.
+class myAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.admin
+    
+    def inaccessible_callback(self, name, **kwargs):    
+        return page_not_found(404)
+
+
+admin = Admin(app, index_view= myAdminIndexView())
+admin.add_view(MyModelView(Users, db.session))
+admin.add_link(MenuLink(name='Logout', category='', url="/logout"))
+
+
+''' error handlers '''
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -237,6 +265,8 @@ def page_not_found(e):
 def internal_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
+
+''' code used to calculate total score '''
 
 def add_score(test):
     total= (test.module_1_score + test.module_2_score + test.module_3_score + test.module_4_score)
@@ -464,13 +494,14 @@ def account():
             user.email_address= email_address
             user.country=country
             try:
+                
                 db.session.commit()
                 form.first_name.data= user.first_name
                 form.last_name.data = user.last_name
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
                 form.country.data= user.country
-                message= "Your details have been updated!"
+                flash("Your details have been updated!")
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
@@ -480,7 +511,7 @@ def account():
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
                 form.country.data= user.country
-                message= "Sorry there was an error, please try again."
+                flash("Sorry there was a problem, please try again.")
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
@@ -500,83 +531,83 @@ def logout():
 
 
 ''' Admin panel page '''
-@app.route('/admin')
-def admin():
-    if current_user.is_authenticated:
-        user= current_user
-        if not user.admin:
-            return page_not_found(404)
-        else:
-            pass
-    else:
-        return page_not_found(404)
-    all_users= Users.query.order_by(Users.date_created)
-    return render_template("admin.html", all_users=all_users)
+# @app.route('/admin')
+# def admin():
+#     if current_user.is_authenticated:
+#         user= current_user
+#         if not user.admin:
+#             return page_not_found(404)
+#         else:
+#             pass
+#     else:
+#         return page_not_found(404)
+#     all_users= Users.query.order_by(Users.date_created)
+#     return render_template("admin.html", all_users=all_users)
 
 ''' Admin update user details page '''
-@app.route('/update/<id>',methods=["GET", "POST"])
-@login_required
-def update(id):
-    user= current_user
-    if not user.admin:
-        return page_not_found(404)
-    update_user= Users.query.get_or_404(id)
-    first_name= update_user.first_name
-    last_name = update_user.last_name
-    birthdate= update_user.dob
-    email_address= update_user.email_address
-    country= update_user.country
-    message= None
-    form= AdminEditForm()
-    if form.validate_on_submit():
-        first_name= form.first_name.data
-        last_name= form.last_name.data
-        birthdate= form.birthdate.data
-        email_address=form.email_address.data.lower()
-        country=form.country.data.lower()
-        update_user.first_name= first_name
-        update_user.last_name= last_name
-        update_user.dob= birthdate
-        update_user.email_address= email_address
-        update_user.country= country
-        try:
-            db.session.commit()
-            form.first_name.data= update_user.first_name
-            form.last_name.data = update_user.last_name
-            form.birthdate.data= update_user.dob
-            form.email_address.data= update_user.email_address
-            form.country.data= update_user.country
-            message= "User's details have been updated!"
-            return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
-            birthdate=birthdate, email_address=email_address,country= country, message=message)
-        except:
-            form.first_name.data= update_user.first_name
-            form.last_name.data = update_user.last_name
-            form.birthdate.data= update_user.dob
-            form.email_address.data= update_user.email_address
-            form.country.data= update_user.country
-            message= "Sorry there was an error, please try again."
-            return render_template("update_user.html", form=form,update_user=update_user,first_name=first_name, last_name=last_name,
-            birthdate=birthdate, email_address=email_address,country= country,  message=message)
-    return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
-    birthdate=birthdate, email_address=email_address,country= country, )
+# @app.route('/update/<id>',methods=["GET", "POST"])
+# @login_required
+# def update(id):
+#     user= current_user
+#     if not user.admin:
+#         return page_not_found(404)
+#     update_user= Users.query.get_or_404(id)
+#     first_name= update_user.first_name
+#     last_name = update_user.last_name
+#     birthdate= update_user.dob
+#     email_address= update_user.email_address
+#     country= update_user.country
+#     message= None
+#     form= AdminEditForm()
+#     if form.validate_on_submit():
+#         first_name= form.first_name.data
+#         last_name= form.last_name.data
+#         birthdate= form.birthdate.data
+#         email_address=form.email_address.data.lower()
+#         country=form.country.data.lower()
+#         update_user.first_name= first_name
+#         update_user.last_name= last_name
+#         update_user.dob= birthdate
+#         update_user.email_address= email_address
+#         update_user.country= country
+#         try:
+#             db.session.commit()
+#             form.first_name.data= update_user.first_name
+#             form.last_name.data = update_user.last_name
+#             form.birthdate.data= update_user.dob
+#             form.email_address.data= update_user.email_address
+#             form.country.data= update_user.country
+#             message= "User's details have been updated!"
+#             return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
+#             birthdate=birthdate, email_address=email_address,country= country, message=message)
+#         except:
+#             form.first_name.data= update_user.first_name
+#             form.last_name.data = update_user.last_name
+#             form.birthdate.data= update_user.dob
+#             form.email_address.data= update_user.email_address
+#             form.country.data= update_user.country
+#             message= "Sorry there was an error, please try again."
+#             return render_template("update_user.html", form=form,update_user=update_user,first_name=first_name, last_name=last_name,
+#             birthdate=birthdate, email_address=email_address,country= country,  message=message)
+#     return render_template("update_user.html", form=form, update_user=update_user,first_name=first_name, last_name=last_name,
+#     birthdate=birthdate, email_address=email_address,country= country, )
 
-@app.route('/delete/<id>')
-@login_required
-def delete(id):
-    user= current_user
-    if not user.admin:
-        return page_not_found(404)
-    update_user= Users.query.get_or_404(id)
-    try:
-        db.session.delete(update_user)
-        db.session.commit()
-        all_users=  Users.query.order_by(Users.date_created)
-        flash("User has been deleted!")
-        return render_template("admin.html", all_users=all_users)
-    except:
-        flash("There was a problem, please try again.")
-        return render_template("admin.html", all_users=all_users)
+# @app.route('/delete/<id>')
+# @login_required
+# def delete(id):
+#     user= current_user
+#     if not user.admin:
+#         return page_not_found(404)
+#     update_user= Users.query.get_or_404(id)
+#     try:
+#         db.session.delete(update_user)
+#         db.session.commit()
+#         all_users=  Users.query.order_by(Users.date_created)
+#         flash("User has been deleted!")
+#         return render_template("admin.html", all_users=all_users)
+#     except:
+#         flash("There was a problem, please try again.")
+#         return render_template("admin.html", all_users=all_users)
 
 ''' ROUTES FOR MODULE 1 '''
 
