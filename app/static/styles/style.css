@@ -1,8 +1,8 @@
-ul.navbar-nav a:hover {
+ul.navbar-nav a:hover, .admin:hover {
     color: darkgrey !important;
   }
 
-ul.navbar-nav a{
+ul.navbar-nav a, .admin{
     color:#66697c !important
 }
 
@@ -39,6 +39,37 @@ ul.navbar-nav a{
     font-style: 'Helvetica Neue';
 
   }
+
+  .button404 {
+    background-color: #EAF0F2;; 
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 2px solid black !important;
+    font-style: 'Helvetica Neue';
+    color: #66697c;
+    width:fit-content;
+    margin:auto;
+  }
+
+  .button404:hover {
+    background-color: #EAF0F2;; 
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 2px solid black !important;
+    font-style: 'Helvetica Neue';
+    color: #66697c;
+    width:fit-content;
+    margin:auto;
+  }
+
 
   .pform{
     width:75%;
@@ -124,7 +155,13 @@ table {
 .tooltip.bs-tooltip-start .tooltip-arrow::before {
   border-left-color: #ccf8eb;  
 
+}
+
 .tooltip.bs-tooltip-end .tooltip-arrow::before {
   border-right-color: #ccf8eb;  
 }
 
+#page-404 {
+
+  background-color: #ccf8eb;
+}

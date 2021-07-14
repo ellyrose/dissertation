@@ -323,7 +323,8 @@ class EditDetailsForm(FlaskForm):
     last_name= StringField("Last Name")
     birthdate= DateField("Birthdate" )
     email_address= StringField("Email address")
-    country= SelectField("Country", choices= COUNTRIES)
+    current_country=StringField("Current country",render_kw={'readonly': True})
+    country= SelectField("Select to change country", choices= COUNTRIES)
     password_hash = PasswordField('Please enter your current password to confirm any changes:', validators=[DataRequired()])
 
     submit= SubmitField("Submit")
@@ -335,6 +336,7 @@ class AdminEditForm(FlaskForm):
     last_name= StringField("Last Name")
     birthdate= DateField("Birthdate" )
     email_address= StringField("Email address")
+    current_country=StringField("Current country",render_kw={'readonly': True})
     country= SelectField("Country", choices= COUNTRIES)
 
     submit= SubmitField("Submit")

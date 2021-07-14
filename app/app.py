@@ -230,11 +230,11 @@ def load_user(id):
 
 
 @app.errorhandler(404)
-def page_not_found(error):
-   return render_template('404.html', title = '404'), 404
+def page_not_found(e):
+   return render_template('404.html'), 404
 
 @app.errorhandler(500)
-def internal_error(error):
+def internal_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
 
@@ -501,10 +501,14 @@ def logout():
 
 ''' Admin panel page '''
 @app.route('/admin')
-@login_required
 def admin():
-    user= current_user
-    if not user.admin:
+    if current_user.is_authenticated:
+        user= current_user
+        if not user.admin:
+            return page_not_found(404)
+        else:
+            pass
+    else:
         return page_not_found(404)
     all_users= Users.query.order_by(Users.date_created)
     return render_template("admin.html", all_users=all_users)
