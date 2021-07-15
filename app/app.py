@@ -313,7 +313,7 @@ def createaccount():
             form.last_name.data= " "
             birthdate= form.birthdate.data.strftime('%d-%m-%Y')
             form.birthdate.data = datetime.strptime("01-01-2020", '%d-%m-%Y')
-            email_address= form.email_address.data.strip(" ")
+            email_address= form.email_address.data.lower().strip(" ")
             form.email_address.data= " "
             country= form.country.data
             form.country.data= " "
@@ -343,7 +343,7 @@ def login():
     user=None
     form= LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email_address=form.email_address.data.strip(" ")).first()
+        user = Users.query.filter_by(email_address=form.email_address.data.lower().strip(" ")).first()
         if user is not None and user.verify_password(form.password_hash.data):
             login_user(user ,remember=False)
             home = url_for('index')
@@ -495,14 +495,14 @@ def account():
         first_name= form.first_name.data
         last_name= form.last_name.data
         birthdate= form.birthdate.data
-        email_address=form.email_address.data.lower()
-        country=form.country.data
+        email_address=form.email_address.data.lower().strip(" ")
+        country=form.country.data.strip(" ")
         current_password= form.password_hash.data
         ''' if email address has changed, check that it is not alrady in use '''
         if email_address != current_email_address:
             check = Users.query.filter_by(email_address=email_address).first()
             if check is not None:
-                message= "Sorry, please enter a different email address."
+                flash("Sorry, please enter a different email address.")
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
@@ -1402,8 +1402,8 @@ def memory():
         test = Test.query.filter_by(userid=id, completed= False).first() 
         '''if they have no active tests ongoing'''
         if test is None: 
-            active_test= False 
             completed = True
+            active_test= False 
             started = False 
         else:
             active_test= True 
