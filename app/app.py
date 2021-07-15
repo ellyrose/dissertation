@@ -454,8 +454,28 @@ def results():
     user = current_user
     id = user.id 
     all_tests= Test.query.filter_by(userid= id, completed= True).order_by(Test.date_completed).all()
-    print(all_tests)
-    return render_template('results.html',all_tests=all_tests)
+    current_test = Test.query.filter_by(userid= id, completed= False).first()
+    module_1 = "not started"
+    module_2= "not started"
+    module_3 = "not started"
+    module_4 = "not started"
+    if current_test == None:
+        module_1 == module_2 == module_3 == module_4 == "not started"
+    else:
+        module_1 = current_test.module_1_status 
+        module_2 = current_test.module_2_status 
+        module_3 = current_test.module_3_status 
+        module_4 = current_test.module_4_status 
+    incomplete_modules = []
+    if module_1 != "completed":
+        incomplete_modules.append("Fluency Fountain")
+    if module_2 != "completed":
+        incomplete_modules.append("Memory Maze")
+    if module_3 != "completed":
+        incomplete_modules.append("Language Log Pile")
+    if module_4 != "completed":
+        incomplete_modules.append("Visual Veg-Plot")
+    return render_template('results.html',all_tests=all_tests, incomplete_modules=incomplete_modules)
 
 
 

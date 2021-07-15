@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% if current_user.is_authenticated %}
+
 <div>
     <div id="onOff">
         <img id="sound" data-toggle="tooltip" data-placement="bottom" title="Click to control sound!">
@@ -15,7 +15,7 @@
            a <a href="static/test.mp3">link to the audio</a> instead.</p>
       </audio>
    </div>
-  
+   {% if current_user.is_authenticated %}
     <img src="{{url_for('static', filename='title.jpg')}}" class="img-fluid mx-auto d-block" width="800" height="150" alt="The Mind Garden">
     <h1 class="text-center"> Welcome to The Mind Garden, {{current_user.first_name}}</h1>
     <p class= "text-center">Click below to enter your garden...</p>
