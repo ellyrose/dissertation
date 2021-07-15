@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %} Memory Maze {% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Memory Maze</h1>
+
+{% if active_test %}
+    {% if completed %}
+        <p class="text-center">You have already completed Memory Maze! Please return to our garden to choose another part of the test. </p>
+
+
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+    
+    {% elif started %}
+
+    <p class="text-center">Welcome back to Memory Maze! Click continue to start where you left off, or return to your garden</p>
+
+     <a href="{{url_for('memorycontinue')}}" class= "button d-block" >Continue</a> 
+    <br>
+     <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+
+    {% else %}
+    <div class= "container-sm">
+        <p>Welcome to Memory Maze, the second part of The Mind Garden test.</p>
+        <p>This part of the test includes 8 questions and should take around 10 minutes to take.</p>
+        <p>It will test your memory, language and fluency.</p>
+        <p>You will need to take this part of the test in one go, so make sure you are comfortable and 
+            in an evironment that is free from distractions!
+        </p>
+        <p>When you are ready, click below to start.</p>
+    </div>
+        <br>
+        <a href="{{url_for('memory')}}" class= "button d-block" >Start</a> 
+
+        <br>
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+    
+
+    {% endif %}
+
+{% else %}
+
+    {% if completed %}
+
+        <p class="text-center">Welcome back to Memory Maze! Click below if you would like to take this part of the test again, or you can return to your garden.</p>
+    
+        <a href="{{url_for('memory1')}}" class= "button d-block" >Start</a> 
+        <br>
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+       
+    {% else %}
+    <div class= "container-sm">
+        <p>Welcome to Memory Maze, the second part of The Mind Garden test.</p>
+        <p>This part of the test includes 8 questions and should take around 10 minutes to take.</p>
+        <p>It will test your memory, language and fluency.</p>
+        <p>You will need to take this part of the test in one go, so make sure you are comfortable and 
+            in an evironment that is free from distractions!
+        </p>
+        <p>When you are ready, click below to start.</p>
+    </div>
+        <br>
+            <a href="{{url_for('memory1')}}" class= "button d-block" >Start</a> 
+        
+
+    {% endif %}
+
+{% endif %}
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+

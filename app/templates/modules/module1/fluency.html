@@ -9,15 +9,32 @@
         <p class="text-center">You have already completed Fluency Fountain! Please return to our garden to choose another part of the test. </p>
 
 
-        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Return to Your Garden</a> 
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
     
-    {% else %}
+    {% elif started %}
 
     <p class="text-center">Welcome back to Fluency Fountain! Click continue to start where you left off, or return to your garden</p>
 
      <a href="{{url_for('fluencycontinue')}}" class= "button d-block" >Continue</a> 
     <br>
-     <a href="{{url_for('yourgarden')}}" class= "button d-block" >Return to Your Garden</a> 
+     <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+
+    {% else %}
+        <div class= "container-sm">
+            <p>Welcome to Fluency Fountain, the first part of The Mind Garden test.</p>
+            <p>This part of the test includes 10 questions and should take around 10 minutes to take.</p>
+            <p>It will test your memory, attention, language and visual spatial abilities.</p>
+            <p>You will need to take this part of the test in one go, so make sure you are comfortable and 
+                in an evironment that is free from distractions!
+            </p>
+            <p>When you are ready, click below to start.</p>
+        </div>
+            <br>
+                <a href="{{url_for('fluency1')}}" class= "button d-block" >Start</a> 
+                <br>
+                <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+        
+
     {% endif %}
 
 {% else %}
@@ -26,9 +43,9 @@
 
         <p class="text-center">Welcome back to Fluency Fountain! Click below if you would like to take the test again, or you can return to your garden.</p>
     
-        <a href="{{url_for('fluency1')}}" class= "button d-block" >Take Test</a> 
+        <a href="{{url_for('fluency1')}}" class= "button d-block" >Start</a> 
         <br>
-        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Return to Your Garden</a> 
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
        
     {% else %}
     <div class= "container-sm">
@@ -41,7 +58,9 @@
         <p>When you are ready, click below to start.</p>
     </div>
         <br>
-            <a href="{{url_for('fluency1')}}" class= "button d-block" >Start Test</a> 
+            <a href="{{url_for('fluency1')}}" class= "button d-block" >Start</a> 
+            <br>
+            <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
         
 
     {% endif %}

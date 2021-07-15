@@ -641,21 +641,28 @@ def fluency():
     if test is None:
         active_test= False 
         completed = False
+        started = False 
     else:
         test = Test.query.filter_by(userid=id, completed= False).first() 
         '''if they have no active tests ongoing'''
         if test is None: 
             active_test= False 
             completed = True
+            started= False 
         else:
             active_test= True 
             module_1_status = test.module_1_status
             '''if they have alreay completed module 1''' 
             if module_1_status == 'completed':
                 completed= True
+                started= False 
+            elif module_1_status == "in progress":
+                started = True 
+                completed = False 
             else:
                 completed= False 
-    return render_template("/modules/module1/fluency.html", completed=completed, active_test=active_test)
+                started = False 
+    return render_template("/modules/module1/fluency.html", started=started, completed=completed, active_test=active_test)
 
 @app.route('/fluencycontinue')
 @login_required
@@ -1376,6 +1383,54 @@ def fluency10():
         value_4=value_4,form=form,message= message, next= next, test_completed= test_completed)
     return render_template("/modules/module1/fluency10.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
+
+
+''' Module 2 code '''
+
+@app.route('/memory')
+@login_required
+def memory():
+    user= current_user
+    id= user.id
+    test= Test.query.filter_by(userid=id).first() 
+    '''if this is their first time taking the test, variables set to false'''
+    if test is None:
+        active_test= False 
+        completed = False
+        started= False 
+    else:
+        test = Test.query.filter_by(userid=id, completed= False).first() 
+        '''if they have no active tests ongoing'''
+        if test is None: 
+            active_test= False 
+            completed = True
+            started = False 
+        else:
+            active_test= True 
+            module_2_status = test.module_2_status
+            '''if they have already completed module 2''' 
+            if module_2_status == 'completed':
+                completed= True
+                started = False 
+            elif module_2_status == "in progress":
+                started = True 
+                completed = False 
+            else:
+                completed= False 
+                started = False 
+    return render_template("/modules/module2/memory.html", completed=completed, started= started, active_test=active_test)
+
+@app.route('/memorycontinue')
+@login_required
+def memorycontinue():
+    user= current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first() 
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)
