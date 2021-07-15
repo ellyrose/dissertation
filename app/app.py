@@ -475,7 +475,7 @@ def results():
         incomplete_modules.append("Language Log Pile")
     if module_4 != "completed":
         incomplete_modules.append("Visual Veg-Plot")
-    return render_template('results.html',all_tests=all_tests, incomplete_modules=incomplete_modules)
+    return render_template('results.html',all_tests=all_tests, incomplete_modules=incomplete_modules, current_test=current_test)
 
 
 

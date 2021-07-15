@@ -48,8 +48,21 @@
     </table>
 
     <p>If you would like further advice regarding your results, or anything else to do with Mild Cognitive Impairment, please visit the Support page.</p>
-
+    {% if current_test == None %}
+        <p>If you would like to take the test again, return to Your Garden and pick a section.</p>
+        
+    {% else %}
+        <p>You haven't yet finished your current test so the results are not available. The sections you still need to complete are listed below:</p>
+        {% for module in incomplete_modules %}
+            <div id= "results">
+                <ul id= "list">
+                    <li>{{module}}</li>
+                </ul>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endif %}
+
 
 
 
