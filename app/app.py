@@ -307,13 +307,13 @@ def createaccount():
         user= Users.query.filter_by(email_address=form.email_address.data).first()
         ''' if user doesnt already exist, add to db'''
         if user is None:
-            first_name= form.first_name.data
+            first_name= form.first_name.data.strip(" ")
             form.first_name.data= " "
-            last_name= form.last_name.data
+            last_name= form.last_name.data.strip(" ")
             form.last_name.data= " "
             birthdate= form.birthdate.data.strftime('%d-%m-%Y')
             form.birthdate.data = datetime.strptime("01-01-2020", '%d-%m-%Y')
-            email_address= form.email_address.data
+            email_address= form.email_address.data.strip(" ")
             form.email_address.data= " "
             country= form.country.data
             form.country.data= " "
@@ -1320,10 +1320,10 @@ def fluency10():
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
         visuospatial= test.visuospatial
-        value_1 = form.v1.data
-        value_2 = form.v2.data
-        value_3 = form.v3.data
-        value_4 = form.v4.data
+        value_1 = form.v1.data.strip(" ")
+        value_2 = form.v2.data.strip(" ")
+        value_3 = form.v3.data.strip(" ")
+        value_4 = form.v4.data.strip(" ")
         if value_1.upper() == "K":
             module_score += 1
             visuospatial += 1 
