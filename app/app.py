@@ -1052,10 +1052,16 @@ def fluency5():
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
         value_4 = form.v4.data.strip(" ")
-        q1_answers=["johnson", "boris johnson"]
-        q2_answers=["thatcher","margaret thatcher"]
-        q3_answers=["biden","joe biden","joseph biden","jo biden"]
-        q4_answers=["kennedy","john kennedy","john f. kennedy","john f kennedy"]
+        q1_answers=["johnson","jonson", "jonsan", "boris johnson","boris jonson","boris jonsan", 
+        "borris johnson", "borris jonson","borris jonsan"]
+        q2_answers=["thatcher","thacher", "thatchar", "thachar", "margaret thatcher", "margaret thacher", "margaret thatchar",
+        "mrgaret thachar", "margarat thatcher", "margarat thacher", "margarat thatchar", "margarat thachar"]
+        q3_answers=["biden","bidon","bidan", "bydon","byden","bydan", "joe biden","joe bidon", "joe bidan", "joe bydon","joe byden",
+        "joe bydan", "joseph biden","joeseph bidon", "joeseph bidan", "joeseph byden","joeseph bydon", "joeseph bydan", "jo biden",
+        "jo bidon", "jo bidan", "jo byden", "jo bydon", "jo bydan"]
+        q4_answers=["kennedy","kenedy", "kenady","john kennedy","john f. kennedy","john f kennedy", "jon kennedy", "jon f. kennedy", 
+        "jon f kennedy", "kenedy","john kenedy","john f. kenedy", "john f kenedy", "jon kenedy", "jon f. kenedy", "jon f kenedy", 
+        "john kenady", "john f. kenady", "john f kenady", "jon kenady", "jon f. kenady", "jon f kenady"]
         if value_1.lower() in q1_answers:
             module_score += 1
             memory += 1 
@@ -1164,7 +1170,7 @@ def fluency7():
         value_12 = form.v12.data.strip(" ")
         q1_answers=["spoon"]
         q2_answers=["book"]
-        q3_answers=["kangaroo","kangaro","kangeroo","kangero","walaby","waleby","wallaby"]
+        q3_answers=["kangaroo","kangaro","kangeroo","kangero","walaby","waleby","wallaby","walleby"]
         q4_answers=["penguin","pengin","pengun","pegine","pengune"]
         q5_answers=["anchor","ancher","anchar","ancer","ancar","ancor"]
         q6_answers=["camel","dromedary","camal","cammel","cammal","camle","cammle"]
@@ -1172,7 +1178,7 @@ def fluency7():
         q8_answers=["rhino","rhinoceros","ryno","rino","rinoserous","rinocerous","rinoseros","rinoceros","rhinocerous","rhinoserous"]
         q9_answers=["barrel","keg","tub","barel","barall","baral"]
         q10_answers=["crown"]
-        q11_answers=["crocodile","alligator","crocadile","crocerdile"]
+        q11_answers=["crocodile","alligator","crocadile","crocerdile", "alligater", "alligatar", "aligator", "aligater", "aligatar"]
         q12_answers=["piano accordion","accordian","squeeze box","acordian","piano acordian"]
         if value_1.lower() in q1_answers:
             module_score += 1
