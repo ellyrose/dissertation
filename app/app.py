@@ -230,6 +230,7 @@ login_manager.init_app(app)
 
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(id):
     return Users.query.get(id)
@@ -265,6 +266,15 @@ def page_not_found(e):
 def internal_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
+
+'''csp added to each request, allows scripts and styles from Jquery and Bootstrap, everything else only local files'''
+@app.after_request
+def add_security_headers(resp):
+    resp.headers['Content-Security-Policy']="""default-src 'self'; img-src 'self';
+    script-src 'self' https://code.jquery.com https://code.jquery.com/jquery-3.3.1.slim.min.js
+     https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js ; 
+    style-src 'self' https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"""
+    return resp
 
 ''' code used to calculate total score '''
 
@@ -459,9 +469,7 @@ def results():
     module_2= "not started"
     module_3 = "not started"
     module_4 = "not started"
-    if current_test == None:
-        module_1 == module_2 == module_3 == module_4 == "not started"
-    else:
+    if current_test != None:
         module_1 = current_test.module_1_status 
         module_2 = current_test.module_2_status 
         module_3 = current_test.module_3_status 
@@ -482,6 +490,8 @@ def results():
 @app.route('/account',methods=["GET", "POST"])
 @login_required
 def account():
+    ''' session.pop used to remove 'please login' flash message if user previously navigated to page prior to login'''
+    session.pop('_flashes', None)
     user= current_user
     first_name= user.first_name
     last_name = user.last_name

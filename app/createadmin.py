@@ -10,6 +10,7 @@ app.config['DEBUG'] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:F41r4cr3/P1pps@localhost/themindgarden'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
+
 db = SQLAlchemy(app)
 
 password= 'Th3m1ndg4rd3n2421!'
