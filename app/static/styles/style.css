@@ -12,6 +12,10 @@ ul.navbar-nav a, .admin{
         margin-bottom: 2px !important;
 }
 
+.navbar .navbar-toggler-icon {
+  background-image: url("images/bootstrap/hamburger.svg") !important;
+}
+
 .button {
     background-color: #ccf8eb; 
     padding: 15px 32px;

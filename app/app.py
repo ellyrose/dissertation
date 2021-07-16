@@ -270,10 +270,7 @@ def internal_error(e):
 '''csp added to each request, allows scripts and styles from Jquery and Bootstrap, everything else only local files'''
 @app.after_request
 def add_security_headers(resp):
-    resp.headers['Content-Security-Policy']="""default-src 'self'; img-src 'self';
-    script-src 'self' https://code.jquery.com https://code.jquery.com/jquery-3.3.1.slim.min.js
-     https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js ; 
-    style-src 'self' https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"""
+    resp.headers['Content-Security-Policy']="default-src 'self'; img-src 'self' ; script-src 'self' https://code.jquery.com/jquery-3.3.1.slim.min.js https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js ; style-src 'self' https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
     return resp
 
 ''' code used to calculate total score '''
@@ -491,7 +488,6 @@ def results():
 @login_required
 def account():
     ''' session.pop used to remove 'please login' flash message if user previously navigated to page prior to login'''
-    session.pop('_flashes', None)
     user= current_user
     first_name= user.first_name
     last_name = user.last_name
@@ -512,7 +508,7 @@ def account():
         if email_address != current_email_address:
             check = Users.query.filter_by(email_address=email_address).first()
             if check is not None:
-                flash("Sorry, please enter a different email address.")
+                message= "Sorry, please enter a different email address."
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
@@ -531,7 +527,7 @@ def account():
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
                 form.country.data= user.country
-                flash("Your details have been updated!")
+                message= "Your details have been updated!"
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
@@ -541,12 +537,12 @@ def account():
                 form.birthdate.data= user.dob
                 form.email_address.data= user.email_address
                 form.country.data= user.country
-                flash("Sorry there was a problem, please try again.")
+                message ="Sorry there was a problem, please try again."
                 return render_template("account.html", message=message,form=form, user=user, 
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
         else:
-            message= "You entered an incorrect password."
+             message= "You entered an incorrect password, please try again."
     return render_template("account.html", message=message,form=form, user=user, first_name= first_name, 
     last_name= last_name, dob= birthdate,email_address=current_email_address,country=country,password_hash= current_password)   
 

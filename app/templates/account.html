@@ -6,13 +6,11 @@
     <h1 class="text-center">Your Details</h1>
     <p class="text-center">Your account details are below. If you would like to edit them, enter your password below to submit any changes.</p>
     <br>
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    
-{% endfor %}
+    {% if message %}
+        <div class="text-center">
+            {{ message }}
+        </div>
+    {% endif %}
     <div>
         <form method="POST">
             <div class= "mb-3">
