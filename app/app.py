@@ -1406,7 +1406,6 @@ def fluency10():
         test.module_1_score= module_score
         test.total_score = add_score(test)
         test.module_1_status= 'completed'
-        test_completed= False 
         module_2_completed= test.module_2_status
         module_3_completed= test.module_3_status
         module_4_completed= test.module_4_status
@@ -1418,7 +1417,7 @@ def fluency10():
         message= "Your answers have been accepted, thank you for completing Fluency Fointain! Please click next to continue"
         next= True
         return render_template("/modules/module1/fluency10.html", value_1=value_1,value_2=value_2,value_3=value_3,
-        value_4=value_4,form=form,message= message, next= next, test_completed= test_completed)
+        value_4=value_4,form=form,message= message, next= next)
     return render_template("/modules/module1/fluency10.html",value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)
 
@@ -1486,8 +1485,6 @@ def memorycontinue():
         return redirect(url_for('memory1'))
 
 
-    return render_template("/modules/module2/memorycontinue.html")
-
 
 @app.route('/memory1')
 @login_required
@@ -1534,6 +1531,7 @@ def memory1():
         return redirect(url_for('yourgarden'))
     message= None
     next= None
+    '''add if form validation here'''
     user = current_user
     id= user.id
     test= Test.query.filter_by(userid= id, completed= False).first()
@@ -1541,14 +1539,206 @@ def memory1():
     '''status changed to in progress as module has been started'''
     test.module_2_status='in progress'
     module_score= test.module_2_score
-    attention= test.attention
+    fluency= test.fluency
+    '''add question checking and score adding here, adding to module_score and fluency or not if incorrect'''
     test.module_2_score= module_score
-    test.attention= attention
+    test.fluency= fluency
     questions.question_1= True
     db.session.commit()
     message= "Your answers have been accepted, please click next to continue"
     next= True
     return render_template("/modules/module2/memory1.html", message= message, next= next)
+
+
+@app.route('/memory2')
+@login_required
+def memory2():
+    user = current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first()
+    if questions.question_2:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_2_score
+    fluency= test.fluency
+    '''add question checking and score adding here, adding to module_score and fluency or not if incorrect'''
+    test.module_2_score= module_score
+    test.fluency= fluency
+    questions.question_2= True
+    db.session.commit()
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module2/memory2.html", message= message, next= next)
+
+@app.route('/memory3')
+@login_required
+def memory3():
+    user = current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first()
+    if questions.question_3:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_2_score
+    memory= test.memory
+    '''add question checking and score adding here, adding to module_score and memory, or not if incorrect'''
+    test.module_2_score= module_score
+    test.memory= memory
+    questions.question_3= True
+    db.session.commit()
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module2/memory3.html", message= message, next= next)
+
+@app.route('/memory4')
+@login_required
+def memory4():
+    user = current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first()
+    if questions.question_4:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation here'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_2_score
+    language= test.language
+    '''add question checking and score adding here, adding to module_score and language, or not if incorrect'''
+    test.module_2_score= module_score
+    test.language= language
+    questions.question_4= True
+    db.session.commit()
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module2/memory4.html", message= message, next= next)
+
+@app.route('/memory5')
+@login_required
+def memory5():
+    user = current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first()
+    if questions.question_5:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation here'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_2_score
+    language= test.language
+    '''add question checking and score adding here, adding to module_score and language, or not if incorrect'''
+    test.module_2_score= module_score
+    test.language= language
+    questions.question_5= True
+    db.session.commit()
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module2/memory5.html", message= message, next= next)
+
+@app.route('/memory6')
+@login_required
+def memory6():
+    user = current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first()
+    if questions.question_6:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation here'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_2_score
+    language= test.language
+    '''add question checking and score adding here, adding to module_score and language, or not if incorrect'''
+    test.module_2_score= module_score
+    test.language= language
+    questions.question_6= True
+    db.session.commit()
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module2/memory6.html", message= message, next= next)
+
+@app.route('/memory7')
+@login_required
+def memory7():
+    user = current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first()
+    if questions.question_7:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation here'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_2_score
+    language= test.language
+    '''add question checking and score adding here, adding to module_score and language, or not if incorrect'''
+    test.module_2_score= module_score
+    test.language= language
+    questions.question_7= True
+    db.session.commit()
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module2/memory7.html", message= message, next= next)
+
+@app.route('/memory8')
+@login_required
+def memory8():
+    user = current_user
+    id= user.id
+    questions= Module_2.query.filter_by(id= id).first()
+    if questions.question_8:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 or not questions.question_7:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_2_score
+    memory= test.memory
+    '''add question checking and score adding here, adding to module_score and memory, or not if incorrect'''
+    test.module_2_score= module_score
+    test.memory=  memory
+    questions.question_8= True
+    test.total_score = add_score(test)
+    test.module_2_status= 'completed'
+    module_2_completed= test.module_2_status
+    module_3_completed= test.module_3_status
+    module_4_completed= test.module_4_status
+    if module_2_completed == module_3_completed == module_4_completed == 'completed':
+        test.completed= True 
+        test.date_completed= datetime.utcnow() 
+    db.session.commit()
+    message= "Your answers have been accepted, thank you for completing Memory Maze! Please click to return to your garden"
+    next= True
+    return render_template("/modules/module2/memory8.html", message= message, next= next)
 
 '''module 3 code '''
 

@@ -9,7 +9,7 @@ first question
     {% if not next %}
     <p class= "text-center"> Please answer all questions below then click submit;</p>
 
-    <a href="{{url_for('fluency2')}}" class= "button d-block" >Next Question</a> 
+    <a href="{{url_for('memory2')}}" class= "button d-block" >Submit</a> 
     {% endif %}
     <br>
     {% if message %}
@@ -19,7 +19,7 @@ first question
 
 {% if next %}
     <br>
-    <a href="{{url_for('fluency2')}}" class= "button d-block" >Next Question</a> 
+    <a href="{{url_for('memory2')}}" class= "button d-block" >Next Question</a> 
     <br>
 {% endif %}
 
