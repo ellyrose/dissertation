@@ -13,7 +13,7 @@ ul.navbar-nav a, .admin{
 }
 
 .navbar .navbar-toggler-icon {
-  background-image: url("images/bootstrap/hamburger.svg") !important;
+  background-image: url("images/bootstrap/hamburger.png") !important;
 }
 
 .button {

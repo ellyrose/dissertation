@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %} Visual Veg Plot {% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Visual Veg Plot</h1>
+
+{% if active_test %}
+    {% if completed %}
+        <p class="text-center">You have already completed Visual Veg Plot! Please return to your garden to choose another part of the test. </p>
+
+
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+    
+    {% elif started %}
+
+    <p class="text-center">Welcome back to Visual Veg Plot! Click continue to start where you left off, or return to your garden</p>
+
+     <a href="{{url_for('visualcontinue')}}" class= "button d-block" >Continue</a> 
+    <br>
+     <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+
+    {% else %}
+    <div class= "container-sm">
+        <p>Welcome to Visual Veg Plot, the fourth part of The Mind Garden test.</p>
+        <p>This part of the test includes 1 question and should take around 5 minutes to take.</p>
+        <p>It will test your language skills.</p>
+        <p>Make sure you are comfortable and in an evironment that is free from distractions.
+        </p>
+        <p>When you are ready, click below to start.</p>
+    </div>
+        <br>
+        <a href="{{url_for('visual1')}}" class= "button d-block" >Start</a> 
+
+        <br>
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+    
+
+    {% endif %}
+
+{% else %}
+
+    {% if completed %}
+
+        <p class="text-center">Welcome back to Visual Veg Plot! Click below if you would like to take this part of the test again, or you can return to your garden.</p>
+    
+        <a href="{{url_for('visual1')}}" class= "button d-block" >Start</a> 
+        <br>
+        <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+       
+    {% else %}
+    <div class= "container-sm">
+        <p>Welcome to Visual Veg Plot, the third part of The Mind Garden test.</p>
+        <p>This part of the test includes 1 question and should take around 5 minutes to take.</p>
+        <p>It will test your language skills.</p>
+        <p>Before starting, make sure you are comfortable and in an evironment that is free from distractions.
+        </p>
+        <p>When you are ready, click below to start.</p>
+    </div>
+        <br>
+            <a href="{{url_for('visual1')}}" class= "button d-block" >Start</a> 
+        
+
+    {% endif %}
+
+{% endif %}
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
