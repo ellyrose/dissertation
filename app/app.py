@@ -477,9 +477,9 @@ def results():
     if module_2 != "completed":
         incomplete_modules.append("Memory Maze")
     if module_3 != "completed":
-        incomplete_modules.append("Language Log Pile")
-    if module_4 != "completed":
         incomplete_modules.append("Visual Veg-Plot")
+    if module_4 != "completed":
+        incomplete_modules.append("Language Log Pile")
     return render_template('results.html',all_tests=all_tests, incomplete_modules=incomplete_modules, current_test=current_test)
 
 
@@ -663,6 +663,16 @@ def fluency1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_1.query.filter_by(id= id).first()
         else:
+            module_1.question_1 = False
+            module_1.question_2 = False 
+            module_1.question_3 = False 
+            module_1.question_4 = False 
+            module_1.question_5 = False 
+            module_1.question_6 = False 
+            module_1.question_7 = False 
+            module_1.question_8 = False 
+            module_1.question_9 = False 
+            module_1.question_10 = False
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_1.query.filter_by(id= id).first()
     if questions.question_1:
@@ -1342,7 +1352,7 @@ def fluency10():
         value_4=value_4,form=form,message= message, next= next)
 
 
-''' Module 2 code '''
+''' ROUTES FOR MODULE 2 '''
 
 @app.route('/memory')
 @login_required
@@ -1412,8 +1422,10 @@ def memory1():
     user = current_user
     id= user.id
     test= Test.query.filter_by(userid= id, completed=False).first()
+    '''if there is no active test'''
     if test == None:
         module_2= Module_2.query.filter_by(id= id).first()
+        ''' if there is no entry on module 2 for given user id, add one and create new Test'''
         if module_2 == None:
             test = Test(userid=id)
             module_2= Module_2(id=id)
@@ -1423,6 +1435,7 @@ def memory1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_2.query.filter_by(id= id).first()
         else:
+            '''if there is an entry for user id on module 2, reset questions to False and create new Test'''
             module_2.question_1 = False
             module_2.question_2 = False 
             module_2.question_3 = False 
@@ -1437,14 +1450,25 @@ def memory1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_2.query.filter_by(id= id).first() 
     else:
+        '''if there is an active test, check if there is an entry on module 2 for user ID '''
         module_2= Module_2.query.filter_by(id= id).first()
         if module_2 == None:
+            '''if there is no entry on module 2, create one and load active test'''
             module_2= Module_2(id=id)
             db.session.add(module_2)
             db.session.commit()
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_2.query.filter_by(id= id).first()
         else:
+            '''if there is, set module 2 questions to false and load active test'''
+            module_2.question_1 = False
+            module_2.question_2 = False 
+            module_2.question_3 = False 
+            module_2.question_4 = False 
+            module_2.question_5 = False 
+            module_2.question_6 = False 
+            module_2.question_7 = False 
+            module_2.question_8 = False 
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_2.query.filter_by(id= id).first()
     if questions.question_1:
@@ -1649,10 +1673,10 @@ def memory8():
     questions.question_8= True
     test.total_score = add_score(test)
     test.module_2_status= 'completed'
-    module_2_completed= test.module_2_status
+    module_1_completed= test.module_1_status
     module_3_completed= test.module_3_status
     module_4_completed= test.module_4_status
-    if module_2_completed == module_3_completed == module_4_completed == 'completed':
+    if module_1_completed == module_3_completed == module_4_completed == 'completed':
         test.completed= True 
         test.date_completed= datetime.utcnow() 
     db.session.commit()
@@ -1663,9 +1687,9 @@ def memory8():
 '''module 3 code '''
 
 
-@app.route('/languge')
+@app.route('/visual')
 @login_required
-def language():
+def visual():
     user= current_user
     id= user.id
     test= Test.query.filter_by(userid=id).first() 
@@ -1694,33 +1718,156 @@ def language():
             else:
                 completed= False 
                 started = False 
-    return render_template("/modules/module3/language.html", completed=completed, started= started, active_test=active_test)
+    return render_template("/modules/module3/visual.html", completed=completed, started= started, active_test=active_test)
 
-@app.route('/languagecontinue')
+@app.route('/visualcontinue')
 @login_required
-def languagecontinue():
+def visualcontinue():
     user= current_user
     id= user.id
-    questions= Module_2.query.filter_by(id= id).first() 
-    return render_template("/modules/module3/languagecontinue.html")
+    questions= Module_3.query.filter_by(id= id).first() 
+    '''logic below checks which question they have already completed'''
+    if questions.question_3:
+        message= "You have completed Visual Veg Plot!"
+        return render_template("/yourgarden.html", message=message)
+    elif questions.question_2:
+        return redirect(url_for('visual3'))
+    elif questions.question_1:
+        return redirect(url_for('visual2'))
+    else:
+        return redirect(url_for('visual1'))
 
-@app.route('/language1')
+
+
+@app.route('/visual1')
 @login_required
-def language1():
-    user= current_user
+def visual1():
+    user = current_user
     id= user.id
-    questions= Module_2.query.filter_by(id= id).first() 
-    test= Test.query.filter_by(userid=id,completed=False).first() 
-    test.module_3_status ="completed"
+    test= Test.query.filter_by(userid= id, completed=False).first()
+    if test == None:
+        module_3= Module_3.query.filter_by(id= id).first()
+        if module_3 == None:
+            test = Test(userid=id)
+            module_3= Module_3(id=id)
+            db.session.add(test)
+            db.session.add(module_3)
+            db.session.commit()
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            questions= Module_3.query.filter_by(id= id).first()
+        else:
+            module_3.question_1 = False
+            module_3.question_2 = False 
+            module_3.question_3 = False 
+            test = Test(userid=id)
+            db.session.add(test)
+            db.session.commit()
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            questions= Module_3.query.filter_by(id= id).first() 
+    else:
+        module_3= Module_3.query.filter_by(id= id).first()
+        if module_3 == None:
+            module_3= Module_3(id=id)
+            db.session.add(module_3)
+            db.session.commit()
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            questions= Module_3.query.filter_by(id= id).first()
+        else:
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            module_3.question_1 = False
+            module_3.question_2 = False 
+            module_3.question_3 = False 
+            questions= Module_3.query.filter_by(id= id).first()
+    if questions.question_1:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation here'''
+    user = current_user
+    id= user.id
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    questions= Module_3.query.filter_by(id= id).first()
+    '''status changed to in progress as module has been started'''
+    test.module_3_status='in progress'
+    module_score= test.module_3_score
+    visuospatial= test.visuospatial
+    '''add question checking and score adding here, adding to module_score and fluency or not if incorrect'''
+    test.module_3_score= module_score
+    test.visuospatial=  visuospatial
+    questions.question_1= True
     db.session.commit()
-    return render_template("/modules/module3/language1.html")
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module3/visual1.html", message= message, next= next)
+
+
+@app.route('/visual2')
+@login_required
+def visual2():
+    user = current_user
+    id= user.id
+    questions= Module_3.query.filter_by(id= id).first()
+    if questions.question_2:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_3_score
+    visuospatial= test.visuospatial
+    '''add question checking and score adding here, adding to module_score and fluency or not if incorrect'''
+    test.module_3_score= module_score
+    test.visuospatial=  visuospatial
+    questions.question_2= True
+    db.session.commit()
+    message= "Your answers have been accepted, please click next to continue"
+    next= True
+    return render_template("/modules/module3/visual2.html", message= message, next= next)
+
+@app.route('/visual3')
+@login_required
+def visual3():
+    user = current_user
+    id= user.id
+    questions= Module_3.query.filter_by(id= id).first()
+    if questions.question_3:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_3_score
+    visuospatial= test.visuospatial
+    '''add question checking and score adding here, adding to module_score and memory, or not if incorrect'''
+    test.module_3_score= module_score
+    test.visuospatial= visuospatial
+    questions.question_3= True
+    test.total_score = add_score(test)
+    test.module_3_status= 'completed'
+    module_1_completed= test.module_1_status
+    module_2_completed= test.module_2_status
+    module_4_completed= test.module_4_status
+    if module_1_completed == module_2_completed == module_4_completed == 'completed':
+        test.completed= True 
+        test.date_completed= datetime.utcnow() 
+    db.session.commit()
+    message= "Your answers have been accepted, thank you for completing Visual Veg Plot! Please click next to return to your garden."
+    next= True
+    return render_template("/modules/module3/visual3.html", message= message, next= next)
+
 
 
 '''code for module 4 '''
 
-@app.route('/visual')
+@app.route('/language')
 @login_required
-def visual():
+def language():
     user= current_user
     id= user.id
     test= Test.query.filter_by(userid=id).first() 
@@ -1749,27 +1896,69 @@ def visual():
             else:
                 completed= False 
                 started = False 
-    return render_template("/modules/module4/visual.html", completed=completed, started= started, active_test=active_test)
+    return render_template("/modules/module4/language.html", completed=completed, started= started, active_test=active_test)
 
-@app.route('/visualcontinue')
-@login_required
-def visualcontinue():
-    user= current_user
-    id= user.id
-    questions= Module_2.query.filter_by(id= id).first() 
-    return render_template("/modules/module4/visualcontinue.html")
 
-@app.route('/visual1')
+@app.route('/language1')
 @login_required
-def visual1():
-    user= current_user
+def language1():
+    user = current_user
     id= user.id
-    questions= Module_2.query.filter_by(id= id).first() 
-    test= Test.query.filter_by(userid= id, completed=False).first() 
-    test.module_4_status ="completed"
-    test.completed = True
+    test= Test.query.filter_by(userid= id, completed=False).first()
+    if test == None:
+        module_4= Module_4.query.filter_by(id= id).first()
+        if module_4 == None:
+            test = Test(userid=id)
+            module43= Module_4(id=id)
+            db.session.add(test)
+            db.session.add(module_4)
+            db.session.commit()
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            questions= Module_3.query.filter_by(id= id).first()
+        else:
+            module_4.question_1 = False
+            test = Test(userid=id)
+            db.session.add(test)
+            db.session.commit()
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            questions= Module_4.query.filter_by(id= id).first() 
+    else:
+        module_4= Module_4.query.filter_by(id= id).first()
+        if module_4 == None:
+            module_4= Module_4(id=id)
+            db.session.add(module_4)
+            db.session.commit()
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            questions= Module_3.query.filter_by(id= id).first()
+        else:
+            test= Test.query.filter_by(userid= id,completed=False).first()
+            module_4.question_1 = False
+            questions= Module_4.query.filter_by(id= id).first()
+    if questions.question_1:
+        return redirect(url_for('yourgarden'))
+    message= None
+    next= None
+    '''add if form validation'''
+    user = current_user
+    test= Test.query.filter_by(userid= id, completed= False).first()
+    module_score= test.module_4_score
+    language= test.language
+    '''add question checking and score adding here, adding to module_score and memory, or not if incorrect'''
+    test.module_4_score= module_score
+    test.language= language
+    questions.question_1= True
+    test.total_score = add_score(test)
+    test.module_4_status= 'completed'
+    module_1_completed= test.module_1_status
+    module_2_completed= test.module_2_status
+    module_3_completed= test.module_3_status
+    if module_1_completed == module_2_completed == module_3_completed == 'completed':
+        test.completed= True 
+        test.date_completed= datetime.utcnow() 
     db.session.commit()
-    return render_template("/modules/module4/visual1.html")
+    message= "Your answers have been accepted, thank you for completing Laguage Log Pile! Please click next to continue"
+    next= True
+    return render_template("/modules/module4/language1.html", message= message, next=next)
 
 
 

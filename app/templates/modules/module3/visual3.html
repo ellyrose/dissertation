@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} Visual Veg Plot{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Part 3</h1>
+
+    {% if not next %}
+    <p class= "text-center"> Please answer all questions below then click submit;</p>
+
+    <a href="{{url_for('yourgarden')}}" class= "button d-block" >Submit</a> 
+    {% endif %}
+    <br>
+    {% if message %}
+    <p class= "text-center"> {{message}} </p>
+
+    {% endif %}
+
+{% if next %}
+    <br>
+    <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+    <br>
+{% endif %}
+
+{% endblock %}
