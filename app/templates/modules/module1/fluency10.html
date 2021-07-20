@@ -2,85 +2,93 @@
 {% block title %} Fluency Fountain {% endblock %}
 {% block content %}
 
-<div class="container">
-    <h1 class="text-center">Part 10</h1>
+    <div class="container">
+        <h1 class="text-center">Part 10</h1>
 
-    {% if message %}
-    <p class= "text-center"> {{message}} </p>
+        {% if next %}
+            {% if test_completed %}
+                <p class = "text-center">Thank you for completing Fluency Fountain, you have finished the Mind Garden Test!
+                    Click below to view your results:
+                </p>
+                
+            <br>
+            <a href="{{url_for('results')}}" class= "button d-block" >Your Results</a> 
+            
+            {% else %}
+                <p class = "text-center">Thank you for completing Fluency Fountain!
+                    Click below to return to your garden to choose the next part of the test:
+                </p>
+            
+                <br>
+                <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
 
-{% endif %}
+                
+            {% endif %}
 
-{% if next %}
-    <br>
-    <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+        {% else %}
 
-{% endif %}
+            <p class= "text-center">In this final question, please name the letters below:</p>
+            <br>
+            <br>
 
-{% if not next %}
-
-    <p class= "text-center">In this final question, please name the letters below:</p>
-    <br>
-    <br>
-
-    <form method="POST" class="pform">
-        <div class= "col-md-5">
-            {{ form.hidden_tag() }}
-        </div>
-        <div class= "row">
-            <div class= "col-md-5">
-                <img src='static/letter1.jpg' class="img-thumbnail image" >
+            <form method="POST" class="pform">
+                <div class= "col-md-5">
+                    {{ form.hidden_tag() }}
+                </div>
+                <div class= "row">
+                    <div class= "col-md-5">
+                        <img src='static/letter1.jpg' class="img-thumbnail image" >
+                        <br><br>
+                        {{ form.v1.label }}
+                        {{ form.v1(class="form-control") }}
+                    </div>
+                    <br>
+                    <div class= "col-md-5">
+                        <img src='static/letter2.jpg' class="img-thumbnail image">
+                        <br><br>
+                        {{ form.v2.label }}
+                        {{ form.v2(class="form-control") }}
+                    </div>
+                    <br>
+                </div>
                 <br><br>
-                {{ form.v1.label }}
-                {{ form.v1(class="form-control") }}
-            </div>
-            <br>
-            <div class= "col-md-5">
-                <img src='static/letter2.jpg' class="img-thumbnail image">
-                <br><br>
-                {{ form.v2.label }}
-                {{ form.v2(class="form-control") }}
-            </div>
-            <br>
-        </div>
-        <br><br>
-        <div class= "row">
-            <div class= "col-md-5">
-                <img src='static/letter3.jpg' class="img-thumbnail image">
-                <br> <br>
-                {{ form.v3.label }}
-                {{ form.v3(class="form-control") }}
-            </div>
-            <br>
-            <div class= "col-md-5">
-                <img src='static/letter4.jpg'class="img-thumbnail image">
-                <br> <br>
-                {{ form.v4.label }}
-                {{ form.v4(class="form-control") }}
-            </div>
-            <br>
-        </div>
-        <br>
-        {% if form.errors %}
-            <p>Sorry, the details could not be processed because of the following errors: </p>
-            <ul class="errors">
-                {% for field_name, field_errors in form.errors|dictsort if field_errors %}
-                    {% for error in field_errors %}
-                        <li> {{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        {% endif %}
+                <div class= "row">
+                    <div class= "col-md-5">
+                        <img src='static/letter3.jpg' class="img-thumbnail image">
+                        <br> <br>
+                        {{ form.v3.label }}
+                        {{ form.v3(class="form-control") }}
+                    </div>
+                    <br>
+                    <div class= "col-md-5">
+                        <img src='static/letter4.jpg'class="img-thumbnail image">
+                        <br> <br>
+                        {{ form.v4.label }}
+                        {{ form.v4(class="form-control") }}
+                    </div>
+                    <br>
+                </div>
+                <br>
+                {% if form.errors %}
+                    <p>Sorry, the details could not be processed because of the following errors: </p>
+                    <ul class="errors">
+                        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+                            {% for error in field_errors %}
+                                <li> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-     
-        <br>
-        <button type="submit" class="button">Submit</button>
-     
-    </form>
+            
+                <br>
+                <button type="submit" class="button">Submit</button>
+            
+            </form>
 
-{% endif %}  
+        {% endif %}  
 
-    
-</div>
-
+        
+    </div>
 
 {% endblock %}

@@ -1,7 +1,8 @@
-from flask import Flask, flash, request, url_for, jsonify, session, render_template, make_response, redirect, render_template, abort
+from flask import Flask, url_for, session, render_template, redirect, render_template
 from datetime import datetime, timedelta, date as dt
 from flask_admin.base import AdminIndexView
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 from sqlalchemy.dialects.postgresql import UUID
 from flask_migrate import Migrate, current
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -270,7 +271,7 @@ def internal_error(e):
 '''csp added to each request, allows scripts and styles from Jquery and Bootstrap, everything else only local files'''
 @app.after_request
 def add_security_headers(resp):
-    resp.headers['Content-Security-Policy']="default-src 'self'; img-src 'self' ; script-src 'self' https://code.jquery.com/jquery-3.3.1.slim.min.js https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js ; style-src 'self' https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+    resp.headers['Content-Security-Policy']="default-src 'self'; img-src 'self' *wikimedia.org ; script-src 'self' https://code.jquery.com/jquery-3.3.1.slim.min.js https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js ; style-src 'self' https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
     return resp
 
 ''' code used to calculate total score '''
@@ -460,7 +461,7 @@ def yourgarden():
 def results():
     user = current_user
     id = user.id 
-    all_tests= Test.query.filter_by(userid= id, completed= True).order_by(Test.date_completed).all()
+    all_tests= Test.query.filter_by(userid= id, completed= True).order_by(desc(Test.date_completed)).all()
     current_test = Test.query.filter_by(userid= id, completed= False).first()
     module_1 = "not started"
     module_2= "not started"
@@ -1305,8 +1306,8 @@ def fluency10():
     value_2 = None
     value_3 = None
     value_4 = None
-    message= None
     next= None
+    test_completed = None
     form= Fluency_10()
     if form.validate_on_submit():
         user = current_user
@@ -1342,14 +1343,15 @@ def fluency10():
         if module_2_completed == module_3_completed == module_4_completed == 'completed':
             test.completed= True 
             test.date_completed= datetime.utcnow() 
+            db.session.commit()
+        test_completed = test.completed
         questions.question_10 = True
         db.session.commit()
-        message= "Your answers have been accepted, thank you for completing Fluency Fointain! Please click next to continue"
         next= True
         return render_template("/modules/module1/fluency10.html", value_1=value_1,value_2=value_2,value_3=value_3,
-        value_4=value_4,form=form,message= message, next= next)
+        value_4=value_4,form=form,next= next, test_completed = test_completed)
     return render_template("/modules/module1/fluency10.html",value_1=value_1,value_2=value_2,value_3=value_3,
-        value_4=value_4,form=form,message= message, next= next)
+        value_4=value_4,form=form, next= next,test_completed = test_completed)
 
 
 ''' ROUTES FOR MODULE 2 '''
@@ -1660,7 +1662,7 @@ def memory8():
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 or not questions.question_7:
         return redirect(url_for('yourgarden'))
-    message= None
+    test_completed = None
     next= None
     '''add if form validation'''
     user = current_user
@@ -1679,10 +1681,11 @@ def memory8():
     if module_1_completed == module_3_completed == module_4_completed == 'completed':
         test.completed= True 
         test.date_completed= datetime.utcnow() 
+        db.session.commit()
     db.session.commit()
-    message= "Your answers have been accepted, thank you for completing Memory Maze! Please click to return to your garden"
+    test_completed = test.completed
     next= True
-    return render_template("/modules/module2/memory8.html", message= message, next= next)
+    return render_template("/modules/module2/memory8.html", next= next,test_completed = test_completed)
 
 '''module 3 code '''
 
@@ -1837,7 +1840,7 @@ def visual3():
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2:
         return redirect(url_for('yourgarden'))
-    message= None
+    test_completed= None
     next= None
     '''add if form validation'''
     user = current_user
@@ -1857,9 +1860,9 @@ def visual3():
         test.completed= True 
         test.date_completed= datetime.utcnow() 
     db.session.commit()
-    message= "Your answers have been accepted, thank you for completing Visual Veg Plot! Please click next to return to your garden."
+    test_completed = test.completed
     next= True
-    return render_template("/modules/module3/visual3.html", message= message, next= next)
+    return render_template("/modules/module3/visual3.html", test_completed= test_completed, next= next)
 
 
 
@@ -1936,7 +1939,7 @@ def language1():
             questions= Module_4.query.filter_by(id= id).first()
     if questions.question_1:
         return redirect(url_for('yourgarden'))
-    message= None
+    test_completed= None
     next= None
     '''add if form validation'''
     user = current_user
@@ -1955,10 +1958,11 @@ def language1():
     if module_1_completed == module_2_completed == module_3_completed == 'completed':
         test.completed= True 
         test.date_completed= datetime.utcnow() 
+        db.session.commit()
     db.session.commit()
-    message= "Your answers have been accepted, thank you for completing Laguage Log Pile! Please click next to continue"
+    test_completed = test.completed
     next= True
-    return render_template("/modules/module4/language1.html", message= message, next=next)
+    return render_template("/modules/module4/language1.html", test_completed=test_completed, next=next)
 
 
 

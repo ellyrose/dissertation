@@ -4,23 +4,44 @@
 first question
 
 <div class="container">
-    <h1 class="text-center">Part 1</h1>
+    <div class="container">
+        <h1 class="text-center">Part 8</h1>
 
-    {% if not next %}
-    <p class= "text-center"> Please answer all questions below then click submit;</p>
+        {% if next %}
+            {% if test_completed %}
+                <p class = "text-center">Thank you for completing Memory Maze, you have finished the Mind Garden Test!
+                    Click below to view your results:
+                </p>
+                
+            <br>
+            <a href="{{url_for('results')}}" class= "button d-block" >Your Results</a> 
+            
+            {% else %}
+                <p class = "text-center">Thank you for completing Memory Maze!
+                    Click below to return to your garden to choose the next part of the test:
+                </p>
+            
+                <br>
+                <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
 
-    <a href="{{url_for('yourgarden')}}" class= "button d-block" >Submit</a> 
-    {% endif %}
-    <br>
-    {% if message %}
-    <p class= "text-center"> {{message}} </p>
+                
+            {% endif %}
 
-    {% endif %}
+        {% else %}
 
-{% if next %}
-    <br>
-    <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
-    <br>
-{% endif %}
+            <p class= "text-center">Final question </p>
+            <br>
+            <br><br>
+            <a href="{{url_for('memory8')}}" class= "button d-block" >Your Garden</a> 
+            <br>
+
+           
+
+        {% endif %}  
+
+        
+    </div>
 
 {% endblock %}
+    
+
