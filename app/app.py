@@ -4,7 +4,7 @@ from flask_admin.base import AdminIndexView
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from sqlalchemy.dialects.postgresql import UUID
-from flask_migrate import Migrate, current
+from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
