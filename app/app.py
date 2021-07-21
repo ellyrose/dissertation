@@ -268,6 +268,10 @@ def internal_error(e):
     db.session.rollback()
     return render_template('500.html'), 500
 
+@app.errorhandler(429)
+def internal_error(e):
+    return render_template('429.html'), 429
+
 '''csp added to each request, allows scripts and styles from Jquery and Bootstrap, everything else only local files'''
 @app.after_request
 def add_security_headers(resp):
@@ -342,7 +346,7 @@ def createaccount():
     
 
 @app.route('/login', methods= ["GET", "POST"])
-@limiter.limit(["100 per day","50 per hour"])
+@limiter.limit("10 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect (url_for('index'))
