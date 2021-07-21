@@ -18,12 +18,12 @@
 
 {% if not next %}
 
-    <p class= "text-center">For this section, name the items in the pictures below:</p>
+    <p class= "text-center">For this section, please name the items in the pictures below. Be careful not to make any errors with your typing as this may affect your score:</p>
    
     <br>
     <br>
 
-    <form method="POST" class="pform">
+    <form method="POST" class="pform" autocomplete="off">
         <div class= "col-md-4">
             {{ form.hidden_tag() }}
         </div>

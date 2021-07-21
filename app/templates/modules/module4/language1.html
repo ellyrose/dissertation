@@ -1,7 +1,46 @@
 {% extends 'base.html' %}
-{% block title %} Memory Maze {% endblock %}
+{% block title %} Language Log Pile {% endblock %}
 {% block content %}
 first question
 
+<div class="container">
+    <div class="container">
+        <h1 class="text-center">Part 1</h1>
+
+        {% if next %}
+            {% if test_completed %}
+                <p class = "text-center">Your answers have been accepted! Thank you for completing Language Log Pile, you have finished the Mind Garden Test!
+                    Click below to view your results:
+                </p>
+                
+            <br>
+            <a href="{{url_for('results')}}" class= "button d-block" >Your Results</a> 
+            
+            {% else %}
+                <p class = "text-center"> Your answers have been accepted, thank you for completing Language Log Pile!
+                    Click below to return to your garden to choose the next part of the test:
+                </p>
+            
+                <br>
+                <a href="{{url_for('yourgarden')}}" class= "button d-block" >Your Garden</a> 
+
+                
+            {% endif %}
+
+        {% else %}
+
+            <p class= "text-center">Final question </p>
+            <br>
+            <br><br>
+            <a href="{{url_for('memory8')}}" class= "button d-block" >Your Garden</a> 
+            <br>
+
+           
+
+        {% endif %}  
+
+        
+    </div>
 
 {% endblock %}
+    
