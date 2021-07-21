@@ -1285,7 +1285,7 @@ def fluency9():
         test.module_1_score= module_score
         questions.question_9 = True
         db.session.commit()
-        message= "Your answers have been accepted, please click next to continue"
+        message= "Your answers have been accepted, please click below to continue"
         next= True
         return render_template("/modules/module1/fluency9.html", value_1=value_1,value_2=value_2,value_3=value_3,
         value_4=value_4,form=form,message= message, next= next)

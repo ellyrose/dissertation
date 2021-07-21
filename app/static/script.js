@@ -9,7 +9,7 @@ $(document).ready(function(){
 
 // code for sound toggle 
 
-if (window.location.href == host){
+if (window.location.href == host | window.location.href == host + 'yourgarden'){
 
     var image = document.getElementById("sound");
     image.src = "static/soundOn.png";
