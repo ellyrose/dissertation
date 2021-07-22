@@ -87,8 +87,6 @@ limiter = Limiter(
     key_func=get_remote_address,
 )
 
-
-
 # create users table 
 
 class Users(UserMixin, db.Model):
@@ -275,7 +273,7 @@ def internal_error(e):
 '''csp added to each request, allows scripts and styles from Jquery and Bootstrap, everything else only local files'''
 @app.after_request
 def add_security_headers(resp):
-    resp.headers['Content-Security-Policy']="default-src 'self'; img-src 'self' *wikimedia.org ; script-src 'self' https://code.jquery.com/jquery-3.3.1.slim.min.js https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js ; style-src 'self' https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+    resp.headers['Content-Security-Policy']="default-src 'self'; img-src 'self'; script-src 'self' https://code.jquery.com/jquery-3.3.1.slim.min.js https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js ; style-src 'self' https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
     return resp
 
 ''' code used to calculate total score '''
@@ -283,6 +281,8 @@ def add_security_headers(resp):
 def add_score(test):
     total= (test.module_1_score + test.module_2_score + test.module_3_score + test.module_4_score)
     return total
+
+'''code used to calculate current age based on date today and given birthdate'''
 
 def calculateAge(birthDate):
     today = dt.today()
@@ -338,7 +338,7 @@ def createaccount():
             db.session.commit()
         else:
             ''' if user does exist, display message'''
-            message= "An account with that email address already exists"
+            message= "Sorry, please coose a different email address"
             return render_template("createaccount.html", first_name=first_name,last_name=last_name,birthdate=birthdate,
     email_address=email_address, country=country, password=password, confirm=confirm, accept_tos= accept_tos, form= form,message=message)
     return render_template("createaccount.html", first_name=first_name,last_name=last_name,birthdate=birthdate,

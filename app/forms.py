@@ -319,24 +319,12 @@ class LoggedInResetPasswordForm(FlaskForm):
     submit= SubmitField("Submit")
 
 class EditDetailsForm(FlaskForm):
-    first_name= StringField("First Name")
-    last_name= StringField("Last Name")
-    birthdate= DateField("Birthdate" )
-    email_address= StringField("Email address")
-    country=StringField("Country")
+    first_name= StringField("First Name", validators=[DataRequired()])
+    last_name= StringField("Last Name", validators=[DataRequired()])
+    birthdate= DateField("Birthdate",validators=[DataRequired()])
+    email_address= StringField("Email address",validators=[DataRequired(),Email(message="Your email address is not valid.")])
+    country=StringField("Country", validators=[DataRequired()])
     password_hash = PasswordField('Please enter your current password to confirm any changes:', validators=[DataRequired()])
-
-    submit= SubmitField("Submit")
-
-
-
-class AdminEditForm(FlaskForm):
-    first_name= StringField("First Name")
-    last_name= StringField("Last Name")
-    birthdate= DateField("Birthdate" )
-    email_address= StringField("Email address")
-    current_country=StringField("Current country",render_kw={'readonly': True})
-    country= SelectField("Country", choices= COUNTRIES)
 
     submit= SubmitField("Submit")
 
