@@ -274,7 +274,7 @@ class CreateAccountForm(FlaskForm):
     country= SelectField("Country", validators=[DataRequired()], choices= COUNTRIES )
 
     password_hash = PasswordField('Password', validators=[InputRequired(),
-    Length(min=12, max=30, message="Your password must contain at least 12 characters"),
+    Length(min=12, max=30, message="Your password must contain at least 12 characters, and at most 30 characters"),
        EqualTo('confirm', message='The two passwords must match')])
     
 
@@ -301,7 +301,7 @@ class ForgottenPasswordForm(FlaskForm):
 
 class ResetPasswordForm(FlaskForm):
     password_hash = PasswordField('Password', validators=[InputRequired(),
-    Length(min=12, max=30, message="Your password must contain at least 12 characters"),
+    Length(min=12, max=30, message="Your password must contain at least 12 characters, and at most 30 characters"),
        EqualTo('confirm', message='The two passwords must match')])
     
 
@@ -311,7 +311,7 @@ class ResetPasswordForm(FlaskForm):
 
 class LoggedInResetPasswordForm(FlaskForm):
     new_password = PasswordField('New password', validators=[
-    Length(min=12, max=30, message="Your password must contain at least 12 characters"),
+    Length(min=12, max=30, message="Your password must contain at least 12 characters, and at most 30 characters"),
        EqualTo('confirm', message='The two passwords must match')])
     
     confirm = PasswordField('Repeat new password')

@@ -660,28 +660,31 @@ def fluency1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_1.query.filter_by(id= id).first() 
     else:
+        module_1_status = test.module_1_status 
         module_1= Module_1.query.filter_by(id= id).first()
-        if module_1 == None:
-            module_1= Module_1(id=id)
-            db.session.add(module_1)
-            db.session.commit()
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            questions= Module_1.query.filter_by(id= id).first()
+        if module_1_status == "not started":
+            if module_1 == None:
+                module_1= Module_1(id=id)
+                db.session.add(module_1)
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_1.query.filter_by(id= id).first()
+            else:
+                module_1.question_1 = False
+                module_1.question_2 = False 
+                module_1.question_3 = False 
+                module_1.question_4 = False 
+                module_1.question_5 = False 
+                module_1.question_6 = False 
+                module_1.question_7 = False 
+                module_1.question_8 = False 
+                module_1.question_9 = False 
+                module_1.question_10 = False
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_1.query.filter_by(id= id).first()
         else:
-            module_1.question_1 = False
-            module_1.question_2 = False 
-            module_1.question_3 = False 
-            module_1.question_4 = False 
-            module_1.question_5 = False 
-            module_1.question_6 = False 
-            module_1.question_7 = False 
-            module_1.question_8 = False 
-            module_1.question_9 = False 
-            module_1.question_10 = False
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            questions= Module_1.query.filter_by(id= id).first()
-    if questions.question_1:
-        return redirect(url_for('yourgarden'))
+            return redirect(url_for('yourgarden'))
     day = None
     date= None
     month= None
