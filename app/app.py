@@ -738,7 +738,7 @@ def fluency1():
             module_score +=1
         print(day)
         print(day_now)
-        if int(date) in range((actual_day-2),(actual_day+2)):
+        if int(date) in range((actual_day-2),(actual_day+3)):
             print("date is correct")
             attention += 1
             module_score +=1
@@ -800,7 +800,7 @@ def fluency1():
         if test_place.lower() == 'fluency fountain':
             attention += 1
             module_score +=1
-            print("test p is correct")
+            print("test place is correct")
         else:
             pass
         if age == actual_age:
@@ -832,8 +832,12 @@ def fluency2():
     user= current_user 
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
+    '''used to stop users skipping back'''
     if questions.question_2:
         return redirect(url_for('yourgarden'))
+    ''' used to stop users skipping forward'''
     if not questions.question_1:
         return redirect(url_for('yourgarden'))
     value_1 = None
@@ -884,6 +888,8 @@ def fluency3():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_3:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2:
@@ -940,6 +946,8 @@ def fluency4():
     user = current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_4:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3:
@@ -990,6 +998,8 @@ def fluency5():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_5:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 :
@@ -1052,6 +1062,8 @@ def fluency6():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_6:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 :
@@ -1089,6 +1101,8 @@ def fluency7():
     user= current_user
     id= user.id
     questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_7:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 :
@@ -1197,12 +1211,12 @@ def fluency7():
 def fluency8():
     user= current_user
     id= user.id
-    question= Module_1.query.filter_by(id= id).first()
-    '''used to stop users skipping back'''
-    if question.question_8:
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
         return redirect(url_for('yourgarden'))
-    ''' used to stop users skipping forward'''
-    if not question.question_1 or not question.question_2 or not question.question_3 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7:
+    if questions.question_8:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 or not questions.question_7:
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1252,10 +1266,12 @@ def fluency8():
 def fluency9():
     user= current_user
     id= user.id
-    question= Module_1.query.filter_by(id= id).first()
-    if question.question_9:
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
         return redirect(url_for('yourgarden'))
-    if not question.question_1 or not question.question_2 or not question.question_3 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8:
+    if questions.question_9:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 or not questions.question_7 or not questions.question_8:
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1304,10 +1320,12 @@ def fluency9():
 def fluency10():
     user= current_user
     id= user.id
-    question= Module_1.query.filter_by(id= id).first()
-    if question.question_10:
+    questions= Module_1.query.filter_by(id= id).first()
+    if questions is None:
         return redirect(url_for('yourgarden'))
-    if not question.question_1 or not question.question_2 or not question.question_3 or not question.question_4 or not question.question_5 or not question.question_6 or not question.question_7 or not question.question_8 or not question.question_9:
+    if questions.question_10:
+        return redirect(url_for('yourgarden'))
+    if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 or not questions.question_7 or not questions.question_8 or not questions.question_9:
         return redirect(url_for('yourgarden'))
     value_1 = None
     value_2 = None
@@ -1506,6 +1524,8 @@ def memory2():
     user = current_user
     id= user.id
     questions= Module_2.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_2:
         return redirect(url_for('yourgarden'))
     if not questions.question_1:
@@ -1532,6 +1552,8 @@ def memory3():
     user = current_user
     id= user.id
     questions= Module_2.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_3:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2:
@@ -1558,6 +1580,8 @@ def memory4():
     user = current_user
     id= user.id
     questions= Module_2.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_4:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3:
@@ -1584,6 +1608,8 @@ def memory5():
     user = current_user
     id= user.id
     questions= Module_2.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_5:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4:
@@ -1610,6 +1636,8 @@ def memory6():
     user = current_user
     id= user.id
     questions= Module_2.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_6:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5:
@@ -1636,6 +1664,8 @@ def memory7():
     user = current_user
     id= user.id
     questions= Module_2.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_7:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6:
@@ -1662,6 +1692,8 @@ def memory8():
     user = current_user
     id= user.id
     questions= Module_2.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_8:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2 or not questions.question_3 or not questions.question_4 or not questions.question_5 or not questions.question_6 or not questions.question_7:
@@ -1817,6 +1849,8 @@ def visual2():
     user = current_user
     id= user.id
     questions= Module_3.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_2:
         return redirect(url_for('yourgarden'))
     if not questions.question_1:
@@ -1843,6 +1877,8 @@ def visual3():
     user = current_user
     id= user.id
     questions= Module_3.query.filter_by(id= id).first()
+    if questions is None:
+        return redirect(url_for('yourgarden'))
     if questions.question_3:
         return redirect(url_for('yourgarden'))
     if not questions.question_1 or not questions.question_2:
