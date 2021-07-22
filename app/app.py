@@ -1431,10 +1431,8 @@ def memory1():
     user = current_user
     id= user.id
     test= Test.query.filter_by(userid= id, completed=False).first()
-    '''if there is no active test'''
     if test == None:
         module_2= Module_2.query.filter_by(id= id).first()
-        ''' if there is no entry on module 2 for given user id, add one and create new Test'''
         if module_2 == None:
             test = Test(userid=id)
             module_2= Module_2(id=id)
@@ -1444,7 +1442,6 @@ def memory1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_2.query.filter_by(id= id).first()
         else:
-            '''if there is an entry for user id on module 2, reset questions to False and create new Test'''
             module_2.question_1 = False
             module_2.question_2 = False 
             module_2.question_3 = False 
@@ -1459,29 +1456,29 @@ def memory1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_2.query.filter_by(id= id).first() 
     else:
-        '''if there is an active test, check if there is an entry on module 2 for user ID '''
+        module_2_status = test.module_2_status 
         module_2= Module_2.query.filter_by(id= id).first()
-        if module_2 == None:
-            '''if there is no entry on module 2, create one and load active test'''
-            module_2= Module_2(id=id)
-            db.session.add(module_2)
-            db.session.commit()
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            questions= Module_2.query.filter_by(id= id).first()
+        if module_2_status == "not started":
+            if module_2 == None:
+                module_2= Module_2(id=id)
+                db.session.add(module_2)
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_2.query.filter_by(id= id).first()
+            else:
+                module_2.question_1 = False
+                module_2.question_2 = False 
+                module_2.question_3 = False 
+                module_2.question_4 = False 
+                module_2.question_5 = False 
+                module_2.question_6 = False 
+                module_2.question_7 = False 
+                module_2.question_8 = False 
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_2.query.filter_by(id= id).first()
         else:
-            '''if there is, set module 2 questions to false and load active test'''
-            module_2.question_1 = False
-            module_2.question_2 = False 
-            module_2.question_3 = False 
-            module_2.question_4 = False 
-            module_2.question_5 = False 
-            module_2.question_6 = False 
-            module_2.question_7 = False 
-            module_2.question_8 = False 
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            questions= Module_2.query.filter_by(id= id).first()
-    if questions.question_1:
-        return redirect(url_for('yourgarden'))
+            return redirect(url_for('yourgarden'))
     message= None
     next= None
     '''add if form validation here'''
@@ -1775,21 +1772,24 @@ def visual1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_3.query.filter_by(id= id).first() 
     else:
+        module_3_status = test.module_3_status 
         module_3= Module_3.query.filter_by(id= id).first()
-        if module_3 == None:
-            module_3= Module_3(id=id)
-            db.session.add(module_3)
-            db.session.commit()
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            questions= Module_3.query.filter_by(id= id).first()
+        if module_3_status == "not started":
+            if module_3 == None:
+                module_3= Module_3(id=id)
+                db.session.add(module_3)
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_3.query.filter_by(id= id).first()
+            else:
+                module_3.question_1 = False
+                module_3.question_2 = False 
+                module_3.question_3 = False 
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_3.query.filter_by(id= id).first()
         else:
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            module_3.question_1 = False
-            module_3.question_2 = False 
-            module_3.question_3 = False 
-            questions= Module_3.query.filter_by(id= id).first()
-    if questions.question_1:
-        return redirect(url_for('yourgarden'))
+            return redirect(url_for('yourgarden'))
     message= None
     next= None
     '''add if form validation here'''
@@ -1919,12 +1919,12 @@ def language1():
         module_4= Module_4.query.filter_by(id= id).first()
         if module_4 == None:
             test = Test(userid=id)
-            module43= Module_4(id=id)
+            module_4= Module_4(id=id)
             db.session.add(test)
             db.session.add(module_4)
             db.session.commit()
             test= Test.query.filter_by(userid= id,completed=False).first()
-            questions= Module_3.query.filter_by(id= id).first()
+            questions= Module_4.query.filter_by(id= id).first()
         else:
             module_4.question_1 = False
             test = Test(userid=id)
@@ -1933,19 +1933,22 @@ def language1():
             test= Test.query.filter_by(userid= id,completed=False).first()
             questions= Module_4.query.filter_by(id= id).first() 
     else:
+        module_4_status = test.module_4_status 
         module_4= Module_4.query.filter_by(id= id).first()
-        if module_4 == None:
-            module_4= Module_4(id=id)
-            db.session.add(module_4)
-            db.session.commit()
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            questions= Module_3.query.filter_by(id= id).first()
+        if module_4_status == "not started":
+            if module_4 == None:
+                module_4= Module_4(id=id)
+                db.session.add(module_4)
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_4.query.filter_by(id= id).first()
+            else:
+                module_4.question_1 = False
+                db.session.commit()
+                test= Test.query.filter_by(userid= id,completed=False).first()
+                questions= Module_4.query.filter_by(id= id).first()
         else:
-            test= Test.query.filter_by(userid= id,completed=False).first()
-            module_4.question_1 = False
-            questions= Module_4.query.filter_by(id= id).first()
-    if questions.question_1:
-        return redirect(url_for('yourgarden'))
+            return redirect(url_for('yourgarden'))
     test_completed= None
     next= None
     '''add if form validation'''
