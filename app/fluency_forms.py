@@ -290,11 +290,11 @@ class Fluency_2(FlaskForm):
     submit= SubmitField("Submit")
 
 class Fluency_3(FlaskForm):
-    v1= IntegerField(label="Answer 1", validators=[DataRequired()])
-    v2= IntegerField(label="Answer 2", validators=[DataRequired()])
-    v3= IntegerField(label="Answer 3", validators=[DataRequired()])
-    v4= IntegerField(label="Answer 4", validators=[DataRequired()])
-    v5= IntegerField(label="Answer 5", validators=[DataRequired()])
+    v1= IntegerField(label="Answer 1", validators=[DataRequired(message="You must enter the number in digits")])
+    v2= IntegerField(label="Answer 2", validators=[DataRequired(message="You must enter the number in digits")])
+    v3= IntegerField(label="Answer 3", validators=[DataRequired(message="You must enter the number in digits")])
+    v4= IntegerField(label="Answer 4", validators=[DataRequired(message="You must enter the number in digits")])
+    v5= IntegerField(label="Answer 5", validators=[DataRequired(message="You must enter the number in digits")])
 
     submit= SubmitField("Submit")
 

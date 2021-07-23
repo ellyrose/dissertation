@@ -525,7 +525,6 @@ def account():
             user.email_address= email_address
             user.country=country
             try:
-                
                 db.session.commit()
                 form.first_name.data= user.first_name
                 form.last_name.data = user.last_name
@@ -853,21 +852,22 @@ def fluency2():
         questions= Module_1.query.filter_by(id= id).first()
         module_score= test.module_1_score
         attention= test.attention
-        value_1 = form.v1.data
-        value_2 = form.v2.data
-        value_3 = form.v3.data
-        answers_1= ["lemon","leman","liman","limon"]
-        answers_2= ["key","kee","ki","kie"]
-        answers_3= ["ball","bal","baul"]
-        if value_1.lower() in answers_1:
+        value_1 = form.v1.data.strip(" ")
+        value_2 = form.v2.data.strip(" ")
+        value_3 = form.v3.data.strip(" ")
+        answers= ["lemon","leman","liman","limon","key","kee","ki","kie","ball","bal","baul"]
+        if value_1.lower() in answers:
             module_score += 1
             attention += 1 
-        if value_2.lower() in answers_2:
+            answers.remove(value_1.lower())
+        if value_2.lower() in answers:
             module_score += 1
             attention += 1 
-        if value_3.lower() in answers_3:
+            answers.remove(value_2.lower())
+        if value_3.lower() in answers:
             module_score += 1
             attention += 1 
+            answers.remove(value_3.lower())
         test.attention= attention
         test.module_1_score= module_score
         questions.question_2= True
@@ -968,18 +968,19 @@ def fluency4():
         value_1 = form.v1.data.strip(" ")
         value_2 = form.v2.data.strip(" ")
         value_3 = form.v3.data.strip(" ")
-        answers_1= ["lemon","leman","liman","limon"]
-        answers_2= ["key","kee","ki","kie"]
-        answers_3= ["ball","bal","baul"]
-        if value_1.lower() in answers_1:
+        answers= ["lemon","leman","liman","limon","key","kee","ki","kie","ball","bal","baul"]
+        if value_1.lower() in answers:
             module_score += 1
             memory += 1 
-        if value_2.lower() in answers_2:
+            answers.remove(value_1.lower())
+        if value_2.lower() in answers:
             module_score += 1
             memory += 1 
-        if value_3.lower() in answers_3:
+            answers.remove(value_2.lower())
+        if value_3.lower() in answers:
             module_score += 1
             memory += 1 
+            answers.remove(value_3.lower())
         test.memory= memory
         test.module_1_score= module_score
         questions.question_4= True
