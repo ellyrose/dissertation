@@ -268,7 +268,6 @@ COUNTRIES= [
 ]
 
 class Fluency_1(FlaskForm):
-    tries = HiddenField("tries")
     day= SelectField(label="What day is it?", validators=[DataRequired()], choices=DAYS)
     date= SelectField(label="What is the date?", validators=[DataRequired()], choices=DATE)
     month= SelectField(label="What month are we in?", validators=[DataRequired()], choices=MONTH)
@@ -346,10 +345,10 @@ class Fluency_8(FlaskForm):
 
 
 class Fluency_9(FlaskForm):
-    v1= IntegerField(label="Number of dots in image 1", validators=[DataRequired()])
-    v2= IntegerField(label="Number of dots in image 2", validators=[DataRequired()])
-    v3= IntegerField(label="Number of dots in image 3", validators=[DataRequired()])
-    v4= IntegerField(label="Number of dots in image 4", validators=[DataRequired()])
+    v1= IntegerField(label="Number of dots in image 1", validators=[DataRequired(message="You must enter the number in digits")])
+    v2= IntegerField(label="Number of dots in image 2", validators=[DataRequired(message="You must enter the number in digits")])
+    v3= IntegerField(label="Number of dots in image 3", validators=[DataRequired(message="You must enter the number in digits")])
+    v4= IntegerField(label="Number of dots in image 4", validators=[DataRequired(message="You must enter the number in digits")])
 
     submit= SubmitField("Submit")
 

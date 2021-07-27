@@ -19,7 +19,7 @@ import calendar
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.menu import MenuLink
-
+import unittest
 
 
 
@@ -86,6 +86,12 @@ limiter = Limiter(
     app,
     key_func=get_remote_address,
 )
+
+@app.cli.command()
+def test():
+    """Run the unit tests."""
+    tests = unittest.TestLoader().discover('tests')
+    unittest.TextTestRunner(verbosity=2).run(tests)
 
 # create users table 
 
@@ -338,7 +344,7 @@ def createaccount():
             db.session.commit()
         else:
             ''' if user does exist, display message'''
-            message= "Sorry, please coose a different email address"
+            message= "Sorry, please choose a different email address"
             return render_template("createaccount.html", first_name=first_name,last_name=last_name,birthdate=birthdate,
     email_address=email_address, country=country, password=password, confirm=confirm, accept_tos= accept_tos, form= form,message=message)
     return render_template("createaccount.html", first_name=first_name,last_name=last_name,birthdate=birthdate,

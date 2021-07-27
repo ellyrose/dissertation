@@ -260,20 +260,20 @@ COUNTRIES= [
 # Create form classes to be used on html files 
 
 class CreateAccountForm(FlaskForm):
-    first_name= StringField("First Name", validators=[DataRequired(),Length(min= 1, max=30, 
+    first_name= StringField("First Name", validators=[DataRequired(message="First name field is required"),Length(min= 1, max=30, 
     message="Value entered exceeds maximum length")], description="First name")
 
-    last_name= StringField("Last Name", validators=[DataRequired(),Length(min= 1, max=30, 
+    last_name= StringField("Last Name", validators=[DataRequired(message="Last name field is required"),Length(min= 1, max=30, 
     message="Value entered exceeds maximum length")], description="Last name")
 
-    birthdate= DateField("Birthdate", validators=[DataRequired()])
+    birthdate= DateField("Birthdate", validators=[DataRequired(message="Birthdate field is required")])
 
-    email_address= StringField("Email address", validators=[DataRequired(),
+    email_address= StringField("Email address", validators=[DataRequired(message="Email field is required"),
     Email(message="Your email address is not valid.")])
 
-    country= SelectField("Country", validators=[DataRequired()], choices= COUNTRIES )
+    country= SelectField("Country", validators=[DataRequired(message="Country field is required")], choices= COUNTRIES )
 
-    password_hash = PasswordField('Password', validators=[InputRequired(),
+    password_hash = PasswordField('Password', validators=[DataRequired(message="Password field is required"),
     Length(min=12, max=30, message="Your password must contain at least 12 characters, and at most 30 characters"),
        EqualTo('confirm', message='The two passwords must match')])
     
