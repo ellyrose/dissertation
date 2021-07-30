@@ -12,8 +12,8 @@ MONTH= ["January","February","March","April","May","June","July","August","Septe
 YEAR= range(1950,2051)
 SEASON= ["Spring","Summer", "Autumn","Winter"]
 OPTIONS= range(1,13)
-AGE= range(1,100)
-AREAS= ["Fluency Fountain", "Memory Maze", "Language Lake", "Visual Veg-Plot"]
+AGE= range(0,100)
+AREAS= ["Fluency Fountain", "Memory Maze", "Language Log Pile", "Visual Veg-Plot"]
 COUNTRIES= [
     "United Kingdom",
     "Afghanistan",
@@ -289,11 +289,11 @@ class Fluency_2(FlaskForm):
     submit= SubmitField("Submit")
 
 class Fluency_3(FlaskForm):
-    v1= IntegerField(label="Answer 1", validators=[DataRequired(message="You must enter the number in digits")])
-    v2= IntegerField(label="Answer 2", validators=[DataRequired(message="You must enter the number in digits")])
-    v3= IntegerField(label="Answer 3", validators=[DataRequired(message="You must enter the number in digits")])
-    v4= IntegerField(label="Answer 4", validators=[DataRequired(message="You must enter the number in digits")])
-    v5= IntegerField(label="Answer 5", validators=[DataRequired(message="You must enter the number in digits")])
+    v1= IntegerField(label="Answer 1", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
+    v2= IntegerField(label="Answer 2", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
+    v3= IntegerField(label="Answer 3", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
+    v4= IntegerField(label="Answer 4", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
+    v5= IntegerField(label="Answer 5", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
 
     submit= SubmitField("Submit")
 
@@ -345,10 +345,10 @@ class Fluency_8(FlaskForm):
 
 
 class Fluency_9(FlaskForm):
-    v1= IntegerField(label="Number of dots in image 1", validators=[DataRequired(message="You must enter the number in digits")])
-    v2= IntegerField(label="Number of dots in image 2", validators=[DataRequired(message="You must enter the number in digits")])
-    v3= IntegerField(label="Number of dots in image 3", validators=[DataRequired(message="You must enter the number in digits")])
-    v4= IntegerField(label="Number of dots in image 4", validators=[DataRequired(message="You must enter the number in digits")])
+    v1= IntegerField(label="Number of dots in image 1", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
+    v2= IntegerField(label="Number of dots in image 2", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
+    v3= IntegerField(label="Number of dots in image 3", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
+    v4= IntegerField(label="Number of dots in image 4", validators=[DataRequired(message="You must enter the number in digits, and 0 will not be accepted as an answer.")])
 
     submit= SubmitField("Submit")
 
