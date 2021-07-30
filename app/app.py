@@ -4,7 +4,7 @@ from flask_admin.base import AdminIndexView
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from sqlalchemy.dialects.postgresql import UUID
-from flask_migrate import Migrate
+# from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
@@ -77,8 +77,8 @@ def send_email(to, subject, template, **kwargs):
 
 
 
-#initialise migrate 
-migrate = Migrate(app, db)
+# #initialise migrate 
+# migrate = Migrate(app, db)
 
 #Use limiter to prevent brute force attacks for a given IP address 
 
@@ -732,60 +732,41 @@ def fluency1():
         summer= ["June", "July", "August","September"]
         autumn= ["September", "October", "November"]
         actual_birthdate= user.dob
-        print("birthdays",birthdate,actual_birthdate)
         actual_email = user.email_address
         actual_age= calculateAge(actual_birthdate)
         actual_country= user.country
-        print ("ages", age, actual_age)
         if day == day_now:
-            print("day is correct")
             attention += 1 
             module_score +=1
-        print(day)
-        print(day_now)
         if int(date) in range((actual_day-2),(actual_day+3)):
-            print("date is correct")
             attention += 1
             module_score +=1
-        print(date)
-        print(actual_day)
         if month == month_now:
-            print("month is correct")
             attention += 1
             module_score +=1
-        print(month)
-        print(month_now)
         if int(year) == actual_year:
-            print("year is correct")
             attention += 1
             module_score +=1
-            type(year)
-        print(year)
-        print(actual_year)
         if season == "Winter":
             if month_now in winter:
-                print("season is correct")
                 attention += 1
                 module_score +=1
             else:
                 pass
         elif season == "Spring":
             if month_now in spring:
-                print("season is correct")
                 attention += 1
                 module_score +=1
             else:
                 pass
         elif season == "Summer":
             if month_now in summer:
-                print("season is correct")
                 attention += 1
                 module_score +=1
             else:
                 pass
         elif season == "Autumn":
             if month_now in autumn:
-                print("season is correct")
                 attention += 1
                 module_score +=1
             else:
@@ -793,36 +774,30 @@ def fluency1():
         if birthdate == actual_birthdate:
             attention += 1
             module_score +=1
-            print("birthdate is correct")
         else:
             pass
         if email_address == actual_email:
             attention += 1
             module_score +=1
-            print("email is correct")
         else:
             pass
         if test_place.lower() == 'fluency fountain':
             attention += 1
             module_score +=1
-            print("test place is correct")
         else:
             pass
         if age == actual_age:
             attention += 1
             module_score +=1
-            print("age is correct")
         else:
             pass
         if country == actual_country:
             attention += 1
             module_score +=1
-            print("country is correct")
         else:
             pass
         test.module_1_score= module_score
         test.attention= attention
-        print("attention socre is", test.attention)
         questions.question_1= True
         db.session.commit()
         return render_template("/modules/module1/fluency1completed.html")
