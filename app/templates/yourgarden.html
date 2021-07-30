@@ -1,68 +1,50 @@
 {% extends 'base.html' %}
-{% block title %} Your Garden {% endblock %}
 {% block content %}
 
-<div class="container">
 
-    <h1 class="text-center">{{current_user.first_name}}'s Mind Garden</h1>
-
+<div>
     <div id="onOff">
-      <img id="sound" data-toggle="tooltip" data-placement="bottom" title="Click to control sound!">
+        <img id="sound" data-toggle="tooltip" data-placement="bottom" title="Click to control sound!">
     </div>
-
-    <div>
-      <audio autoplay loop id= "audio">
-          <source src="static/test.mp3" type="audio/mpeg">
-          <source src="static/test.ogg" type="audio/ogg">
-          <p>Your browser doesn't support HTML5 audio. Here is
-            a <a href="static/test.mp3">link to the audio</a> instead.</p>
-        </audio>
-    </div>
-    
-    <p class="text-center">Behind each area of your garden is part of the Mind Garden test. Click on an area to complete it.</p>
-   
-    <br>
  
-    <table class = "text-center">
-        <tr>
-          <td>
-            <a href= "{{url_for('fluency')}}">
-                {% if module_1_completed == 'not started' %}
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Black_And_White_Fountain_%2890123217%29.jpeg" height=250 width=250 >
-               
-                {% elif module_1_completed == 'in progress' %}
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Round_fountain_surrounded_by_trees_under_a_stormy_sky_in_Kyoto_Botanical_Garden_Japan.jpg" height=250 width=250 >
+   <div>
+    <audio autoplay loop id= "audio">
+        <source src="static/garden.mp3" type="audio/mpeg">
+        <source src="static/garden.ogg" type="audio/ogg">
+        <p>Your browser doesn't support HTML5 audio. Here is
+           a <a href="static/garden.mp3">link to the audio</a> instead.</p>
+      </audio>
+   </div>
+   {% if current_user.is_authenticated %}
+    <img src="{{url_for('static', filename='title.jpg')}}" class="img-fluid mx-auto d-block" width="800" height="150" alt="The Mind Garden">
+    <h1 class="text-center"> Welcome to The Mind Garden, {{current_user.first_name}}</h1>
+    <p class= "text-center">Click below to enter your garden...</p>
 
-                {% else %}
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Fountain_-_Wilhelma.jpg" height=250 width=250 >
-
-                </a>
-                {% endif %}
-          </td>
-          <td>
-            <a href= "{{url_for('memory')}}">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c6/Hedge_maze_in_Parque_S%C3%A3o_Roque_da_Lameira_2.jpg" height=250 width=250>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <a href= "{{url_for('visual')}}">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Allotments_off_Sandling_Lane_-_geograph.org.uk_-_89452.jpg" height=250 width=250>
-           </a>  
-          </td>
-          <td>
-            <a href= "{{url_for('language')}}">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Stonecrop_Gardens%2C_Cold_Spring%2C_violet_flowers.jpg" height=250 width=250>
-          </a>
-          </td>
-        </tr>
-      </table>
-      
+    <br>
     
+    <a href='/yourgarden' class= "button d-block" >Your Garden</a> 
+</div>
+{% else %}
+<div>
+    <img src="{{url_for('static', filename='title.jpg')}}" class="img-fluid mx-auto d-block" width="800" height="150" alt="The Mind Garden">
+    <a href='/createaccount' class= "button d-block" >Create Account </a> 
+
+</div>
+<br>
+<div>
+    <h1 class="text-center"> Welcome to the Mind Garden, a confidential way to test for Mild Cognitive Impairment. </h1>
+    <br>
+    <p> The Mind Garden is a digitalized version of the Addenbrooke's Ace III test, which you can take from the comfort of your own back yard.
+        If you would like to find out more about the test, please visit the 'About' page. If you would like to find out 
+        how to get support for Mild Cognitive Impairment, you can visit the 'Support' page. Click the 'Create Account' button above to 
+        signup and get started.
+    </p>
 
 </div>
 
+{% endif %}
+
+   
 
 
 {% endblock %}
