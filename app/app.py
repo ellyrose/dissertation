@@ -19,6 +19,7 @@ import calendar
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.menu import MenuLink
+from flask_admin.form import SecureForm
 import unittest
 
 
@@ -240,9 +241,12 @@ login_manager.login_view = 'login'
 def load_user(id):
     return Users.query.get(id)
 
+
+
 ''' code for admin panel'''
 
 class MyModelView(ModelView):
+        form_base_class = SecureForm
         column_display_pk = True
         
 
@@ -1221,7 +1225,6 @@ def fluency8():
         if value_1 == 10:
             module_score += 1
             language += 1 
-            print("q1 right")
         if value_2 == 3:
             module_score += 1
             language += 1

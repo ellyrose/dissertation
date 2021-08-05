@@ -163,7 +163,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         id = user.id
         test= Test.query.filter_by(userid= id, completed= False).first()
@@ -178,7 +178,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='31',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='6',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         id = user.id
         test= Test.query.filter_by(userid= id, completed= False).first()
@@ -193,7 +193,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='27',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='2',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         id = user.id
         test= Test.query.filter_by(userid= id, completed= False).first()
@@ -208,7 +208,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='26',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         response = self.app.get('/fluency1')
         self.assertEqual(urlparse(response.location).path, '/yourgarden')
@@ -222,7 +222,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='26',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         response = self.app.get('/fluency3')
         self.assertEqual(urlparse(response.location).path, '/yourgarden')
@@ -237,7 +237,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -255,7 +255,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -273,7 +273,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -291,7 +291,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -308,7 +308,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -326,7 +326,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -347,7 +347,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -369,7 +369,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -388,7 +388,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -409,7 +409,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -429,7 +429,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -449,7 +449,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -473,7 +473,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -497,7 +497,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -521,7 +521,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -544,7 +544,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -567,7 +567,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -594,7 +594,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -622,7 +622,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -649,7 +649,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -675,7 +675,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -701,7 +701,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -735,7 +735,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -769,7 +769,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -803,7 +803,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -836,7 +836,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -869,7 +869,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -906,7 +906,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -942,7 +942,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -979,7 +979,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1020,7 +1020,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1060,7 +1060,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1098,7 +1098,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1137,7 +1137,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1178,7 +1178,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1222,7 +1222,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1266,7 +1266,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
@@ -1310,7 +1310,7 @@ class FluencyTests(unittest.TestCase):
         self.login('test@test.com',"pppppppppppp")
         self.app.post(
         '/fluency1',
-        data=dict(day='Thursday',date='29',month='July',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
+        data=dict(day='Wednesday',date='4',month='August',year='2021',season='Summer', birthdate=date.today(), email_address='test@test.com', 
         test_place='Fluency Fountain',age='0',country='United Kingdom'))
         self.app.post(
         '/fluency2',
