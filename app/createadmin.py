@@ -2,12 +2,13 @@ from app import Users
 from werkzeug.security import generate_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+import os 
 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:F41r4cr3/P1pps@localhost/themindgarden'
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
 

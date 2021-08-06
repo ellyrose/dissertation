@@ -32,6 +32,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
+
 #set session time so a user is logged out after 1 hour of inactivity 
 app.config['PERMANENT_SESSION_LIFETIME']= timedelta(minutes=60)
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
@@ -40,7 +41,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 #add database 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://postgres:F41r4cr3/P1pps@localhost/themindgarden'
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
 #instantiate database 
