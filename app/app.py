@@ -30,7 +30,7 @@ app = Flask(__name__)
 
 #create secret key for CSRF protection, session etc 
 
-app.config['SECRET_KEY'] = "hI9t6Bt4Dl1!8F"
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 #set session time so a user is logged out after 1 hour of inactivity 
 app.config['PERMANENT_SESSION_LIFETIME']= timedelta(minutes=60)
