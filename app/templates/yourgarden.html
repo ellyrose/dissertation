@@ -28,13 +28,13 @@
           <td>
             <a href= "{{url_for('fluency')}}">
                 {% if module_1_completed == 'not started' %}
-                    <img src="static/FF1.png" height=250 width=250 >
+                    <img src="static/FF1.png" height=250 width=250 alt="Fluency Fountain Not Started">
                
                 {% elif module_1_completed == 'in progress' %}
-                    <img src="static/FF2.png" height=250 width=250 >
+                    <img src="static/FF2.png" height=250 width=250 alt="Fluency Fountain In Progress">
 
                 {% else %}
-                    <img src="static/FF3.png" height=250 width=250 >
+                    <img src="static/FF3.png" height=250 width=250 alt="Fluency Fountain Complete">
 
                 </a>
                 {% endif %}
@@ -42,13 +42,13 @@
           <td>
             <a href= "{{url_for('memory')}}">
               {% if module_2_completed == 'not started' %}
-              <img src="static/mm1.png" height=250 width=250 >
+              <img src="static/mm1.png" height=250 width=250 alt="Memory Maze Not Started">
          
           {% elif module_2_completed == 'in progress' %}
-              <img src="static/mm2.png" height=250 width=250 >
+              <img src="static/mm2.png" height=250 width=250 alt="Memory Maze In Progress" >
 
           {% else %}
-              <img src="static/mm3.png" height=250 width=250 >
+              <img src="static/mm3.png" height=250 width=250 alt="Memory Maze Complete" >
 
           </a>
           {% endif %}
@@ -58,13 +58,13 @@
           <td>
             <a href= "{{url_for('visual')}}">
               {% if module_3_completed == 'not started' %}
-                <img src="static/VVP1.png" height=250 width=250 >
+                <img src="static/VVP1.png" height=250 width=250 alt="Visual Veg Plot Not Started">
          
               {% elif module_3_completed == 'in progress' %}
-               <img src="static/VVP2.png" height=250 width=250 >
+               <img src="static/VVP2.png" height=250 width=250 alt="Visual Veg Plot In Progress">
 
               {% else %}
-                <img src="static/VVP3.png" height=250 width=250 >
+                <img src="static/VVP3.png" height=250 width=250 alt="Visual Veg Plot Complete">
 
           </a>
           {% endif %} 
@@ -72,13 +72,13 @@
           <td>
             <a href= "{{url_for('language')}}">
               {% if module_4_completed == 'not started' %}
-              <img src="static/LLP1.png" height=250 width=250 >
+              <img src="static/LLP1.png" height=250 width=250 alt="Language Log Pile Not Started">
          
           {% elif module_4_completed == 'in progress' %}
-              <img src="static/LLP2.png" height=250 width=250 >
+              <img src="static/LLP2.png" height=250 width=250 alt="Language Log Pile In Progress" >
 
           {% else %}
-              <img src="static/LLP3.png" height=250 width=250 >
+              <img src="static/LLP3.png" height=250 width=250 alt="Language Log Pile Complete">
 
           </a>
           {% endif %}

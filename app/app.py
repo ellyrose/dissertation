@@ -42,6 +42,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 #add database 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
 #instantiate database 
