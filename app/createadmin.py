@@ -14,8 +14,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
 
 db = SQLAlchemy(app)
 
-password= 'Th3m1ndg4rd3n2421!'
+password= os.environ.get('ADMIN_PASSWORD')
+email_address= os.environ.get('ADMIN_USERNAME')
 password_hashed= generate_password_hash(password)
-admin_user=Users(first_name='admin',last_name='admin', dob='24-01-1991',email_address='themindgarden21@gmail.com',country="United Kingdom", password_hash=password_hashed, admin=True )
+admin_user=Users(first_name='admin',last_name='admin', dob='24-01-1991',email_address=email_address,country="United Kingdom", password_hash=password_hashed, admin=True )
 db.session.add(admin_user)
 db.session.commit()
