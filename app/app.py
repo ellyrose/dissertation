@@ -90,11 +90,25 @@ limiter = Limiter(
     key_func=get_remote_address,
 )
 
+# Used to run the unit tests 
 @app.cli.command()
 def test():
     """Run the unit tests."""
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
+
+
+# Used to log users in 
+login_manager= LoginManager()
+
+login_manager.init_app(app)
+
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def load_user(id):
+    return Users.query.get(id)
 
 # create users table 
 
@@ -151,7 +165,7 @@ class Test(db.Model):
     __tablename__ = "test"
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    userid = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'))
+    userid = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id', ondelete="cascade"))
     date_completed= db.Column(db.DateTime,nullable=True)
     module_1_score= db.Column(db.Integer, default= 0)
     module_1_status = db.Column(db.String(100),unique=False,nullable=False, default='not started')
@@ -176,7 +190,7 @@ class Test(db.Model):
 class Module_1(db.Model):
     __tablename__ = "module_1"
 
-    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id',ondelete="cascade"), primary_key=True )
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
@@ -195,7 +209,7 @@ class Module_1(db.Model):
 class Module_2(db.Model):
     __tablename__ = "module_2"
 
-    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id',ondelete="cascade"), primary_key=True )
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
@@ -212,7 +226,7 @@ class Module_2(db.Model):
 class Module_3(db.Model):
     __tablename__ = "module_3"
 
-    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id',ondelete="cascade"), primary_key=True )
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_2= db.Column(db.Boolean,unique=False,nullable=False, default=False)
     question_3= db.Column(db.Boolean,unique=False,nullable=False, default=False)
@@ -223,7 +237,7 @@ class Module_3(db.Model):
 class Module_4(db.Model):
     __tablename__ = "module_4"
 
-    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), primary_key=True )
+    id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id',ondelete="cascade"), primary_key=True )
     question_1= db.Column(db.Boolean,unique=False,nullable=False, default=False)
 
 
@@ -232,16 +246,7 @@ class Module_4(db.Model):
 
 db.create_all()
 
-login_manager= LoginManager()
 
-login_manager.init_app(app)
-
-login_manager.login_view = 'login'
-
-
-@login_manager.user_loader
-def load_user(id):
-    return Users.query.get(id)
 
 
 
@@ -513,7 +518,6 @@ def results():
 @app.route('/account',methods=["GET", "POST"])
 @login_required
 def account():
-    ''' session.pop used to remove 'please login' flash message if user previously navigated to page prior to login'''
     user= current_user
     first_name= user.first_name
     last_name = user.last_name
@@ -567,7 +571,7 @@ def account():
                 first_name= first_name, last_name= last_name, dob= birthdate,email_address=email_address,country=country,
                 password_hash= current_password)   
         else:
-             message= "You entered an incorrect password, please try again."
+             message= "You entered an incorrect password, please edit your details and try again."
     return render_template("account.html", message=message,form=form, user=user, first_name= first_name, 
     last_name= last_name, dob= birthdate,email_address=current_email_address,country=country,password_hash= current_password)   
 
