@@ -13,7 +13,7 @@ YEAR= range(1950,2051)
 SEASON= ["Spring","Summer", "Autumn","Winter"]
 OPTIONS= range(1,13)
 AGE= range(0,100)
-AREAS= ["Fluency Fountain", "Memory Maze", "Language Log Pile", "Visual Veg-Plot"]
+AREAS= [ "Memory Maze", "Language Log Pile","Fluency Fountain", "Visual Veg-Plot"]
 COUNTRIES= [
     "United Kingdom",
     "Afghanistan",
