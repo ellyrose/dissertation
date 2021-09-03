@@ -1159,7 +1159,7 @@ def fluency7():
         q9_answers=["barrel","keg","tub","barel","barall","baral"]
         q10_answers=["crown"]
         q11_answers=["crocodile","alligator","crocadile","crocerdile", "alligater", "alligatar", "aligator", "aligater", "aligatar"]
-        q12_answers=["piano accordion","accordian","squeeze box","acordian","piano acordian"]
+        q12_answers=["piano accordion","accordion","squeeze box","acordian","piano acordian"]
         if value_1.lower() in q1_answers:
             module_score += 1
             language += 1 
