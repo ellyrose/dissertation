@@ -1,4 +1,11 @@
+// change the host if required, important to allow code to run. This is used because base.html configures the heading for every page. 
+
 const host= "http://127.0.0.1/";
+
+
+// code for sound toggle 
+
+// adds tool tip to sound icon 
 
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip({
@@ -7,7 +14,7 @@ $(document).ready(function(){
     
   });
 
-// code for sound toggle 
+
 
 if (window.location.href == host | window.location.href == host + 'yourgarden'){
 

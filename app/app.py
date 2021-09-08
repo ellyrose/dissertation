@@ -4,7 +4,6 @@ from flask_admin.base import AdminIndexView
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 from sqlalchemy.dialects.postgresql import UUID
-# from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from flask_login import LoginManager, login_required, login_user, UserMixin, logout_user, current_user
@@ -79,9 +78,6 @@ def send_email(to, subject, template, **kwargs):
     mail.send(msg)
 
 
-
-# #initialise migrate 
-# migrate = Migrate(app, db)
 
 #Use limiter to prevent brute force attacks for a given IP address 
 
@@ -257,8 +253,8 @@ class MyModelView(ModelView):
         column_display_pk = True
         
 
-
 # edits AdminIndexView to only allow users who are logged in as admin to access page. WIll return 404 error if not.
+
 class myAdminIndexView(AdminIndexView):
     def is_accessible(self):
         return current_user.is_authenticated and current_user.admin
@@ -1163,7 +1159,6 @@ def fluency7():
         if value_1.lower() in q1_answers:
             module_score += 1
             language += 1 
-            print("q1 right")
         if value_2.lower() in q2_answers:
             module_score += 1
             language += 1 
@@ -1299,7 +1294,6 @@ def fluency9():
         if value_1 == 8:
             module_score += 1
             visuospatial += 1 
-            print("q1 right")
         if value_2 == 10:
             module_score += 1
             visuospatial += 1
@@ -1353,7 +1347,6 @@ def fluency10():
         if value_1.upper() == "K":
             module_score += 1
             visuospatial += 1 
-            print("q1 right")
         if value_2.upper() == "M":
             module_score += 1
             visuospatial += 1
